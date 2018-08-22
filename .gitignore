@@ -2,6 +2,10 @@
 
 # intellij
 .idea
+.vscode/
+
+# firebase
+.firebase/
 
 # dependencies
 /node_modules
