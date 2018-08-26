@@ -9,9 +9,9 @@ class App extends Component {
             <div className="App">
                 <Router>
                     <div>
-                        <header className="App-header">
-                            <h1 className="App-title">myFinanceTracker</h1>
-                            <nav className="nav">
+                        <header>
+                            <h1>myFinanceTracker</h1>
+                            <nav>
                                 <NavLink exact to="/" activeClassName="selected">Home</NavLink>
                                 <NavLink exact to="/budget" activeClassName="selected">Budget</NavLink>
                             </nav>
