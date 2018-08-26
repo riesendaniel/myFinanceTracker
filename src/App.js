@@ -1,31 +1,29 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, NavLink, Route, Switch} from 'react-router-dom';
 import './App.css';
+import Budget from './Budget';
 
 class App extends Component {
     render() {
         return (
             <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Welcome to React</h1>
-                    <Router>
-                        <div>
-                            <div className="nav">
+                <Router>
+                    <div>
+                        <header className="App-header">
+                            <h1 className="App-title">myFinanceTracker</h1>
+                            <nav className="nav">
                                 <NavLink exact to="/" activeClassName="selected">Home</NavLink>
                                 <NavLink exact to="/budget" activeClassName="selected">Budget</NavLink>
-                            </div>
+                            </nav>
+                        </header>
+                        <main>
                             <Switch>
-                                <Route path="/budget"/>
+                                <Route path="/budget" component={Budget}/>
                                 <Route path="/"/>
                             </Switch>
-                        </div>
-                    </Router>
-                </header>
-                <footer>
-                    <p className="App-intro">
-                        Welcome..
-                    </p>
-                </footer>
+                        </main>
+                    </div>
+                </Router>
             </div>
         );
     }
