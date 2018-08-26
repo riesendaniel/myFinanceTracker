@@ -12,8 +12,10 @@ class App extends Component {
                         <header>
                             <h1>myFinanceTracker</h1>
                             <nav>
-                                <NavLink exact to="/" activeClassName="selected">Home</NavLink>
-                                <NavLink exact to="/budget" activeClassName="selected">Budget</NavLink>
+                                <ul>
+                                    <li><NavLink exact to="/" activeClassName="selected">Home</NavLink></li>
+                                    <li><NavLink exact to="/budget" activeClassName="selected">Budget</NavLink></li>
+                                </ul>
                             </nav>
                         </header>
                         <main>
