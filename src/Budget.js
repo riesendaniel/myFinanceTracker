@@ -12,7 +12,7 @@ class Budget extends Component {
                 <BudgetGroup />
                 <BudgetGroupCreator />
                 <div>
-                    Total
+                    Total 300
                 </div>
             </div>
         );
