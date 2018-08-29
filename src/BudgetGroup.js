@@ -6,7 +6,7 @@ class BudgetGroup extends Component {
     render () {
         return (
             <div className="BudgetGroup">
-                <h3>Haushalt</h3>
+                <h3>{this.props.group}</h3>
                 <table>
                     <thead>
                         <tr>
@@ -17,18 +17,14 @@ class BudgetGroup extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Unterhalt</td>
-                            <td>100</td>
-                            <td>-</td>
-                            <td><button type="button">X</button></td>
-                        </tr>
-                        <tr>
-                            <td>Essen & Getränke</td>
-                            <td>250</td>
-                            <td>-</td>
-                            <td><button type="button">X</button></td>
-                        </tr>
+                        { this.props.budget.map(item => {return (
+                            <tr>
+                                <td>{item.category}</td>
+                                <td>{item.monthly}</td>
+                                <td>{item.yearly || '-'}</td>
+                                <td><button type="button">X</button></td>
+                            </tr>
+                        )}) }
                     </tbody>
                     <tfoot>
                         <tr>
@@ -36,7 +32,9 @@ class BudgetGroup extends Component {
                         </tr>
                         <tr>
                             <td>Total</td>
-                            <td>350</td>
+                            <td>{ this.props.budget.reduce((total, item) => {return total + item.monthly;}, 0) }</td>
+                            <td>{ this.props.budget.reduce((total, item) => {return total + item.yearly;}, 0) }</td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
