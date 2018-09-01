@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, NavLink, Route, Switch} from 'react-router-dom';
 import './App.css';
 import Budget from './Budget';
+import BudgetEntryEditor from './BudgetEntryEditor';
 
 class App extends Component {
     render() {
@@ -20,6 +21,7 @@ class App extends Component {
                         </header>
                         <main>
                             <Switch>
+                                <Route path="/budget/edit" component={BudgetEntryEditor} />
                                 <Route path="/budget" component={Budget}/>
                                 <Route path="/"/>
                             </Switch>

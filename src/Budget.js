@@ -58,7 +58,7 @@ class Budget extends Component {
                 <h2>Budget</h2>
                 { this.state.groups.map(group => {
                     let list = this.state.budget.filter(item => item.group === group);
-                    return list.length !== 0 && <BudgetGroup group={group} budget={list} />;
+                    return list.length !== 0 && <BudgetGroup key={group} group={group} budget={list} />;
                 }) }
                 <BudgetGroupCreator onGroupAdded={(name) => this.addGroup(name)} />
                 <div>

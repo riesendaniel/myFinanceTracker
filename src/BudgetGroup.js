@@ -28,7 +28,7 @@ class BudgetGroup extends Component {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colSpan="4"><input placeholder="Eintrag hinzufügen..." /></td>
+                            <td colSpan="4"><a href="/budget/edit">Eintrag hinzufügen...</a></td>
                         </tr>
                         <tr>
                             <td>Total</td>
