@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './BudgetGroup.css';
 
 class BudgetGroup extends Component {
 

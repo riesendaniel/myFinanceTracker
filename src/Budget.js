@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './Budget.css';
 import BudgetGroup from './BudgetGroup';
 import BudgetGroupCreator from './BudgetGroupCreator';
 

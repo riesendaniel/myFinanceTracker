@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import {BrowserRouter as Router, NavLink, Route, Switch} from 'react-router-dom';
-import './App.css';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Budget from './Budget';
 import BudgetEntryEditor from './BudgetEntryEditor';
+import Header from './Header';
+import Menu from './Menu';
 
 class App extends Component {
     render() {
@@ -11,13 +12,8 @@ class App extends Component {
                 <Router>
                     <div>
                         <header>
-                            <h1>myFinanceTracker</h1>
-                            <nav>
-                                <ul>
-                                    <li><NavLink exact to="/" activeClassName="selected">Home</NavLink></li>
-                                    <li><NavLink exact to="/budget" activeClassName="selected">Budget</NavLink></li>
-                                </ul>
-                            </nav>
+                            <Header />
+                            <Menu />
                         </header>
                         <main>
                             <Switch>
