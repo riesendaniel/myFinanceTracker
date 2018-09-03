@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { actions, getOutgoings} from '../redux/modules/OutgoingReducer';
-import OutgoingComponent from './../components/OutgoingComponent';
+import OutgoingComponent from '../components/OutgoingComponent';
 
 const mapStateToProps = state => ({
     outgoings: getOutgoings(state)
