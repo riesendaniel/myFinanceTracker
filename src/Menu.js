@@ -27,6 +27,12 @@ class Menu extends Component {
                             </ListItemIcon>
                             <ListItemText primary="Budget" />
                         </ListItem>
+                        <ListItem button component={Link} to="/outgoings">
+                            <ListItemIcon>
+                                <CompareIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Outgoings" />
+                        </ListItem>
                     </List>
                 </Drawer>
             </div>
