@@ -15,7 +15,7 @@ class OutgoingComponent extends Component {
         return (
             <Paper className="container">
                 <br /><br /><br />
-                <h2>Test</h2>
+                <h2>Ausgaben</h2>
                 <Table className="tab">
                     <TableHead>
                         <TableRow>

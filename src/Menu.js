@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
+import MoneyIcon from '@material-ui/icons/Money';
 
 class Menu extends Component {
     
@@ -29,7 +30,7 @@ class Menu extends Component {
                         </ListItem>
                         <ListItem button component={Link} to="/outgoings">
                             <ListItemIcon>
-                                <CompareIcon />
+                                <MoneyIcon />
                             </ListItemIcon>
                             <ListItemText primary="Outgoings" />
                         </ListItem>
