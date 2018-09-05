@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {
+  Card, CardContent,
+  TextField,
+} from '@material-ui/core';
 
 class BudgetGroupCreator extends Component {
   addGroup(event) {
@@ -11,9 +15,17 @@ class BudgetGroupCreator extends Component {
 
   render() {
     return (
-      <div className="BudgetGroupCreator">
-        <input onKeyUp={event => this.addGroup(event)} placeholder="Hauptkategorie hinzufügen..." />
-      </div>
+      <Card>
+        <CardContent>
+          <TextField
+            id="category"
+            label="Hauptkategorie hinzufügen..."
+            placeholder="Hauptkategorie hinzufügen..."
+            onKeyUp={event => this.addGroup(event)}
+            fullWidth
+          />
+        </CardContent>
+      </Card>
     );
   }
 }

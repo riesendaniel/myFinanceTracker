@@ -1,4 +1,16 @@
 import React, { Component } from 'react';
+import {
+  FormControlLabel,
+  Paper,
+  Switch,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  Input,
+  InputAdornment,
+  Button,
+} from '@material-ui/core';
 
 class BudgetEntryEditor extends Component {
   static handleSubmit() {
@@ -6,23 +18,43 @@ class BudgetEntryEditor extends Component {
 
   render() {
     return (
-      <div className="BudgetEntryEditor">
-        <h2>Budgeteintrag erfassen</h2>
+      <Paper>
+        <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         <form onSubmit="this.handleSubmit" action="/budget">
-          <input type="text" placeholder="Bezeichnung" />
-          <label htmlFor="monthly">
-            <input id="monthly" type="radio" name="period" value="monthly" />
-            <span>monatlich</span>
-          </label>
-          <input type="number" placeholder="CHF" />
-          <label htmlFor="yearly">
-            <input id="yearly" type="radio" name="period" value="yearly" />
-            <span>jährlich</span>
-          </label>
-          <input type="number" placeholder="CHF" />
-          <button type="submit">Hinzufügen</button>
+          <FormControl>
+            <TextField
+              id="description"
+              label="Bezeichnung"
+            />
+          </FormControl>
+          <FormControl>
+            <FormControlLabel
+              label="jährlich"
+              labelPlacement="start"
+              control={(
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      id="monthly"
+                    />
+                  )}
+                  label="monatlich"
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl>
+            <InputLabel htmlFor="amount">Betrag</InputLabel>
+            <Input
+              id="amount"
+              startAdornment={
+                <InputAdornment position="start">CHF</InputAdornment>
+              }
+            />
+          </FormControl>
+          <Button variant="contained" type="submit">Hinzufügen</Button>
         </form>
-      </div>
+      </Paper>
     );
   }
 }

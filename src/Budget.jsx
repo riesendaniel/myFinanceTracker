@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {
+  Card, CardContent,
+  Table, TableCell, TableFooter, TableRow,
+} from '@material-ui/core';
 import BudgetGroup from './BudgetGroup';
 import BudgetGroupCreator from './BudgetGroupCreator';
 
@@ -47,24 +51,37 @@ class Budget extends Component {
   }
 
   addGroup(name) {
-    this.setState(state => ({ groups: state.concat(name) }));
+    this.setState(state => ({ groups: [...state.groups, name] }));
   }
 
   render() {
     const { budget, groups } = this.state;
     return (
       <div className="Budget">
+        <BudgetGroupCreator onGroupAdded={name => this.addGroup(name)} />
         <h2>Budget</h2>
         { groups.map((group) => {
           const list = budget.filter(item => item.group === group);
           return list.length !== 0 && <BudgetGroup key={group} group={group} budget={list} />;
         }) }
-        <BudgetGroupCreator onGroupAdded={name => this.addGroup(name)} />
-        <div>
-          <span>Total</span>
-          <span>{ budget.reduce((total, item) => total + item.monthly, 0) }</span>
-          <span>{ budget.reduce((total, item) => total + item.yearly, 0) }</span>
-        </div>
+        <Card>
+          <CardContent>
+            <Table>
+              <TableFooter>
+                <TableRow>
+                  <TableCell>Total</TableCell>
+                  <TableCell numeric>
+                    { budget.reduce((total, item) => total + item.monthly, 0) }
+                  </TableCell>
+                  <TableCell numeric>
+                    { budget.reduce((total, item) => total + item.yearly, 0) }
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     );
   }
