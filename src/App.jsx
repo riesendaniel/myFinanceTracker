@@ -18,7 +18,7 @@ const App = () => (
           <Switch>
             <Route path="/budget/edit" component={BudgetEntryEditor} />
             <Route path="/budget" component={Budget} />
-            <Route path="/outgoings" component={OutgoingContainer}/>
+            <Route path="/outgoings" component={OutgoingContainer} />
             <Route path="/" />
           </Switch>
         </main>

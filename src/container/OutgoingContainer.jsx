@@ -1,18 +1,16 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actions, getOutgoings} from '../redux/modules/OutgoingReducer';
+import { actions, getOutgoings } from '../redux/modules/OutgoingReducer';
 import OutgoingComponent from '../components/OutgoingComponent';
 
 const mapStateToProps = state => ({
-    outgoings: getOutgoings(state)
+  outgoings: getOutgoings(state),
 });
 
-const mapDispatchToProps = dispatch => {
-    return bindActionCreators(actions, dispatch);
-};
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(OutgoingComponent);
