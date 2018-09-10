@@ -4,6 +4,7 @@ import Budget from './Budget';
 import BudgetEntryEditor from './BudgetEntryEditor';
 import Header from './Header';
 import Menu from './Menu';
+import OutgoingContainer from './container/OutgoingContainer';
 
 const App = () => (
   <div className="App">
@@ -17,6 +18,7 @@ const App = () => (
           <Switch>
             <Route path="/budget/edit" component={BudgetEntryEditor} />
             <Route path="/budget" component={Budget} />
+            <Route path="/outgoings" component={OutgoingContainer}/>
             <Route path="/" />
           </Switch>
         </main>
