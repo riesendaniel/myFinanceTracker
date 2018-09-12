@@ -8,8 +8,9 @@ import {
 class BudgetGroupCreator extends Component {
   addGroup(event) {
     if (event.key === 'Enter') {
-      const { onGroupAdded } = this.props;
-      onGroupAdded(event.target.value);
+      const { doAddBudgetGroup } = this.props;
+      doAddBudgetGroup(event.target.value);
+      event.target.value = null;
     }
   }
 
@@ -31,7 +32,7 @@ class BudgetGroupCreator extends Component {
 }
 
 BudgetGroupCreator.propTypes = {
-  onGroupAdded: PropTypes.func.isRequired,
+  doAddBudgetGroup: PropTypes.func.isRequired,
 };
 
 export default BudgetGroupCreator;

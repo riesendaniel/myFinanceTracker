@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Budget from './Budget';
-import BudgetEntryEditor from './BudgetEntryEditor';
+import Budget from './container/BudgetContainer';
+import BudgetEntryEditor from './container/BudgetEntryEditorContainer';
 import Header from './Header';
 import Menu from './Menu';
 import OutgoingContainer from './container/OutgoingContainer';

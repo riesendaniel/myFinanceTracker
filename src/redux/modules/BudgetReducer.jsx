@@ -1,0 +1,144 @@
+// ------------------------------------
+// Selectors
+// ------------------------------------
+
+export const getIsLoading = state => state.budget.isLoading;
+
+export const getBudgetGroups = state => state.budget.budgetGroups;
+
+export const getBudgetEntityIds = state => state.budget.budgetEntityIds;
+
+export const getBudget = state => state.budget.budget;
+
+
+// ------------------------------------
+// Action Types
+// ------------------------------------
+const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
+const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
+const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
+
+
+// ------------------------------------
+// Action Creators
+// ------------------------------------
+const isLoading = status => ({
+  type: BUDGET_IS_LOADING,
+  status,
+});
+
+const addBudgetGroup = groupName => ({
+  type: ADD_BUDGET_GROUP,
+  groupName,
+});
+
+const addBudgetEntry = entry => ({
+  type: ADD_BUDGET_ENTRY,
+  entry,
+});
+
+
+// ------------------------------------
+// Async Action Creators
+// ------------------------------------
+
+const doLoadBudgetGroups = () => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  setTimeout(() => {
+    const result = { groups: getState().budget.budgetGroups };
+    dispatch(isLoading(false));
+    return result;
+  }, 1000);
+};
+
+const doLoadBudget = () => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  setTimeout(() => {
+    const result = { budget: getState().budget.budget };
+    dispatch(isLoading(false));
+    return result;
+  }, 1000);
+};
+
+export const doAddBudgetGroup = groupName => (
+  addBudgetGroup(groupName)
+);
+
+export const doAddBudgetEntry = entry => (
+  addBudgetEntry(entry)
+);
+
+
+// ------------------------------------
+// Actions
+// ------------------------------------
+
+export const actions = {
+  doLoadBudgetGroups,
+  doLoadBudget,
+  doAddBudgetGroup,
+  doAddBudgetEntry,
+};
+
+
+// ------------------------------------
+// Action Handlers
+// ------------------------------------
+const ACTION_HANDLERS = {
+  [BUDGET_IS_LOADING]: (state, action) => (
+    { ...state, isLoading: action.status }
+  ),
+  [ADD_BUDGET_GROUP]: (state, action) => {
+    const budgetGroups = [...state.budgetGroups, action.groupName];
+    return { ...state, budgetGroups };
+  },
+  [ADD_BUDGET_ENTRY]: (state, action) => {
+    const budget = [...state.budget, action.entry];
+    return { ...state, budget };
+  },
+};
+
+// ------------------------------------
+// Reducer
+// ------------------------------------
+const initialState = {
+  isLoading: false,
+  budgetGroups: [
+    'Wohnen',
+    'Haushalt',
+    'Gesundheit & Körper',
+    'Freizeit',
+    'Reisen',
+    'Versicherungen',
+    'Steuern',
+    'Sparen & Anlegen',
+  ],
+  budget: [
+    {
+      id: 1,
+      group: 'Haushalt',
+      category: 'Unterhalt',
+      monthly: 100,
+      yearly: null,
+    },
+    {
+      id: 2,
+      group: 'Haushalt',
+      category: 'Essen & Getränke',
+      monthly: 250,
+      yearly: null,
+    },
+    {
+      id: 3,
+      group: 'Mobilität',
+      category: 'öffentlicher Verkehr',
+      monthly: null,
+      yearly: 2600,
+    },
+  ],
+};
+
+export default function reducer(state = initialState, action) {
+  const handler = ACTION_HANDLERS[action.type];
+  return handler ? handler(state, action) : state;
+}
