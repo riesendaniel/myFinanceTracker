@@ -3,17 +3,14 @@ import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import './index.css';
 import App from './App';
-import thunk from 'redux-thunk';
 import {Provider} from 'react-redux';
-import rootReducer from './redux/rootReducer';
-import {applyMiddleware, compose, createStore} from 'redux';
+import createStore from './redux/store'
 
 const initialState = {};
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+this.store = createStore(initialState)
 
 ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={this.store}>
         <App/>
     </Provider>,
     document.getElementById('root')
