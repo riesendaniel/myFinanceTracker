@@ -3,7 +3,15 @@ import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import './index.css';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import {Provider} from 'react-redux';
+import createStore from './redux/store'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+const initialState = {};
+this.store = createStore(initialState)
+
+ReactDOM.render(
+    <Provider store={this.store}>
+        <App/>
+    </Provider>,
+    document.getElementById('root')
+);
