@@ -8,15 +8,12 @@ class OutgoingComponent extends Component {
         outgoings: PropTypes.array.isRequired,
     };
 
-    componentDidMount() {
-    }
-
     render() {
         return (
-            <Paper className="container">
+            <Paper>
                 <br /><br /><br />
                 <h2>Ausgaben</h2>
-                <Table className="tab">
+                <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Titel</TableCell>

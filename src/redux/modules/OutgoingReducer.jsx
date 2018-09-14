@@ -3,7 +3,7 @@
 // ------------------------------------
 
 export const getOutgoings = state => {
-    return state.reducerOne.outgoings;
+    return state.outgoingReducer.outgoings;
 };
 
 // ------------------------------------
