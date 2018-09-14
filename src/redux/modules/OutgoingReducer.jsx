@@ -2,7 +2,7 @@
 // Selectors
 // ------------------------------------
 
-export const getOutgoings = state => state.reducerOne.outgoings;
+export const getOutgoings = state => state.outgoings.outgoings;
 
 // ------------------------------------
 // Async Action Creators
