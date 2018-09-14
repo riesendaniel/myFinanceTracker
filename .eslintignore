@@ -28,5 +28,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # react files
-src/registerServiceWorker.js
 src/index.js
