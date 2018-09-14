@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Budget from './container/BudgetContainer';
-import BudgetEntryEditor from './container/BudgetEntryEditorContainer';
+import BudgetItemForm from './container/BudgetItemFormContainer';
 import Header from './Header';
 import Menu from './Menu';
 import OutgoingContainer from './container/OutgoingContainer';
@@ -16,7 +16,7 @@ const App = () => (
         </header>
         <main>
           <Switch>
-            <Route path="/budget/edit" component={BudgetEntryEditor} />
+            <Route path="/budget/edit" component={BudgetItemForm} />
             <Route path="/budget" component={Budget} />
             <Route path="/outgoings" component={OutgoingContainer} />
             <Route path="/" />

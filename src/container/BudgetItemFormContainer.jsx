@@ -2,12 +2,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import {
-  actions, getIsLoading,
+  actions, getIsLoading, getBudgetGroups,
 } from '../redux/modules/BudgetReducer';
-import BudgetEntryEditorComponent from '../components/BudgetEntryEditorComponent';
+import BudgetItemFormComponent from '../components/BudgetItemFormComponent';
 
 const mapStateToProps = state => ({
   isLoading: getIsLoading(state),
+  budgetGroups: getBudgetGroups(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -15,4 +16,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetEntryEditorComponent);
+)(BudgetItemFormComponent);

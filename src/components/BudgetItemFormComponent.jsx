@@ -2,30 +2,42 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import {
-  FormControlLabel,
+  Button,
+  FormControl, FormControlLabel,
+  IconButton,
+  Input, InputLabel, InputAdornment,
+  MenuItem,
   Paper,
+  Select,
   Switch,
   TextField,
   Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  Button,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
-class BudgetEntryEditor extends Component {
+class BudgetItemForm extends Component {
   constructor() {
     super();
     this.state = {
+      open: false,
+      groupSelected: '',
       redirect: false,
     };
     this.budgetEntry = {};
   }
 
+  handleClick() {
+    this.setState({ open: true });
+  }
+
+  handleChange(event) {
+    this.budgetEntry.group = event.target.value;
+    this.setState({ groupSelected: event.target.value });
+  }
+
   async handleSubmit() {
-    const { location, doAddBudgetEntry } = this.props;
-    this.budgetEntry.group = location.query.group;
+    const { doAddBudgetEntry } = this.props;
     if (this.budgetEntry.monthlyPeriod === '1') {
       this.budgetEntry.monthly = this.budgetEntry.amount;
     } else {
@@ -41,15 +53,41 @@ class BudgetEntryEditor extends Component {
   }
 
   render() {
-    const { redirect } = this.state;
+    const {
+      open,
+      groupSelected,
+      redirect,
+    } = this.state;
+    const {
+      budgetGroups,
+    } = this.props;
     if (redirect) {
       return <Redirect to="/budget" />;
     }
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
+        { open && <BudgetGroupForm open={open} /> }
         <form onSubmit={this.handleSubmit.bind(this)}>
-          {/* TODO: Auswahlliste für Gruppen (und Hinzufügen neuer Gruppen) */}
+          <FormControl>
+            <InputLabel htmlFor="group-select">Gruppe</InputLabel>
+            <Select
+              value={groupSelected}
+              onChange={this.handleChange.bind(this)}
+              inputProps={{
+                name: 'group',
+                id: 'group-select',
+              }}
+            >
+              { budgetGroups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>) }
+            </Select>
+          </FormControl>
+          <IconButton
+            aria-label="Gruppe hinzufügen"
+            onClick={this.handleClick.bind(this)}
+          >
+            <AddIcon />
+          </IconButton>
           <FormControl>
             <TextField
               id="category"
@@ -92,9 +130,9 @@ class BudgetEntryEditor extends Component {
   }
 }
 
-BudgetEntryEditor.propTypes = {
+BudgetItemForm.propTypes = {
   doAddBudgetEntry: PropTypes.func.isRequired,
-  location: PropTypes.shape({ query: PropTypes.object.isRequired }).isRequired,
+  budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default BudgetEntryEditor;
+export default BudgetItemForm;

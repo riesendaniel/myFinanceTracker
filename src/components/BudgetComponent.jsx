@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Card, CardContent,
-  Table, TableCell, TableFooter, TableRow,
+  BottomNavigation, BottomNavigationAction,
+  Paper,
+  Typography,
 } from '@material-ui/core';
-import BudgetGroup from './BudgetGroupComponent';
-import BudgetGroupCreator from './BudgetGroupCreatorComponent';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Loading from './LoadingComponent';
+import BudgetList from './BudgetListComponent';
+import BudgetSummary from './BudgetSummaryComponent';
 
 class Budget extends Component {
   async componentDidMount() {
@@ -13,51 +16,46 @@ class Budget extends Component {
     await doLoadBudgetGroups();
   }
 
+  handleChange(event, value) {
+    const paths = {
+      addBudgetEntry: '/budget/edit',
+    };
+    const { history } = this.props;
+    history.push(paths[value]);
+  }
+
   render() {
     const {
       isLoading,
       budget, budgetGroups,
-      doAddBudgetGroup,
     } = this.props;
+
     return (
-      <div className="Budget">
-        {/* TODO: Hinzufügen neuer Gruppen entfernen */}
-        <BudgetGroupCreator doAddBudgetGroup={doAddBudgetGroup} />
-        <h2>Budget</h2>
-        { isLoading ? <div>Wird geladen...</div> : (
+      <Paper>
+        <Typography variant="headline" component="h2">Budget</Typography>
+        { isLoading ? <Loading /> : (
           <div>
             { budgetGroups.map((group) => {
               const list = budget.filter(item => item.group === group);
-              return list.length !== 0 && <BudgetGroup key={group} group={group} budget={list} />;
+              return list.length !== 0 && <BudgetList key={group} title={group} list={list} />;
             }) }
-            <Card>
-              <CardContent>
-                <Table>
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell>Total</TableCell>
-                      <TableCell numeric>
-                        { budget.reduce((total, item) => total + item.monthly, 0) }
-                      </TableCell>
-                      <TableCell numeric>
-                        { budget.reduce((total, item) => total + item.yearly, 0) }
-                      </TableCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </CardContent>
-            </Card>
+            <BudgetSummary budget={budget} />
+            <BottomNavigation
+              showLabels
+              onChange={this.handleChange.bind(this)}
+            >
+              <BottomNavigationAction value="addBudgetEntry" label="Eintrag hinzufügen" icon={<AddCircleIcon />} />
+            </BottomNavigation>
           </div>
         ) }
-      </div>
+      </Paper>
     );
   }
 }
 
 Budget.propTypes = {
   doLoadBudgetGroups: PropTypes.func.isRequired,
-  doAddBudgetGroup: PropTypes.func.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
