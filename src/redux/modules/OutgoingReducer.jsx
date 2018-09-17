@@ -3,7 +3,7 @@
 // ------------------------------------
 
 export const getOutgoings = state => {
-    return state.outgoingReducer.outgoings;
+    return state.outgoings.outgoings;
 };
 
 // ------------------------------------
@@ -16,6 +16,9 @@ const doLoadOutgoings = () => (dispatch, getState) => {
     };
 };
 
+export const doAddOutgoing = entry => (
+    addOutgoing(entry)
+);
 
 // ------------------------------------
 // Actions
@@ -23,6 +26,7 @@ const doLoadOutgoings = () => (dispatch, getState) => {
 
 export const actions = {
     doLoadOutgoings,
+    doAddOutgoing
 };
 
 // ------------------------------------
@@ -33,10 +37,10 @@ const ADD_OUTGOING = 'ADD_OUTGOING';
 // ------------------------------------
 // Action Creators
 // ------------------------------------
-/*const addOutgoing = payload => ({
+const addOutgoing = payload => ({
     type: ADD_OUTGOING,
     payload
-});*/
+});
 
 // ------------------------------------
 // Action Handlers
