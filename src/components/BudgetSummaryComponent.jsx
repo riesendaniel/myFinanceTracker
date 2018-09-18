@@ -5,7 +5,7 @@ import {
   Table, TableCell, TableFooter, TableRow,
 } from '@material-ui/core';
 
-const Budget = (props) => {
+const BudgetSummaryComponent = (props) => {
   const { budget } = props;
   return (
     <Card>
@@ -29,8 +29,8 @@ const Budget = (props) => {
   );
 };
 
-Budget.propTypes = {
+BudgetSummaryComponent.propTypes = {
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default Budget;
+export default BudgetSummaryComponent;

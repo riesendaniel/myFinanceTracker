@@ -1,8 +1,8 @@
 import React from 'react';
 import { CircularProgress } from '@material-ui/core';
 
-const Loading = () => (
+const LoadingComponent = () => (
   <CircularProgress />
 );
 
-export default Loading;
+export default LoadingComponent;

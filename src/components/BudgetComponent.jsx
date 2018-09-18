@@ -10,7 +10,7 @@ import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
 
-class Budget extends Component {
+class BudgetComponent extends Component {
   async componentDidMount() {
     const { doLoadBudgetGroups } = this.props;
     await doLoadBudgetGroups();
@@ -53,7 +53,7 @@ class Budget extends Component {
   }
 }
 
-Budget.propTypes = {
+BudgetComponent.propTypes = {
   doLoadBudgetGroups: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   isLoading: PropTypes.bool.isRequired,
@@ -61,4 +61,4 @@ Budget.propTypes = {
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default Budget;
+export default BudgetComponent;

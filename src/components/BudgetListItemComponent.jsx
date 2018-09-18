@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
-const BudgetListItem = (props) => {
+const BudgetListItemComponent = (props) => {
   const { item } = props;
   return (
     <TableRow key={item.id}>
@@ -22,7 +22,7 @@ const BudgetListItem = (props) => {
   );
 };
 
-BudgetListItem.propTypes = {
+BudgetListItemComponent.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
@@ -31,4 +31,4 @@ BudgetListItem.propTypes = {
   }).isRequired,
 };
 
-export default BudgetListItem;
+export default BudgetListItemComponent;

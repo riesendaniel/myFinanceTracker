@@ -16,7 +16,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
-class BudgetItemForm extends Component {
+class BudgetItemFormComponent extends Component {
   constructor() {
     super();
     this.state = {
@@ -130,9 +130,9 @@ class BudgetItemForm extends Component {
   }
 }
 
-BudgetItemForm.propTypes = {
+BudgetItemFormComponent.propTypes = {
   doAddBudgetEntry: PropTypes.func.isRequired,
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default BudgetItemForm;
+export default BudgetItemFormComponent;

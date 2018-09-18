@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@material-ui/core';
 
-class BudgetGroupCreator extends Component {
+class BudgetGroupFormComponent extends Component {
   constructor() {
     super();
     this.state = { open: false };
@@ -56,9 +56,9 @@ class BudgetGroupCreator extends Component {
   }
 }
 
-BudgetGroupCreator.propTypes = {
+BudgetGroupFormComponent.propTypes = {
   doAddBudgetGroup: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
 
-export default BudgetGroupCreator;
+export default BudgetGroupFormComponent;

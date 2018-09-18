@@ -7,7 +7,7 @@ import {
 import BudgetListItem from './BudgetListItemComponent';
 import BudgetListSummary from './BudgetListSummaryComponent';
 
-const BudgetList = (props) => {
+const BudgetListComponent = (props) => {
   const { list, title } = props;
   return (
     <Card>
@@ -44,13 +44,13 @@ const BudgetList = (props) => {
   );
 };
 
-BudgetList.propTypes = {
+BudgetListComponent.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
   title: PropTypes.string,
 };
 
-BudgetList.defaultProps = {
+BudgetListComponent.defaultProps = {
   title: '',
 };
 
-export default BudgetList;
+export default BudgetListComponent;

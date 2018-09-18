@@ -4,7 +4,7 @@ import {
   TableCell, TableRow,
 } from '@material-ui/core';
 
-const BudgetListSummary = (props) => {
+const BudgetListSummaryComponent = (props) => {
   const { list } = props;
   return (
     <TableRow>
@@ -20,11 +20,11 @@ const BudgetListSummary = (props) => {
   );
 };
 
-BudgetListSummary.propTypes = {
+BudgetListSummaryComponent.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({
     monthly: PropTypes.number,
     yearly: PropTypes.string,
   })).isRequired,
 };
 
-export default BudgetListSummary;
+export default BudgetListSummaryComponent;
