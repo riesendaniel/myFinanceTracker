@@ -59,14 +59,14 @@ const initialState = {
         {
             "id": "1",
             "date": "17.08.2018",
-            "categorie": "Tanken",
+            "category": "Tanken",
             "title": "Benzin für mein Auto",
             "amount": "100.00"
         },
         {
             "id": "2",
             "date": "20.08.2018",
-            "categorie": "Essen",
+            "category": "Essen",
             "title": "Mitagessen",
             "amount": "9.50"
         }

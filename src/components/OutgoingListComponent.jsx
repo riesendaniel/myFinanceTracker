@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
 import NewOutgoingComponent from "./NewOutgoingComponent";
+import OutgoingItemComponent from "./OutgoingItemComponent";
 
-class OutgoingComponent extends Component {
+class OutgoingListComponent extends Component {
 
     static propTypes = {
         outgoings: PropTypes.array.isRequired,
@@ -27,12 +28,7 @@ class OutgoingComponent extends Component {
                     <TableBody>
                         {this.props.outgoings.map(row => {
                             return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.date}</TableCell>
-                                    <TableCell>{row.categorie}</TableCell>
-                                    <TableCell>{row.amount}</TableCell>
-                                </TableRow>
+                                <OutgoingItemComponent outgoing={row}/>
                             );
                         })}
                     </TableBody>
@@ -41,15 +37,26 @@ class OutgoingComponent extends Component {
         );
     }
 
-    onAddOutgoing = (outgoing) => {
+    onAddOutgoing = (amount, category, date, title) => {
+
         this.props.doAddOutgoing({
-            "id": "4",
-            "date": "01.09.2018",
-            "categorie": "Juhui",
-            "title": outgoing,
-            "amount": "99.99"
+            "id": this.uuid(),
+            "date": date,
+            "categorie": category,
+            "title": title,
+            "amount": amount
         });
     };
+
+    //TODO  Nur temporär bis Firebase angebunden ist
+    uuid() {
+        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() + this.s4();
+    }
+
+    //TODO  Nur temporär bis Firebase angebunden ist
+    s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
 }
 
-export default OutgoingComponent;
+export default OutgoingListComponent;

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import AddIcon from '@material-ui/icons/Add';
+import {FormControl, TextField, IconButton, InputAdornment, Input, InputLabel} from '@material-ui/core';
 
 class NewOutgoingComponent extends Component {
 
@@ -8,30 +10,61 @@ class NewOutgoingComponent extends Component {
     };
 
     state = {
-        newOutgoing: ''
+        outgoingTitle: '',
+        outgoingAmount: '',
+        outgoingCategory: '',
+        outgoingDate: ''
     };
 
     render() {
         return (
-            <form className="new-outgoing" onSubmit={this.addOutgoing}>
-                <input id="outgoing-text" name="outgoingName" type="text" placeholder="Neue Ausgabe erfassen"
-                       autoComplete="on"
-                       value={this.state.newOutgoing}
-                       onChange={this.onChange}
+            <FormControl onSubmit={this.addOutgoing}>
+                <TextField
+                    id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
+                    autoComplete="on"
+                    value={this.state.outgoingTitle}
+                    onChange={(event) => { this.setState({outgoingTitle: event.target.value })}}
                 />
-                <button id="add-button" className="add-button">+</button>
-            </form>
-        );
-    }
+                <FormControl>
+                    <InputLabel htmlFor="amount">Betrag</InputLabel>
+                    <Input
+                        id="amount"
+                        type="number"
+                        value={this.state.outgoingAmount}
+                        onChange={(event) => { this.setState({outgoingAmount: event.target.value}) }}
+                        startAdornment={
+                            <InputAdornment position="start">CHF</InputAdornment>
+                        }
+                    />
+                </FormControl>
+                <TextField
+                    id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Kategorie eingeben"
+                    autoComplete="on"
+                    value={this.state.outgoingCategory}
+                    onChange={(event) => { this.setState({outgoingCategory: event.target.value })}}
+                />
+                <TextField
+                    id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Datum auswählen"
+                    autoComplete="on"
+                    type="date"
+                    value={this.state.outgoingDate}
+                    onChange={(event) => { this.setState({outgoingDate: event.target.value })}}
+                />
+                <IconButton
+                    aria-label="add outgoing"
+                    onClick={this.addOutgoing}
+                >
+                    <AddIcon />
+                </IconButton>
 
-    onChange = (e) => {
-        this.setState({newOutgoing: e.target.value});
+            </FormControl>
+        );
     }
 
     addOutgoing = (e) => {
         e.preventDefault();
-        this.props.onAddOutgoing(this.state.newOutgoing);
-        this.setState({newOutgoing: ''});
+        this.props.onAddOutgoing(this.state.outgoingAmount, this.state.outgoingCategory, this.state.outgoingDate, this.state.outgoingTitle);
+        this.setState({outgoingAmount: '', outgoingCategory: '', outgoingDate: '', outgoingTitle: ''});
     }
 }
 
