@@ -39,13 +39,18 @@ class BudgetItemFormComponent extends Component {
   async handleSubmit() {
     const { doAddBudgetEntry } = this.props;
     if (this.budgetEntry.monthlyPeriod === '1') {
-      this.budgetEntry.monthly = this.budgetEntry.amount;
+      this.budgetEntry.period = 'monthly';
+      this.budgetEntry.monthly = Number(this.budgetEntry.amount);
+      this.budgetEntry.yearly = this.budgetEntry.monthly * 12;
     } else {
-      this.budgetEntry.yearly = this.budgetEntry.amount;
+      this.budgetEntry.period = 'yearly';
+      this.budgetEntry.yearly = Number(this.budgetEntry.amount);
+      this.budgetEntry.monthly = this.budgetEntry.yearly / 12;
     }
     await doAddBudgetEntry({
       group: this.budgetEntry.group,
       category: this.budgetEntry.category,
+      period: this.budgetEntry.period,
       monthly: this.budgetEntry.monthly,
       yearly: this.budgetEntry.yearly,
     });

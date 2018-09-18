@@ -10,10 +10,10 @@ const BudgetListSummaryComponent = (props) => {
     <TableRow>
       <TableCell>Total</TableCell>
       <TableCell numeric>
-        { list.reduce((total, item) => total + item.monthly, 0) }
+        { Math.round(list.reduce((total, item) => total + item.monthly, 0)) }
       </TableCell>
       <TableCell numeric>
-        { list.reduce((total, item) => total + item.yearly, 0) }
+        { Math.round(list.reduce((total, item) => total + item.yearly, 0)) }
       </TableCell>
       <TableCell />
     </TableRow>
@@ -23,7 +23,7 @@ const BudgetListSummaryComponent = (props) => {
 BudgetListSummaryComponent.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({
     monthly: PropTypes.number,
-    yearly: PropTypes.string,
+    yearly: PropTypes.number,
   })).isRequired,
 };
 
