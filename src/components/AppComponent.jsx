@@ -2,28 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import Budget from './container/BudgetContainer';
-import BudgetItemForm from './container/BudgetItemFormContainer';
-import Header from './Header';
-import Menu from './Menu';
-import OutgoingContainer from './container/OutgoingContainer';
+import Budget from '../container/BudgetContainer';
+import BudgetItemForm from '../container/BudgetItemFormContainer';
+import Header from '../container/HeaderContainer';
+import Menu from './MenuComponent';
+import OutgoingContainer from '../container/OutgoingContainer';
+
+const menuWidth = '300px';
 
 const styles = theme => ({
   toolbarPlaceholder: theme.mixins.toolbar,
+  main: {
+    marginRight: menuWidth,
+  },
 });
 
 const App = (props) => {
-  const { classes } = props;
+  const { classes, menuState } = props;
   return (
     <div className="App">
       <Router>
         <div>
           <header>
             <Header />
-            <Menu />
+            { menuState === 'open' && <Menu width={menuWidth} /> }
           </header>
           <div className={classes.toolbarPlaceholder} />
-          <main>
+          <main className={menuState === 'open' ? classes.main : undefined}>
             <Switch>
               <Route path="/budget/edit" component={BudgetItemForm} />
               <Route path="/budget" component={Budget} />
@@ -39,6 +44,7 @@ const App = (props) => {
 
 App.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  menuState: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(App);
