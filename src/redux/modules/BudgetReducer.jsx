@@ -17,6 +17,7 @@ export const getBudget = state => state.budget.budget;
 const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
 const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
 const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
+const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 
 
 // ------------------------------------
@@ -35,6 +36,11 @@ const addBudgetGroup = groupName => ({
 const addBudgetEntry = entry => ({
   type: ADD_BUDGET_ENTRY,
   entry,
+});
+
+const deleteBudgetEntry = id => ({
+  type: DELETE_BUDGET_ENTRY,
+  id,
 });
 
 
@@ -68,6 +74,10 @@ export const doAddBudgetEntry = entry => (
   addBudgetEntry(entry)
 );
 
+export const doDeleteBudgetEntry = id => (
+  deleteBudgetEntry(id)
+);
+
 
 // ------------------------------------
 // Actions
@@ -78,6 +88,7 @@ export const actions = {
   doLoadBudget,
   doAddBudgetGroup,
   doAddBudgetEntry,
+  doDeleteBudgetEntry,
 };
 
 
@@ -94,6 +105,10 @@ const ACTION_HANDLERS = {
   },
   [ADD_BUDGET_ENTRY]: (state, action) => {
     const budget = [...state.budget, action.entry];
+    return { ...state, budget };
+  },
+  [DELETE_BUDGET_ENTRY]: (state, action) => {
+    const budget = state.budget.filter(entry => entry.id !== action.id);
     return { ...state, budget };
   },
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   IconButton,
@@ -7,31 +7,39 @@ import {
 } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
-const BudgetListItemComponent = (props) => {
-  const { item } = props;
-  return (
-    <TableRow key={item.id}>
-      <TableCell component="th">{item.category}</TableCell>
-      <TableCell numeric>
-        <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
-          {Math.round(item.monthly)}
-        </Typography>
-      </TableCell>
-      <TableCell numeric>
-        <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
-          {Math.round(item.yearly)}
-        </Typography>
-      </TableCell>
-      <TableCell>
-        <IconButton>
-          <DeleteOutlineIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  );
-};
+class BudgetListItemComponent extends Component {
+  handleDelete() {
+    const { doDeleteBudgetEntry, item } = this.props;
+    doDeleteBudgetEntry(item.id);
+  }
+
+  render() {
+    const { item } = this.props;
+    return (
+      <TableRow key={item.id}>
+        <TableCell component="th">{item.category}</TableCell>
+        <TableCell numeric>
+          <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
+            {Math.round(item.monthly)}
+          </Typography>
+        </TableCell>
+        <TableCell numeric>
+          <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
+            {Math.round(item.yearly)}
+          </Typography>
+        </TableCell>
+        <TableCell>
+          <IconButton onClick={this.handleDelete.bind(this)}>
+            <DeleteOutlineIcon />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    );
+  }
+}
 
 BudgetListItemComponent.propTypes = {
+  doDeleteBudgetEntry: PropTypes.func.isRequired,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
