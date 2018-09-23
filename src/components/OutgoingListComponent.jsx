@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
+import Loading from './LoadingComponent';
 import NewOutgoingComponent from "./NewOutgoingComponent";
 import OutgoingItemComponent from "./OutgoingItemComponent";
 
 class OutgoingListComponent extends Component {
 
     static propTypes = {
+        isLoading: PropTypes.bool.isRequired,
         outgoings: PropTypes.array.isRequired,
     };
+
+    async componentDidMount() {
+        const { doLoadOutgoings } = this.props;
+        await doLoadOutgoings();
+    }
 
     render() {
         return (
@@ -16,23 +23,25 @@ class OutgoingListComponent extends Component {
                 <br/><br/><br/>
                 <h2>Ausgaben</h2>
                 <NewOutgoingComponent onAddOutgoing={this.onAddOutgoing}/>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Titel</TableCell>
-                            <TableCell>Datum</TableCell>
-                            <TableCell>Kategorie</TableCell>
-                            <TableCell>Betrag</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.props.outgoings.map(row => {
-                            return (
-                                <OutgoingItemComponent outgoing={row}/>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                {this.props.isLoading ? <Loading/> : (
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Titel</TableCell>
+                                <TableCell>Datum</TableCell>
+                                <TableCell>Kategorie</TableCell>
+                                <TableCell>Betrag</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {this.props.outgoings.map(row => {
+                                return (
+                                    <OutgoingItemComponent outgoing={row}/>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                )}
             </Paper>
         );
     }

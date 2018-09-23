@@ -2,18 +2,22 @@
 // Selectors
 // ------------------------------------
 
-export const getOutgoings = state => {
-    return state.outgoings.outgoings;
-};
+export const getOutgoings = state => state.outgoings.outgoings;
+
+export const getIsLoading = state => state.outgoings.isLoading;
 
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
 
 const doLoadOutgoings = () => (dispatch, getState) => {
-    return {
-        outgoings: getState.outgoings
-    };
+    dispatch(isLoading(true));
+    setTimeout(() => {
+
+        const result = { outgoings: getState().outgoings };
+        dispatch(isLoading(false));
+        return result;
+    }, 1000);
 };
 
 export const doAddOutgoing = entry => (
@@ -34,6 +38,8 @@ export const actions = {
 // ------------------------------------
 const ADD_OUTGOING = 'ADD_OUTGOING';
 
+const OUTGOING_IS_LOADING = 'OUTGOING_IS_LOADING';
+
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -42,19 +48,28 @@ const addOutgoing = payload => ({
     payload
 });
 
+const isLoading = status => ({
+    type: OUTGOING_IS_LOADING,
+    status,
+});
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
     [ADD_OUTGOING]: (state, action) => {
         return {...state, outgoings: [...state.outgoings, action.payload]};
-    }
+    },
+    [OUTGOING_IS_LOADING]: (state, action) => (
+        {...state, isLoading: action.status}
+    )
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
+    isLoading: false,
     outgoings: [
         {
             "id": "1",

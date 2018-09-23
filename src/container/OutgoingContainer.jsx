@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actions, getOutgoings} from '../redux/modules/OutgoingReducer';
+import { actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
 import OutgoingListComponent from '../components/OutgoingListComponent';
 
 const mapStateToProps = state => ({
+    isLoading: getIsLoading(state),
     outgoings: getOutgoings(state)
 });
 
