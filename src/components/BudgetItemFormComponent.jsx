@@ -20,6 +20,7 @@ class BudgetItemFormComponent extends Component {
   state = {
     redirect: false,
     budgetEntry: {
+      id: null,
       group: '',
       category: '',
       period: 'monthly',
@@ -27,8 +28,24 @@ class BudgetItemFormComponent extends Component {
     },
   };
 
+  componentDidMount = () => {
+    const { location } = this.props;
+    if (location.state && location.state.item) {
+      const { item } = location.state;
+      this.setState({
+        budgetEntry: {
+          id: item.id,
+          group: item.group,
+          category: item.category,
+          period: item.period,
+          amount: item.period === 'monthly' ? item.monthly : item.yearly,
+        },
+      });
+    }
+  }
+
   handleSubmit = async () => {
-    const { doAddBudgetEntry } = this.props;
+    const { doAddBudgetEntry, doUpdateBudgetEntry } = this.props;
     const { budgetEntry } = this.state;
     if (budgetEntry.period === 'monthly') {
       budgetEntry.monthly = Number(budgetEntry.amount);
@@ -37,13 +54,11 @@ class BudgetItemFormComponent extends Component {
       budgetEntry.yearly = Number(budgetEntry.amount);
       budgetEntry.monthly = budgetEntry.yearly / 12;
     }
-    await doAddBudgetEntry({
-      group: budgetEntry.group,
-      category: budgetEntry.category,
-      period: budgetEntry.period,
-      monthly: budgetEntry.monthly,
-      yearly: budgetEntry.yearly,
-    });
+    if (budgetEntry.id) {
+      await doUpdateBudgetEntry({ ...budgetEntry });
+    } else {
+      await doAddBudgetEntry({ ...budgetEntry });
+    }
     this.setState({ redirect: true });
   }
 
@@ -141,6 +156,7 @@ class BudgetItemFormComponent extends Component {
 }
 
 BudgetItemFormComponent.propTypes = {
+  location: PropTypes.shape({ state: PropTypes.object }).isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   budgetGroupFormIsOpen: PropTypes.func.isRequired,

@@ -20,6 +20,7 @@ const RECEIVE_BUDGET_GROUPS = 'RECEIVE_BUDGET_GROUPS';
 const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
 const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
 const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
+const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
 const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 
 
@@ -53,6 +54,11 @@ const addBudgetGroup = groupName => ({
 
 const addBudgetEntry = entry => ({
   type: ADD_BUDGET_ENTRY,
+  entry,
+});
+
+const updateBudgetEntry = entry => ({
+  type: UPDATE_BUDGET_ENTRY,
   entry,
 });
 
@@ -92,6 +98,10 @@ export const doAddBudgetEntry = entry => (
   addBudgetEntry(entry)
 );
 
+export const doUpdateBudgetEntry = entry => (
+  updateBudgetEntry(entry)
+);
+
 export const doDeleteBudgetEntry = id => (
   deleteBudgetEntry(id)
 );
@@ -106,6 +116,7 @@ export const actions = {
   doLoadBudget,
   doAddBudgetGroup,
   doAddBudgetEntry,
+  doUpdateBudgetEntry,
   doDeleteBudgetEntry,
   budgetGroupFormIsOpen,
 };
@@ -135,6 +146,10 @@ const ACTION_HANDLERS = {
   },
   [ADD_BUDGET_ENTRY]: (state, action) => {
     const budget = [...state.budget, action.entry];
+    return { ...state, budget };
+  },
+  [UPDATE_BUDGET_ENTRY]: (state, action) => {
+    const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
     return { ...state, budget };
   },
   [DELETE_BUDGET_ENTRY]: (state, action) => {

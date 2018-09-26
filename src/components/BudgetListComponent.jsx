@@ -24,7 +24,7 @@ const BudgetListComponent = (props) => {
                 <TableCell>Kategorie</TableCell>
                 <TableCell numeric>monatlich</TableCell>
                 <TableCell numeric>jährlich</TableCell>
-                <TableCell>Entfernen</TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
