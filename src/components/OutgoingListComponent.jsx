@@ -36,7 +36,7 @@ class OutgoingListComponent extends Component {
                         <TableBody>
                             {this.props.outgoings.map(row => {
                                 return (
-                                    <OutgoingItemComponent outgoing={row}/>
+                                    <OutgoingItemComponent key={row.id} outgoing={row}/>
                                 );
                             })}
                         </TableBody>

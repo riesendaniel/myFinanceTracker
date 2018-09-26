@@ -44,7 +44,7 @@ class NewOutgoingComponent extends Component {
                     onChange={(event) => { this.setState({outgoingCategory: event.target.value })}}
                 />
                 <TextField
-                    id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Datum auswählen"
+                    id="outgoing-categorie" name="outgoingCategorie" placeholder="Datum auswählen"
                     autoComplete="on"
                     type="date"
                     value={this.state.outgoingDate}
