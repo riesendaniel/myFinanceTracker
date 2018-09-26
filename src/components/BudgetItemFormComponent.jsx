@@ -27,7 +27,7 @@ class BudgetItemFormComponent extends Component {
     },
   };
 
-  async handleSubmit() {
+  handleSubmit = async () => {
     const { doAddBudgetEntry } = this.props;
     const { budgetEntry } = this.state;
     if (budgetEntry.period === 'monthly') {
@@ -47,7 +47,7 @@ class BudgetItemFormComponent extends Component {
     this.setState({ redirect: true });
   }
 
-  render() {
+  render = () => {
     const {
       redirect,
       budgetEntry,

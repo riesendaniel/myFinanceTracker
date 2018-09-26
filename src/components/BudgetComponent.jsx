@@ -11,7 +11,7 @@ import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
 
 class BudgetComponent extends Component {
-  async componentDidMount() {
+  componentDidMount = async () => {
     const {
       doLoadBudgetGroups, doLoadBudget,
     } = this.props;
@@ -27,7 +27,7 @@ class BudgetComponent extends Component {
     history.push(paths[value]);
   }
 
-  render() {
+  render = () => {
     const {
       isLoading,
       budget, budgetGroups,

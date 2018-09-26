@@ -13,7 +13,7 @@ class BudgetListItemComponent extends Component {
     doDeleteBudgetEntry(item.id);
   }
 
-  render() {
+  render = () => {
     const { item } = this.props;
     return (
       <TableRow key={item.id}>

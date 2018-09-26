@@ -11,7 +11,7 @@ class BudgetGroupFormComponent extends Component {
     groupName: '',
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     const {
       budgetGroupFormIsOpen,
       doAddBudgetGroup,
@@ -26,7 +26,7 @@ class BudgetGroupFormComponent extends Component {
     this.budgetGroupFormIsOpen(false);
   }
 
-  render() {
+  render = () => {
     const {
       groupName,
     } = this.state;
