@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actions, getOutgoings } from '../redux/modules/OutgoingReducer';
-import OutgoingComponent from '../components/OutgoingComponent';
+import {
+  actions,
+} from '../redux/modules/BudgetReducer';
+import BudgetListItemComponent from '../components/BudgetListItemComponent';
 
-const mapStateToProps = state => ({
-  outgoings: getOutgoings(state),
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -13,4 +14,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingComponent);
+)(BudgetListItemComponent);

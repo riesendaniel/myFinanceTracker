@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import outgoingReducer from './modules/OutgoingReducer';
+import budget from './modules/BudgetReducer';
+import outgoings from './modules/OutgoingReducer';
 
 export default combineReducers({
-    outgoingReducer
+  budget,
+  outgoings,
 });

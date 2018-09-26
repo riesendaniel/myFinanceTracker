@@ -1,11 +1,13 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { actions, getOutgoings } from '../redux/modules/OutgoingReducer';
-import OutgoingComponent from '../components/OutgoingComponent';
+import {
+  actions, getIsBudgetGroupFormOpen,
+} from '../redux/modules/BudgetReducer';
+import BudgetGroupFormComponent from '../components/BudgetGroupFormComponent';
 
 const mapStateToProps = state => ({
-  outgoings: getOutgoings(state),
+  open: getIsBudgetGroupFormOpen(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -13,4 +15,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingComponent);
+)(BudgetGroupFormComponent);
