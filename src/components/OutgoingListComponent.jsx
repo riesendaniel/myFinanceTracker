@@ -20,7 +20,6 @@ class OutgoingListComponent extends Component {
     render() {
         return (
             <Paper>
-                <br/><br/><br/>
                 <h2>Ausgaben</h2>
                 <NewOutgoingComponent onAddOutgoing={this.onAddOutgoing}/>
                 {this.props.isLoading ? <Loading/> : (
