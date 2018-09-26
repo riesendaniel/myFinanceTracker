@@ -6,7 +6,7 @@ import {
 } from '../redux/modules/BudgetReducer';
 import BudgetListItemComponent from '../components/BudgetListItemComponent';
 
-const mapStateToProps = state => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
