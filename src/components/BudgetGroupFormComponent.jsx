@@ -7,11 +7,10 @@ import {
 } from '@material-ui/core';
 
 class BudgetGroupFormComponent extends Component {
-  constructor() {
-    super();
-    this.state = { open: false };
-    this.groupName = '';
-  }
+  state = {
+    open: false,
+    groupName: '',
+  };
 
   componentDidMount() {
     const {
@@ -22,21 +21,20 @@ class BudgetGroupFormComponent extends Component {
     this.setState({ open });
   }
 
-  handleClose() {
-    this.setState({ open: false });
-  }
-
   handleSubmit() {
     this.doAddBudgetGroup(this.groupName);
     this.setState({ open: false });
   }
 
   render() {
-    const { open } = this.state;
+    const {
+      open,
+      groupName,
+    } = this.state;
     return (
       <Dialog
         open={open}
-        onClose={this.handleClose.bind(this)}
+        onClose={() => this.setState({ open: false })}
       >
         <DialogContent>
           <TextField
@@ -44,11 +42,12 @@ class BudgetGroupFormComponent extends Component {
             label="Hauptkategorie hinzufügen..."
             placeholder="Hauptkategorie hinzufügen..."
             fullWidth
-            onChange={(event) => { this.groupName = event.target.value; }}
+            value={groupName}
+            onChange={(event) => { this.setState({ groupName: event.target.value }); }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.handleClose.bind(this)} type="reset">Abbrechen</Button>
+          <Button onClick={() => this.setState({ open: false })} type="reset">Abbrechen</Button>
           <Button onClick={this.handleSubmit.bind(this)} type="submit">Hinzufügen</Button>
         </DialogActions>
       </Dialog>
