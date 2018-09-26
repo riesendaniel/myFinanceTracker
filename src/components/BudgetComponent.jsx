@@ -12,8 +12,11 @@ import BudgetSummary from './BudgetSummaryComponent';
 
 class BudgetComponent extends Component {
   async componentDidMount() {
-    const { doLoadBudgetGroups } = this.props;
+    const {
+      doLoadBudgetGroups, doLoadBudget,
+    } = this.props;
     await doLoadBudgetGroups();
+    await doLoadBudget();
   }
 
   handleChange(event, value) {

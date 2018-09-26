@@ -6,8 +6,6 @@ export const getIsLoading = state => state.budget.isLoading;
 
 export const getBudgetGroups = state => state.budget.budgetGroups;
 
-export const getBudgetEntityIds = state => state.budget.budgetEntityIds;
-
 export const getBudget = state => state.budget.budget;
 
 
@@ -15,6 +13,8 @@ export const getBudget = state => state.budget.budget;
 // Action Types
 // ------------------------------------
 const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
+const RECEIVE_BUDGET_GROUPS = 'RECEIVE_BUDGET_GROUPS';
+const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
 const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
 const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
 const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
@@ -26,6 +26,16 @@ const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 const isLoading = status => ({
   type: BUDGET_IS_LOADING,
   status,
+});
+
+const receiveBudgetGroups = budgetGroups => ({
+  type: RECEIVE_BUDGET_GROUPS,
+  budgetGroups,
+});
+
+const receiveBudget = budget => ({
+  type: RECEIVE_BUDGET,
+  budget,
 });
 
 const addBudgetGroup = groupName => ({
@@ -51,18 +61,18 @@ const deleteBudgetEntry = id => ({
 const doLoadBudgetGroups = () => (dispatch, getState) => {
   dispatch(isLoading(true));
   setTimeout(() => {
-    const result = { groups: getState().budget.budgetGroups };
+    const { budgetGroups } = getState().budget;
     dispatch(isLoading(false));
-    return result;
+    return dispatch(receiveBudgetGroups(budgetGroups));
   }, 1000);
 };
 
 const doLoadBudget = () => (dispatch, getState) => {
   dispatch(isLoading(true));
   setTimeout(() => {
-    const result = { budget: getState().budget.budget };
+    const { budget } = getState().budget;
     dispatch(isLoading(false));
-    return result;
+    return dispatch(receiveBudget(budget));
   }, 1000);
 };
 
@@ -99,6 +109,14 @@ const ACTION_HANDLERS = {
   [BUDGET_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
+  [RECEIVE_BUDGET_GROUPS]: (state, action) => {
+    const budgetGroups = [...action.budgetGroups];
+    return { ...state, budgetGroups };
+  },
+  [RECEIVE_BUDGET]: (state, action) => {
+    const budget = [...action.budget];
+    return { ...state, budget };
+  },
   [ADD_BUDGET_GROUP]: (state, action) => {
     const budgetGroups = [...state.budgetGroups, action.groupName];
     return { ...state, budgetGroups };
