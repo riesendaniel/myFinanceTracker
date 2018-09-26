@@ -106,6 +106,7 @@ class BudgetItemFormComponent extends Component {
                     <Switch
                       id="monthly"
                       value={budgetEntry.period}
+                      checked={budgetEntry.period === 'monthly'}
                       onChange={(event) => {
                         this.setState({
                           budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
