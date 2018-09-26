@@ -17,42 +17,33 @@ import AddIcon from '@material-ui/icons/Add';
 import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
 class BudgetItemFormComponent extends Component {
-  constructor() {
-    super();
-    this.state = {
-      open: false,
-      groupSelected: '',
-      redirect: false,
-    };
-    this.budgetEntry = {};
-  }
-
-  handleClick() {
-    this.setState({ open: true });
-  }
-
-  handleChange(event) {
-    this.budgetEntry.group = event.target.value;
-    this.setState({ groupSelected: event.target.value });
-  }
+  state = {
+    open: false,
+    redirect: false,
+    budgetEntry: {
+      group: '',
+      category: '',
+      period: 'monthly',
+      amount: 0,
+    },
+  };
 
   async handleSubmit() {
     const { doAddBudgetEntry } = this.props;
-    if (this.budgetEntry.monthlyPeriod === '1') {
-      this.budgetEntry.period = 'monthly';
-      this.budgetEntry.monthly = Number(this.budgetEntry.amount);
-      this.budgetEntry.yearly = this.budgetEntry.monthly * 12;
+    const { budgetEntry } = this.state;
+    if (budgetEntry.period === 'monthly') {
+      budgetEntry.monthly = Number(budgetEntry.amount);
+      budgetEntry.yearly = budgetEntry.monthly * 12;
     } else {
-      this.budgetEntry.period = 'yearly';
-      this.budgetEntry.yearly = Number(this.budgetEntry.amount);
-      this.budgetEntry.monthly = this.budgetEntry.yearly / 12;
+      budgetEntry.yearly = Number(budgetEntry.amount);
+      budgetEntry.monthly = budgetEntry.yearly / 12;
     }
     await doAddBudgetEntry({
-      group: this.budgetEntry.group,
-      category: this.budgetEntry.category,
-      period: this.budgetEntry.period,
-      monthly: this.budgetEntry.monthly,
-      yearly: this.budgetEntry.yearly,
+      group: budgetEntry.group,
+      category: budgetEntry.category,
+      period: budgetEntry.period,
+      monthly: budgetEntry.monthly,
+      yearly: budgetEntry.yearly,
     });
     this.setState({ redirect: true });
   }
@@ -60,8 +51,8 @@ class BudgetItemFormComponent extends Component {
   render() {
     const {
       open,
-      groupSelected,
       redirect,
+      budgetEntry,
     } = this.state;
     const {
       budgetGroups,
@@ -77,8 +68,10 @@ class BudgetItemFormComponent extends Component {
           <FormControl>
             <InputLabel htmlFor="group-select">Gruppe</InputLabel>
             <Select
-              value={groupSelected}
-              onChange={this.handleChange.bind(this)}
+              value={budgetEntry.group}
+              onChange={(event) => {
+                this.setState({ budgetEntry: { ...budgetEntry, group: event.target.value } });
+              }}
               inputProps={{
                 name: 'group',
                 id: 'group-select',
@@ -89,7 +82,7 @@ class BudgetItemFormComponent extends Component {
           </FormControl>
           <IconButton
             aria-label="Gruppe hinzufügen"
-            onClick={this.handleClick.bind(this)}
+            onClick={() => this.setState({ open: true })}
           >
             <AddIcon />
           </IconButton>
@@ -97,7 +90,10 @@ class BudgetItemFormComponent extends Component {
             <TextField
               id="category"
               label="Bezeichnung"
-              onChange={(event) => { this.budgetEntry.category = event.target.value; }}
+              value={budgetEntry.category}
+              onChange={(event) => {
+                this.setState({ budgetEntry: { ...budgetEntry, category: event.target.value } });
+              }}
             />
           </FormControl>
           <FormControl>
@@ -109,7 +105,12 @@ class BudgetItemFormComponent extends Component {
                   control={(
                     <Switch
                       id="monthly"
-                      onChange={(event) => { this.budgetEntry.monthlyPeriod = event.target.value; }}
+                      value={budgetEntry.period}
+                      onChange={(event) => {
+                        this.setState({
+                          budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                        });
+                      }}
                     />
                   )}
                   label="monatlich"
@@ -122,7 +123,10 @@ class BudgetItemFormComponent extends Component {
             <Input
               id="amount"
               type="number"
-              onChange={(event) => { this.budgetEntry.amount = event.target.value; }}
+              value={budgetEntry.amount}
+              onChange={(event) => {
+                this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
+              }}
               startAdornment={
                 <InputAdornment position="start">CHF</InputAdornment>
               }
