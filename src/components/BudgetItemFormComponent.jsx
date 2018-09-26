@@ -18,7 +18,6 @@ import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
 class BudgetItemFormComponent extends Component {
   state = {
-    open: false,
     redirect: false,
     budgetEntry: {
       group: '',
@@ -50,11 +49,12 @@ class BudgetItemFormComponent extends Component {
 
   render() {
     const {
-      open,
       redirect,
       budgetEntry,
     } = this.state;
     const {
+      open,
+      budgetGroupFormIsOpen,
       budgetGroups,
     } = this.props;
     if (redirect) {
@@ -63,7 +63,7 @@ class BudgetItemFormComponent extends Component {
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
-        { open && <BudgetGroupForm open={open} /> }
+        { open && <BudgetGroupForm /> }
         <form onSubmit={this.handleSubmit.bind(this)}>
           <FormControl>
             <InputLabel htmlFor="group-select">Gruppe</InputLabel>
@@ -82,7 +82,7 @@ class BudgetItemFormComponent extends Component {
           </FormControl>
           <IconButton
             aria-label="Gruppe hinzufügen"
-            onClick={() => this.setState({ open: true })}
+            onClick={() => budgetGroupFormIsOpen(true)}
           >
             <AddIcon />
           </IconButton>
@@ -142,6 +142,8 @@ class BudgetItemFormComponent extends Component {
 
 BudgetItemFormComponent.propTypes = {
   doAddBudgetEntry: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  budgetGroupFormIsOpen: PropTypes.func.isRequired,
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

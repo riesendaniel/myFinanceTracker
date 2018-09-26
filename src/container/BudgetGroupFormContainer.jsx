@@ -2,11 +2,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import {
-  actions,
+  actions, getIsBudgetGroupFormOpen,
 } from '../redux/modules/BudgetReducer';
 import BudgetGroupFormComponent from '../components/BudgetGroupFormComponent';
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  open: getIsBudgetGroupFormOpen(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

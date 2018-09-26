@@ -2,12 +2,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import {
-  actions, getIsLoading, getBudgetGroups,
+  actions, getIsBudgetGroupFormOpen, getBudgetGroups,
 } from '../redux/modules/BudgetReducer';
 import BudgetItemFormComponent from '../components/BudgetItemFormComponent';
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  open: getIsBudgetGroupFormOpen(state),
   budgetGroups: getBudgetGroups(state),
 });
 

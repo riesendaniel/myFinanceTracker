@@ -4,6 +4,8 @@
 
 export const getIsLoading = state => state.budget.isLoading;
 
+export const getIsBudgetGroupFormOpen = state => state.budget.isBudgetGroupFormOpen;
+
 export const getBudgetGroups = state => state.budget.budgetGroups;
 
 export const getBudget = state => state.budget.budget;
@@ -13,6 +15,7 @@ export const getBudget = state => state.budget.budget;
 // Action Types
 // ------------------------------------
 const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
+const BUDGET_GROUP_FORM_IS_OPEN = 'BUDGET_GROUP_FORM_IS_OPEN';
 const RECEIVE_BUDGET_GROUPS = 'RECEIVE_BUDGET_GROUPS';
 const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
 const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
@@ -26,6 +29,11 @@ const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 const isLoading = status => ({
   type: BUDGET_IS_LOADING,
   status,
+});
+
+const budgetGroupFormIsOpen = isOpen => ({
+  type: BUDGET_GROUP_FORM_IS_OPEN,
+  isOpen,
 });
 
 const receiveBudgetGroups = budgetGroups => ({
@@ -99,6 +107,7 @@ export const actions = {
   doAddBudgetGroup,
   doAddBudgetEntry,
   doDeleteBudgetEntry,
+  budgetGroupFormIsOpen,
 };
 
 
@@ -108,6 +117,9 @@ export const actions = {
 const ACTION_HANDLERS = {
   [BUDGET_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
+  ),
+  [BUDGET_GROUP_FORM_IS_OPEN]: (state, action) => (
+    { ...state, isBudgetGroupFormOpen: action.isOpen }
   ),
   [RECEIVE_BUDGET_GROUPS]: (state, action) => {
     const budgetGroups = [...action.budgetGroups];
@@ -136,6 +148,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
+  isBudgetGroupFormOpen: false,
   budgetGroups: [
     'Wohnen',
     'Haushalt',

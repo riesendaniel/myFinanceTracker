@@ -8,34 +8,35 @@ import {
 
 class BudgetGroupFormComponent extends Component {
   state = {
-    open: false,
     groupName: '',
   };
 
   componentDidMount() {
     const {
+      budgetGroupFormIsOpen,
       doAddBudgetGroup,
-      open,
     } = this.props;
+    this.budgetGroupFormIsOpen = budgetGroupFormIsOpen;
     this.doAddBudgetGroup = doAddBudgetGroup;
-    this.setState({ open });
   }
 
   handleSubmit = () => {
     const { groupName } = this.state;
     this.doAddBudgetGroup(groupName);
-    this.setState({ open: false });
+    this.budgetGroupFormIsOpen(false);
   }
 
   render() {
     const {
-      open,
       groupName,
     } = this.state;
+    const {
+      open,
+    } = this.props;
     return (
       <Dialog
         open={open}
-        onClose={() => this.setState({ open: false })}
+        onClose={() => this.budgetGroupFormIsOpen(false)}
       >
         <DialogContent>
           <TextField
@@ -48,7 +49,7 @@ class BudgetGroupFormComponent extends Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.setState({ open: false })} type="reset">Abbrechen</Button>
+          <Button onClick={() => this.budgetGroupFormIsOpen(false)} type="reset">Abbrechen</Button>
           <Button onClick={this.handleSubmit} type="submit">Hinzufügen</Button>
         </DialogActions>
       </Dialog>
@@ -57,6 +58,7 @@ class BudgetGroupFormComponent extends Component {
 }
 
 BudgetGroupFormComponent.propTypes = {
+  budgetGroupFormIsOpen: PropTypes.func.isRequired,
   doAddBudgetGroup: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
