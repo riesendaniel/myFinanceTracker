@@ -21,8 +21,9 @@ class BudgetGroupFormComponent extends Component {
     this.setState({ open });
   }
 
-  handleSubmit() {
-    this.doAddBudgetGroup(this.groupName);
+  handleSubmit = () => {
+    const { groupName } = this.state;
+    this.doAddBudgetGroup(groupName);
     this.setState({ open: false });
   }
 
@@ -48,7 +49,7 @@ class BudgetGroupFormComponent extends Component {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => this.setState({ open: false })} type="reset">Abbrechen</Button>
-          <Button onClick={this.handleSubmit.bind(this)} type="submit">Hinzufügen</Button>
+          <Button onClick={this.handleSubmit} type="submit">Hinzufügen</Button>
         </DialogActions>
       </Dialog>
     );

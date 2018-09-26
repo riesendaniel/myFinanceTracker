@@ -8,7 +8,7 @@ import {
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 class BudgetListItemComponent extends Component {
-  handleDelete() {
+  handleDelete = () => {
     const { doDeleteBudgetEntry, item } = this.props;
     doDeleteBudgetEntry(item.id);
   }
@@ -29,7 +29,7 @@ class BudgetListItemComponent extends Component {
           </Typography>
         </TableCell>
         <TableCell>
-          <IconButton onClick={this.handleDelete.bind(this)}>
+          <IconButton onClick={this.handleDelete}>
             <DeleteOutlineIcon />
           </IconButton>
         </TableCell>

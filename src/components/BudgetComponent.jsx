@@ -19,7 +19,7 @@ class BudgetComponent extends Component {
     await doLoadBudget();
   }
 
-  handleChange(event, value) {
+  handleChange = (event, value) => {
     const paths = {
       addBudgetEntry: '/budget/edit',
     };
@@ -45,7 +45,7 @@ class BudgetComponent extends Component {
             <BudgetSummary budget={budget} />
             <BottomNavigation
               showLabels
-              onChange={this.handleChange.bind(this)}
+              onChange={this.handleChange}
             >
               <BottomNavigationAction value="addBudgetEntry" label="Eintrag hinzufügen" icon={<AddCircleIcon />} />
             </BottomNavigation>
