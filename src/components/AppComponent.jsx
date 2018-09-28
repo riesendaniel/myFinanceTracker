@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Budget from '../container/BudgetContainer';
 import BudgetItemForm from '../container/BudgetItemFormContainer';
 import Header from '../container/HeaderContainer';
+import Income from '../container/IncomeContainer';
 import Menu from './MenuComponent';
 import OutgoingContainer from '../container/OutgoingContainer';
 
@@ -32,6 +33,7 @@ const App = (props) => {
             <Switch>
               <Route path="/budget/edit" component={BudgetItemForm} />
               <Route path="/budget" component={Budget} />
+              <Route path="/income" component={Income} />
               <Route path="/outgoings" component={OutgoingContainer} />
               <Route path="/" />
             </Switch>
