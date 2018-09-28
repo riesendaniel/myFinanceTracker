@@ -6,7 +6,7 @@ import {
 } from '../redux/modules/AppReducer';
 import HeaderComponent from '../components/HeaderComponent';
 
-const mapStateToProps = state => ({
+const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
