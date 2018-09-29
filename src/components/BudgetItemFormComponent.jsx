@@ -79,7 +79,7 @@ class BudgetItemFormComponent extends Component {
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <BudgetGroupForm /> }
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.handleSubmit}>
           <FormControl>
             <InputLabel htmlFor="group-select">Gruppe</InputLabel>
             <Select
