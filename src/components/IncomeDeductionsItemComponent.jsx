@@ -14,28 +14,47 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
 
 class IncomeDeductionsItemComponent extends Component {
-  initialState = {
-    id: null,
-    description: '',
-    type: 'percentaged',
-    value: 0,
-    editDeduction: '',
-  };
+  state = {
+    deduction: {},
+    editable: false,
+  }
 
-  state = { ...this.initialState };
+  componentDidMount = () => {
+    const {
+      deduction,
+      editable,
+    } = this.props;
+    this.initialDeduction = deduction;
+    this.initialEditable = editable;
+    this.setState({ deduction, editable });
+  }
+
+  handleInputChange = (event) => {
+    const { deduction } = this.state;
+    let { value } = event.target;
+    if (isNaN(value)) {
+      value = String(value);
+    } else {
+      value = Number(value);
+    }
+    deduction[event.target.name] = value;
+    this.setState({ deduction });
+  }
 
   saveDeduction = async () => {
     const {
       doAddDeduction,
       doUpdateDeduction,
     } = this.props;
-    const { id } = this.state;
-    if (id) {
-      await doUpdateDeduction(this.state);
+    const {
+      deduction,
+    } = this.state;
+    if (deduction.id) {
+      await doUpdateDeduction(deduction);
     } else {
-      await doAddDeduction(this.state);
+      await doAddDeduction(deduction);
     }
-    this.setState({ ...this.initialState });
+    this.setState({ deduction: this.initialDeduction, editable: this.initialDeduction });
   }
 
   deleteDeduction = async (id) => {
@@ -45,85 +64,71 @@ class IncomeDeductionsItemComponent extends Component {
     await doDeleteDeduction(id);
   }
 
-  handleEdit = (deduction) => {
-    this.setState({
-      id: deduction.id,
-      description: deduction.description,
-      type: deduction.type,
-      value: deduction.value,
-      editDeduction: deduction.id,
-    });
-  }
-
-  isEditable = (id) => {
-    const { editable } = this.props;
-    const { editDeduction } = this.state;
-    return editable || id === editDeduction;
-  }
-
   render = () => {
     const {
       deduction,
-    } = this.props;
-    let item;
-    if (this.isEditable(deduction.id)) {
-      item = this.state;
-    } else {
-      item = deduction;
-    }
+      editable,
+    } = this.state;
     return (
-      <TableRow key={item.id}>
+      <TableRow key={deduction.id}>
         <TableCell>
           <FormControl>
-            {this.isEditable(item.id) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
+            {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
               id="description"
+              name="description"
               type="text"
-              value={item.description}
-              onChange={event => this.setState({ description: event.target.value })}
-              disableUnderline={!this.isEditable(item.id)}
-              readOnly={!this.isEditable(item.id)}
+              value={deduction.description}
+              onChange={event => this.handleInputChange(event)}
+              disableUnderline={!editable}
+              readOnly={!editable}
             />
           </FormControl>
         </TableCell>
         <TableCell numeric>
           <FormControl>
-            { this.isEditable(item.id) && (
+            { editable && (
               <Select
-                value={item.type}
-                onChange={event => this.setState({ type: event.target.value })}
+                name="type"
+                value={deduction.type}
+                onChange={event => this.handleInputChange(event)}
               >
                 <MenuItem value="percentaged">%</MenuItem>
                 <MenuItem value="fixed">CHF</MenuItem>
               </Select>
             )}
             <Input
+              name="value"
               type="number"
-              value={item.value}
-              onChange={event => this.setState({ value: Number(event.target.value) })}
+              value={deduction.value}
+              onChange={event => this.handleInputChange(event)}
               endAdornment={
-                <InputAdornment position="end">{item.type === 'percentaged' ? '%' : 'CHF'}</InputAdornment>
+                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : 'CHF'}</InputAdornment>
               }
-              disableUnderline={!this.isEditable(item.id)}
-              readOnly={!this.isEditable(item.id)}
+              disableUnderline={!editable}
+              readOnly={!editable}
             />
           </FormControl>
         </TableCell>
-        { this.isEditable(item.id) ? (
+        { editable ? (
           <TableCell>
             <IconButton onClick={this.saveDeduction}>
               <SaveIcon />
             </IconButton>
-            <IconButton onClick={() => this.setState({ ...this.initialState })}>
+            <IconButton onClick={() => this.setState({
+              deduction: this.initialDeduction,
+              editable: this.initialEditable,
+            })}
+            >
               <CancelIcon />
             </IconButton>
           </TableCell>
         ) : (
           <TableCell>
-            <IconButton onClick={() => this.handleEdit(item)}>
+            <IconButton onClick={() => this.setState({ editable: true })}>
               <EditIcon />
             </IconButton>
-            <IconButton onClick={() => this.deleteDeduction(item.id)}>
+            <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
               <DeleteOutlineIcon />
             </IconButton>
           </TableCell>

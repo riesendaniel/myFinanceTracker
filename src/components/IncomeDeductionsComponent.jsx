@@ -10,7 +10,6 @@ const IncomeDeductionsComponent = (props) => {
     description: '',
     type: 'percentaged',
     value: 0,
-    editing: '',
   };
   const {
     deductions,
