@@ -20,6 +20,7 @@ const RECEIVE_INCOME = 'RECEIVE_INCOME';
 const CALC_TOTAL_DEDUCTIONS = 'CALC_TOTAL_DEDUCTIONS';
 const CALC_NET_PAY = 'CALC_NET_PAY';
 const ADD_DEDUCTION = 'ADD_DEDUCTION';
+const UPDATE_DEDUCTION = 'UPDATE_DEDUCTION';
 const DELETE_DEDUCTION = 'DELETE_DEDUCTION';
 
 
@@ -48,6 +49,11 @@ const calcNetPay = income => ({
 
 const addDeduction = deduction => ({
   type: ADD_DEDUCTION,
+  deduction,
+});
+
+const updateDeduction = deduction => ({
+  type: UPDATE_DEDUCTION,
   deduction,
 });
 
@@ -88,6 +94,11 @@ const doAddDeduction = deduction => (dispatch, getState) => {
   updateCalculatedElements(dispatch, getState);
 };
 
+const doUpdateDeduction = deduction => (dispatch, getState) => {
+  dispatch(updateDeduction(deduction));
+  updateCalculatedElements(dispatch, getState);
+};
+
 const doDeleteDeduction = id => (dispatch, getState) => {
   dispatch(deleteDeduction(id));
   updateCalculatedElements(dispatch, getState);
@@ -100,6 +111,7 @@ const doDeleteDeduction = id => (dispatch, getState) => {
 export const actions = {
   doLoadIncome,
   doAddDeduction,
+  doUpdateDeduction,
   doDeleteDeduction,
 };
 
@@ -141,6 +153,12 @@ const ACTION_HANDLERS = {
   },
   [ADD_DEDUCTION]: (state, action) => {
     const deductions = [...state.deductions, action.deduction];
+    return { ...state, deductions };
+  },
+  [UPDATE_DEDUCTION]: (state, action) => {
+    const deductions = state.deductions.map(
+      deduction => (deduction.id !== action.deduction.id ? deduction : action.deduction),
+    );
     return { ...state, deductions };
   },
   [DELETE_DEDUCTION]: (state, action) => {

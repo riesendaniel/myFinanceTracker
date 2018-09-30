@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BottomNavigation, BottomNavigationAction,
   IconButton,
   Paper,
   Typography,
 } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import Loading from './LoadingComponent';
 import IncomeDeductions from '../container/IncomeDeductionsContainer';
@@ -41,11 +39,6 @@ class IncomeComponent extends Component {
             <div>
               {`Nettoeinkommen ${Math.round(netPay)} CHF`}
             </div>
-            <BottomNavigation
-              showLabels
-            >
-              <BottomNavigationAction value="addIncomeDeduction" label="Lohnabzug hinzufügen" icon={<AddCircleIcon />} />
-            </BottomNavigation>
           </div>
         ) }
       </Paper>
