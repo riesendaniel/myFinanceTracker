@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  IconButton,
   Paper,
   Typography,
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import Loading from './LoadingComponent';
+import IncomeGrossPay from '../container/IncomeGrossPayContainer';
 import IncomeDeductions from '../container/IncomeDeductionsContainer';
 
 class IncomeComponent extends Component {
@@ -20,21 +19,14 @@ class IncomeComponent extends Component {
   render = () => {
     const {
       isLoading,
-      grossPay,
       netPay,
     } = this.props;
-
     return (
       <Paper>
         <Typography variant="headline" component="h2">Einkommen</Typography>
         { isLoading ? <Loading /> : (
           <div>
-            <div>
-              {`Bruttoeinkommen ${grossPay} CHF`}
-              <IconButton>
-                <EditIcon />
-              </IconButton>
-            </div>
+            <IncomeGrossPay />
             <IncomeDeductions />
             <div>
               {`Nettoeinkommen ${Math.round(netPay)} CHF`}
@@ -49,7 +41,6 @@ class IncomeComponent extends Component {
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  grossPay: PropTypes.number.isRequired,
   netPay: PropTypes.number.isRequired,
 };
 

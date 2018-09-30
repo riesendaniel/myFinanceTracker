@@ -19,6 +19,7 @@ const INCOME_IS_LOADING = 'INCOME_IS_LOADING';
 const RECEIVE_INCOME = 'RECEIVE_INCOME';
 const CALC_TOTAL_DEDUCTIONS = 'CALC_TOTAL_DEDUCTIONS';
 const CALC_NET_PAY = 'CALC_NET_PAY';
+const UPDATE_GROSS_PAY = 'UPDATE_GROSS_PAY';
 const ADD_DEDUCTION = 'ADD_DEDUCTION';
 const UPDATE_DEDUCTION = 'UPDATE_DEDUCTION';
 const DELETE_DEDUCTION = 'DELETE_DEDUCTION';
@@ -45,6 +46,11 @@ const calcTotalDeductions = income => ({
 const calcNetPay = income => ({
   type: CALC_NET_PAY,
   income,
+});
+
+const updateGrossPay = grossPay => ({
+  type: UPDATE_GROSS_PAY,
+  grossPay,
 });
 
 const addDeduction = deduction => ({
@@ -89,6 +95,11 @@ const doLoadIncome = () => (dispatch, getState) => {
   }, 1000);
 };
 
+const doUpdateGrossPay = grossPay => (dispatch, getState) => {
+  dispatch(updateGrossPay(grossPay));
+  updateCalculatedElements(dispatch, getState);
+};
+
 const doAddDeduction = deduction => (dispatch, getState) => {
   dispatch(addDeduction(deduction));
   updateCalculatedElements(dispatch, getState);
@@ -110,6 +121,7 @@ const doDeleteDeduction = id => (dispatch, getState) => {
 // ------------------------------------
 export const actions = {
   doLoadIncome,
+  doUpdateGrossPay,
   doAddDeduction,
   doUpdateDeduction,
   doDeleteDeduction,
@@ -150,6 +162,10 @@ const ACTION_HANDLERS = {
     const { grossPay, totalDeductions } = action.income;
     const netPay = calculateNetPay(grossPay, totalDeductions);
     return { ...state, netPay };
+  },
+  [UPDATE_GROSS_PAY]: (state, action) => {
+    const { grossPay } = action;
+    return { ...state, grossPay };
   },
   [ADD_DEDUCTION]: (state, action) => {
     const deductions = [...state.deductions, action.deduction];
