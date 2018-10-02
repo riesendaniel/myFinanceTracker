@@ -19,7 +19,7 @@ const IncomeDeductionsComponent = (props) => {
     <Table>
       <TableBody>
         {deductions.map(deduction => (
-          <IncomDeductionsItem deduction={deduction} />
+          <IncomDeductionsItem key={deduction.id} deduction={deduction} />
         ))}
         <IncomDeductionsItem deduction={emptyDeduction} editable />
       </TableBody>

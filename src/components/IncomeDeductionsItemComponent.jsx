@@ -24,7 +24,7 @@ class IncomeDeductionsItemComponent extends Component {
       deduction,
       editable,
     } = this.props;
-    this.initialDeduction = deduction;
+    this.initialDeduction = { ...deduction };
     this.initialEditable = editable;
     this.setState({ deduction, editable });
   }
@@ -51,10 +51,11 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.state;
     if (deduction.id) {
       await doUpdateDeduction(deduction);
+      this.setState({ editable: this.initialEditable });
     } else {
       await doAddDeduction(deduction);
+      this.setState({ deduction: this.initialDeduction, editable: this.initialEditable });
     }
-    this.setState({ deduction: this.initialDeduction, editable: this.initialDeduction });
   }
 
   deleteDeduction = async (id) => {
@@ -116,7 +117,7 @@ class IncomeDeductionsItemComponent extends Component {
               <SaveIcon />
             </IconButton>
             <IconButton onClick={() => this.setState({
-              deduction: this.initialDeduction,
+              deduction: { ...this.initialDeduction },
               editable: this.initialEditable,
             })}
             >
