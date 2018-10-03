@@ -5,8 +5,10 @@ cache:
   directories:
     - ".eslintcache"
     - "node_modules"
-install:
+before_install:
   - npm install -g firebase-tools
+install:
+  - npm install
 script:
   - npm run test
   - npm run build
