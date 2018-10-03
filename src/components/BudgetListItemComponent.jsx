@@ -20,7 +20,10 @@ class BudgetListItemComponent extends Component {
   }
 
   render = () => {
-    const { item } = this.props;
+    const {
+      currency,
+      item,
+    } = this.props;
     const { redirect } = this.state;
     if (redirect) {
       return (
@@ -37,12 +40,12 @@ class BudgetListItemComponent extends Component {
         <TableCell component="th">{item.category}</TableCell>
         <TableCell numeric>
           <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
-            {Math.round(item.monthly)}
+            {`${Math.round(item.monthly)} ${currency}`}
           </Typography>
         </TableCell>
         <TableCell numeric>
           <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
-            {Math.round(item.yearly)}
+            {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
         </TableCell>
         <TableCell>
@@ -60,6 +63,7 @@ class BudgetListItemComponent extends Component {
 
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,

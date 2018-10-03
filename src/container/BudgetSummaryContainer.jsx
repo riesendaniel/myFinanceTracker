@@ -7,7 +7,7 @@ import {
 import {
   actions,
 } from '../redux/modules/BudgetReducer';
-import BudgetListItemComponent from '../components/BudgetListItemComponent';
+import BudgetSummaryComponent from '../components/BudgetSummaryComponent';
 
 const mapStateToProps = state => ({
   currency: getCurrency(state),
@@ -18,4 +18,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetListItemComponent);
+)(BudgetSummaryComponent);
