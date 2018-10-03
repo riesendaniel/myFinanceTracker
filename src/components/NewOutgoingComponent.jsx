@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
-import {FormControl, TextField, IconButton, InputAdornment, Input, InputLabel} from '@material-ui/core';
+import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} from '@material-ui/core';
+import {Redirect} from 'react-router-dom';
+import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 class NewOutgoingComponent extends Component {
 
-    static propTypes = {
-        onAddOutgoing: PropTypes.func.isRequired
-    };
-
     state = {
+        isOutgoingSaved: false,
         outgoingTitle: '',
         outgoingAmount: '',
         outgoingCategory: '',
@@ -19,11 +19,14 @@ class NewOutgoingComponent extends Component {
     render() {
         return (
             <FormControl onSubmit={this.addOutgoing}>
+                {this.state.isOutgoingSaved && <Redirect to='/outgoings' push/>}
                 <TextField
                     id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
                     autoComplete="on"
                     value={this.state.outgoingTitle}
-                    onChange={(event) => { this.setState({outgoingTitle: event.target.value })}}
+                    onChange={(event) => {
+                        this.setState({outgoingTitle: event.target.value})
+                    }}
                 />
                 <FormControl>
                     <InputLabel htmlFor="amount">Betrag</InputLabel>
@@ -31,7 +34,9 @@ class NewOutgoingComponent extends Component {
                         id="amount"
                         type="number"
                         value={this.state.outgoingAmount}
-                        onChange={(event) => { this.setState({outgoingAmount: event.target.value}) }}
+                        onChange={(event) => {
+                            this.setState({outgoingAmount: event.target.value})
+                        }}
                         startAdornment={
                             <InputAdornment position="start">CHF</InputAdornment>
                         }
@@ -41,31 +46,44 @@ class NewOutgoingComponent extends Component {
                     id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Kategorie eingeben"
                     autoComplete="on"
                     value={this.state.outgoingCategory}
-                    onChange={(event) => { this.setState({outgoingCategory: event.target.value })}}
+                    onChange={(event) => {
+                        this.setState({outgoingCategory: event.target.value})
+                    }}
                 />
                 <TextField
                     id="outgoing-categorie" name="outgoingCategorie" placeholder="Datum auswählen"
                     autoComplete="on"
                     type="date"
                     value={this.state.outgoingDate}
-                    onChange={(event) => { this.setState({outgoingDate: event.target.value })}}
+                    onChange={(event) => {
+                        this.setState({outgoingDate: event.target.value})
+                    }}
                 />
                 <IconButton
                     aria-label="add outgoing"
                     onClick={this.addOutgoing}
                 >
-                    <AddIcon />
+                    <AddIcon/>
                 </IconButton>
-
             </FormControl>
+
         );
     }
 
-    addOutgoing = (e) => {
-        e.preventDefault();
-        this.props.onAddOutgoing(this.state.outgoingAmount, this.state.outgoingCategory, this.state.outgoingDate, this.state.outgoingTitle);
-        this.setState({outgoingAmount: '', outgoingCategory: '', outgoingDate: '', outgoingTitle: ''});
+    addOutgoing = () => {
+        try {
+            this.props.dispatch(doAddOutgoing(this.state));
+            this.setState({isOutgoingSaved: true});
+        } catch (e) {
+            console.log(e);
+        }
     }
 }
 
-export default NewOutgoingComponent;
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(actions, dispatch);
+};
+
+export default connect(
+    mapDispatchToProps
+)(NewOutgoingComponent);

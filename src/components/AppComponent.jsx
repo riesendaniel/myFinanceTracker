@@ -7,6 +7,8 @@ import BudgetItemForm from '../container/BudgetItemFormContainer';
 import Header from '../container/HeaderContainer';
 import Menu from './MenuComponent';
 import OutgoingContainer from '../container/OutgoingContainer';
+import NotFound from "./NotFound";
+import NewOutgoingComponent from "./NewOutgoingComponent";
 
 const menuWidth = '300px';
 
@@ -30,10 +32,12 @@ const App = (props) => {
           <div className={classes.toolbarPlaceholder} />
           <main className={menuState === 'open' ? classes.main : undefined}>
             <Switch>
-              <Route path="/budget/edit" component={BudgetItemForm} />
-              <Route path="/budget" component={Budget} />
-              <Route path="/outgoings" component={OutgoingContainer} />
-              <Route path="/" />
+                <Route path="/budget/edit" component={BudgetItemForm} />
+                <Route path="/budget" component={Budget} />
+                <Route path="/outgoings" component={OutgoingContainer} />
+                <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+                <Route path="/" />
+                <Route component={NotFound}/>
             </Switch>
           </main>
         </div>

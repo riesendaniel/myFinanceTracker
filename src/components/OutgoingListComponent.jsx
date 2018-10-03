@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React,  {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
+import {Button, Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
+import { Route } from 'react-router-dom';
+import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
-import NewOutgoingComponent from "./NewOutgoingComponent";
 import OutgoingItemComponent from "./OutgoingItemComponent";
 
 class OutgoingListComponent extends Component {
@@ -13,7 +14,7 @@ class OutgoingListComponent extends Component {
     };
 
     async componentDidMount() {
-        const { doLoadOutgoings } = this.props;
+        const {doLoadOutgoings} = this.props;
         await doLoadOutgoings();
     }
 
@@ -21,7 +22,13 @@ class OutgoingListComponent extends Component {
         return (
             <Paper>
                 <h2>Ausgaben</h2>
-                <NewOutgoingComponent onAddOutgoing={this.onAddOutgoing}/>
+
+                <Route render={({history}) => (
+                    <Button type='button' onClick={() => {
+                        history.push('/outgoing/edit')
+                    }}> <AddIcon /></Button>
+                )}/>
+
                 {this.props.isLoading ? <Loading/> : (
                     <Table>
                         <TableHead>
@@ -45,26 +52,6 @@ class OutgoingListComponent extends Component {
         );
     }
 
-    onAddOutgoing = (amount, category, date, title) => {
-
-        this.props.doAddOutgoing({
-            "id": this.uuid(),
-            "date": date,
-            "categorie": category,
-            "title": title,
-            "amount": amount
-        });
-    };
-
-    //TODO  Nur temporär bis Firebase angebunden ist
-    uuid() {
-        return this.s4() + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + '-' + this.s4() + this.s4() + this.s4();
-    }
-
-    //TODO  Nur temporär bis Firebase angebunden ist
-    s4() {
-        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-    }
 }
 
 export default OutgoingListComponent;
