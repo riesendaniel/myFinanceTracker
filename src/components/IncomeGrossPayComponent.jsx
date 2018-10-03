@@ -48,6 +48,9 @@ class IncomeGrossPayComponent extends Component {
       grossPay,
       editGrossPay,
     } = this.state;
+    const {
+      currency,
+    } = this.props;
     return (
       <div>
         <span>Bruttoeinkommen</span>
@@ -57,7 +60,7 @@ class IncomeGrossPayComponent extends Component {
             value={grossPay}
             onChange={event => this.setState({ grossPay: event.target.value })}
             endAdornment={
-              <InputAdornment position="end">CHF</InputAdornment>
+              <InputAdornment position="end">{currency}</InputAdornment>
             }
             disableUnderline={!editGrossPay}
             readOnly={!editGrossPay}
@@ -84,6 +87,7 @@ class IncomeGrossPayComponent extends Component {
 
 IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
+  currency: PropTypes.func.isRequired,
   grossPay: PropTypes.number.isRequired,
 };
 

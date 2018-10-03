@@ -12,6 +12,7 @@ const IncomeDeductionsComponent = (props) => {
     value: 0,
   };
   const {
+    currency,
     deductions,
     totalDeductions,
   } = props;
@@ -26,7 +27,7 @@ const IncomeDeductionsComponent = (props) => {
       <TableFooter>
         <TableRow>
           <TableCell>Total Abzüge</TableCell>
-          <TableCell numeric>{`${Math.round(totalDeductions)} CHF`}</TableCell>
+          <TableCell numeric>{`${Math.round(totalDeductions)} ${currency}`}</TableCell>
           <TableCell />
         </TableRow>
       </TableFooter>
@@ -35,6 +36,7 @@ const IncomeDeductionsComponent = (props) => {
 };
 
 IncomeDeductionsComponent.propTypes = {
+  currency: PropTypes.string.isRequired,
   deductions: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

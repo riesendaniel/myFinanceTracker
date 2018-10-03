@@ -2,6 +2,8 @@
 // Selectors
 // ------------------------------------
 
+export const getCurrency = state => state.app.currency;
+
 export const getMenuState = state => state.app.menuState;
 
 
@@ -52,6 +54,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
+  currency: 'CHF',
   menuState: 'open',
 };
 

@@ -70,6 +70,9 @@ class IncomeDeductionsItemComponent extends Component {
       deduction,
       editable,
     } = this.state;
+    const {
+      currency,
+    } = this.props;
     return (
       <TableRow key={deduction.id}>
         <TableCell>
@@ -95,7 +98,7 @@ class IncomeDeductionsItemComponent extends Component {
                 onChange={event => this.handleInputChange(event)}
               >
                 <MenuItem value="percentaged">%</MenuItem>
-                <MenuItem value="fixed">CHF</MenuItem>
+                <MenuItem value="fixed">{currency}</MenuItem>
               </Select>
             )}
             <Input
@@ -104,7 +107,7 @@ class IncomeDeductionsItemComponent extends Component {
               value={deduction.value}
               onChange={event => this.handleInputChange(event)}
               endAdornment={
-                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : 'CHF'}</InputAdornment>
+                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
               }
               disableUnderline={!editable}
               readOnly={!editable}
@@ -143,6 +146,7 @@ IncomeDeductionsItemComponent.propTypes = {
   doAddDeduction: PropTypes.func.isRequired,
   doUpdateDeduction: PropTypes.func.isRequired,
   doDeleteDeduction: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired,
   deduction: PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

@@ -19,6 +19,7 @@ class IncomeComponent extends Component {
   render = () => {
     const {
       isLoading,
+      currency,
       netPay,
     } = this.props;
     return (
@@ -29,7 +30,7 @@ class IncomeComponent extends Component {
             <IncomeGrossPay />
             <IncomeDeductions />
             <div>
-              {`Nettoeinkommen ${Math.round(netPay)} CHF`}
+              {`Nettoeinkommen ${Math.round(netPay)} ${currency}`}
             </div>
           </div>
         ) }
@@ -41,6 +42,7 @@ class IncomeComponent extends Component {
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  currency: PropTypes.string.isRequired,
   netPay: PropTypes.number.isRequired,
 };
 
