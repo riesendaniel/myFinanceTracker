@@ -6,9 +6,9 @@ cache:
     - ".eslintcache"
     - "node_modules"
 install:
-  - npm install
+  - npm install -g firebase-tools
 script:
   - npm run test
   - npm run build
-#after_success:
-#— firebase deploy — project projectId — token $FIREBASE_TOKEN.
+after_success:
+  -  firebase deploy  -  project -myfinancetracker-ch  - token "$FIREBASE_TOKEN".
