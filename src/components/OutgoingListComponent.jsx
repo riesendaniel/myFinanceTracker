@@ -5,6 +5,9 @@ import {Route} from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
 import OutgoingItemComponent from "./OutgoingItemComponent";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
 
 class OutgoingListComponent extends Component {
 
@@ -57,4 +60,24 @@ class OutgoingListComponent extends Component {
 
 }
 
-export default OutgoingListComponent;
+
+const mapStateToProps = state => ({
+    isLoading: getIsLoading(state),
+    outgoings: getOutgoings(state)
+});
+
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(actions, dispatch);
+};
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(OutgoingListComponent);
+
+
+
+
+
+
