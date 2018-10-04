@@ -14,7 +14,7 @@ const doLoadOutgoings = () => (dispatch, getState) => {
     dispatch(isLoading(true));
     setTimeout(() => {
 
-        const result = { outgoings: getState().outgoings };
+        const result = {outgoings: getState().outgoings};
         dispatch(isLoading(false));
         return result;
     }, 1000);
@@ -72,18 +72,18 @@ const initialState = {
     isLoading: false,
     outgoings: [
         {
-            "id": "1",
-            "date": "17.08.2018",
-            "category": "Tanken",
-            "title": "Benzin für mein Auto",
-            "amount": "100.00"
+            "id": "75d652ad-db2c-ba8d-c666-996c8f1e1111",
+            "outgoingDate": "17.08.2018",
+            "outgoingCategory": "Tanken",
+            "outgoingTitle": "Benzin für mein Auto",
+            "outgoingAmount": "100.00"
         },
         {
-            "id": "2",
-            "date": "20.08.2018",
-            "category": "Essen",
-            "title": "Mitagessen",
-            "amount": "9.50"
+            "id": "75d652ad-db2c-ba8d-c666-996c8f1e2222",
+            "outgoingDate": "20.08.2018",
+            "outgoingCategory": "Essen",
+            "outgoingTitle": "Mitagessen",
+            "outgoingAmount": "9.50"
         }
     ]
 };

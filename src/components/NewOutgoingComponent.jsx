@@ -10,10 +10,13 @@ class NewOutgoingComponent extends Component {
 
     state = {
         isOutgoingSaved: false,
-        outgoingTitle: '',
-        outgoingAmount: '',
-        outgoingCategory: '',
-        outgoingDate: ''
+        outgoing: {
+            id: uuid(),
+            outgoingTitle: '',
+            outgoingAmount: '',
+            outgoingCategory: '',
+            outgoingDate: ''
+        },
     };
 
     render() {
@@ -23,9 +26,9 @@ class NewOutgoingComponent extends Component {
                 <TextField
                     id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
                     autoComplete="on"
-                    value={this.state.outgoingTitle}
+                    value={this.state.outgoing.outgoingTitle}
                     onChange={(event) => {
-                        this.setState({outgoingTitle: event.target.value})
+                        this.setState({outgoing: { ...this.state.outgoing, outgoingTitle: event.target.value}})
                     }}
                 />
                 <FormControl>
@@ -33,9 +36,9 @@ class NewOutgoingComponent extends Component {
                     <Input
                         id="amount"
                         type="number"
-                        value={this.state.outgoingAmount}
+                        value={this.state.outgoing.outgoingAmount}
                         onChange={(event) => {
-                            this.setState({outgoingAmount: event.target.value})
+                            this.setState({outgoing: { ...this.state.outgoing, outgoingAmount: event.target.value}})
                         }}
                         startAdornment={
                             <InputAdornment position="start">CHF</InputAdornment>
@@ -45,18 +48,18 @@ class NewOutgoingComponent extends Component {
                 <TextField
                     id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Kategorie eingeben"
                     autoComplete="on"
-                    value={this.state.outgoingCategory}
+                    value={this.state.outgoing.outgoingCategory}
                     onChange={(event) => {
-                        this.setState({outgoingCategory: event.target.value})
+                        this.setState({outgoing: { ...this.state.outgoing, outgoingCategory: event.target.value}})
                     }}
                 />
                 <TextField
                     id="outgoing-categorie" name="outgoingCategorie" placeholder="Datum auswählen"
                     autoComplete="on"
                     type="date"
-                    value={this.state.outgoingDate}
+                    value={this.state.outgoing.outgoingDate}
                     onChange={(event) => {
-                        this.setState({outgoingDate: event.target.value})
+                        this.setState({outgoing: { ...this.state.outgoing, outgoingDate: event.target.value}})
                     }}
                 />
                 <IconButton
@@ -72,12 +75,25 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
-            this.props.dispatch(doAddOutgoing(this.state));
-            this.setState({isOutgoingSaved: true});
+            this.props.dispatch(doAddOutgoing(this.state.outgoing));
+            this.setState({isOutgoingSaved: true, outgoing: {
+                    outgoingTitle: '',
+                    outgoingAmount: '',
+                    outgoingCategory: '',
+                    outgoingDate: ''
+                }});
         } catch (e) {
             console.log(e);
         }
     }
+}
+
+const uuid = ()=> {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+const s4 = ()=> {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 }
 
 const mapDispatchToProps = dispatch => {

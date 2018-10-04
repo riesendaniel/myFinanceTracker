@@ -7,20 +7,20 @@ class OutgoingItemComponent extends Component {
     static propTypes = {
         outgoing: PropTypes.shape({
             id: PropTypes.string.isRequired,
-            title: PropTypes.string.isRequired,
-            date: PropTypes.string.isRequired,
-            category: PropTypes.string.isRequired,
-            amount: PropTypes.string.isRequired
+            outgoingTitle: PropTypes.string.isRequired,
+            outgoingDate: PropTypes.string.isRequired,
+            outgoingCategory: PropTypes.string.isRequired,
+            outgoingAmount: PropTypes.string.isRequired
         }).isRequired,
     };
 
     render() {
         return (
             <TableRow key={this.props.outgoing.id}>
-                <TableCell>{this.props.outgoing.title}</TableCell>
-                <TableCell>{this.props.outgoing.date}</TableCell>
-                <TableCell>{this.props.outgoing.category}</TableCell>
-                <TableCell>{this.props.outgoing.amount}</TableCell>
+                <TableCell>{this.props.outgoing.outgoingTitle}</TableCell>
+                <TableCell>{this.props.outgoing.outgoingDate}</TableCell>
+                <TableCell>{this.props.outgoing.outgoingCategory}</TableCell>
+                <TableCell>{this.props.outgoing.outgoingAmount}</TableCell>
             </TableRow>
         );
     }
