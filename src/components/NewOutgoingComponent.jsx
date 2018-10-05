@@ -4,6 +4,7 @@ import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} f
 import {Redirect} from 'react-router-dom';
 import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
 import { connect } from 'react-redux';
+import {generateUuid} from '../helper/helper'
 import { bindActionCreators } from 'redux';
 
 class NewOutgoingComponent extends Component {
@@ -11,7 +12,7 @@ class NewOutgoingComponent extends Component {
     state = {
         isOutgoingSaved: false,
         outgoing: {
-            id: uuid(),
+            id: generateUuid(),
             outgoingTitle: '',
             outgoingAmount: '',
             outgoingCategory: '',
@@ -90,13 +91,6 @@ class NewOutgoingComponent extends Component {
     }
 }
 
-const uuid = ()=> {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
-const s4 = ()=> {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-}
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(actions, dispatch);
