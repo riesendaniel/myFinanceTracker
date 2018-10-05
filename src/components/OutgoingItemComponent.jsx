@@ -10,7 +10,8 @@ class OutgoingItemComponent extends Component {
             outgoingTitle: PropTypes.string.isRequired,
             outgoingDate: PropTypes.string.isRequired,
             outgoingCategory: PropTypes.string.isRequired,
-            outgoingAmount: PropTypes.string.isRequired
+            outgoingAmount: PropTypes.string.isRequired,
+            outgoingCurrency: PropTypes.string.isRequired
         }).isRequired,
     };
 
@@ -21,6 +22,7 @@ class OutgoingItemComponent extends Component {
                 <TableCell>{this.props.outgoing.outgoingDate}</TableCell>
                 <TableCell>{this.props.outgoing.outgoingCategory}</TableCell>
                 <TableCell>{this.props.outgoing.outgoingAmount}</TableCell>
+                <TableCell>{this.props.outgoing.outgoingCurrency}</TableCell>
             </TableRow>
         );
     }

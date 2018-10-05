@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
+import {IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow} from '@material-ui/core';
 import {Route} from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
@@ -29,9 +29,9 @@ class OutgoingListComponent extends Component {
                 {this.props.isLoading ? <Loading/> : (
                     <div>
                         <Route render={({history}) => (
-                            <Button type='button' onClick={() => {
+                            <IconButton type='button' onClick={() => {
                                 history.push('/outgoing/edit')
-                            }}> <AddIcon/></Button>
+                            }}> <AddIcon/></IconButton>
                         )}/>
 
 
@@ -42,6 +42,7 @@ class OutgoingListComponent extends Component {
                                     <TableCell>Datum</TableCell>
                                     <TableCell>Kategorie</TableCell>
                                     <TableCell>Betrag</TableCell>
+                                    <TableCell>Währung</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

@@ -15,7 +15,8 @@ class NewOutgoingComponent extends Component {
             outgoingTitle: '',
             outgoingAmount: '',
             outgoingCategory: '',
-            outgoingDate: ''
+            outgoingDate: '',
+            outgoingCurrency: 'CHF'
         },
     };
 
@@ -80,7 +81,8 @@ class NewOutgoingComponent extends Component {
                     outgoingTitle: '',
                     outgoingAmount: '',
                     outgoingCategory: '',
-                    outgoingDate: ''
+                    outgoingDate: '',
+                    outgoingCurrency: ''
                 }});
         } catch (e) {
             console.log(e);
