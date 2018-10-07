@@ -11,6 +11,7 @@ import {
 import history from '../helper/history';
 import Budget from './BudgetComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
+import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
 import MainCategoryListComponent from './MainCategoryListComponent';
@@ -49,7 +50,7 @@ const AppComponent = (props) => {
               <Route path="/outgoings" component={OutgoingListComponent} />
               <Route path="/outgoing/edit" component={NewOutgoingComponent} />
               <Route path="/maincategories" component={MainCategoryListComponent} />
-              <Route path="/" exact />
+              <Route path="/" component={Dashboard} exact />
               <Route path="*" component={NotFound} />
             </Switch>
           </main>
