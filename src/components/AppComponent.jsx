@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import history from '../helper/history';
 import Budget from '../container/BudgetContainer';
 import BudgetItemForm from '../container/BudgetItemFormContainer';
 import Header from '../container/HeaderContainer';
@@ -21,7 +22,7 @@ const App = (props) => {
   const { classes, menuState } = props;
   return (
     <div className="App">
-      <Router>
+      <Router history={history}>
         <div>
           <header>
             <Header />
