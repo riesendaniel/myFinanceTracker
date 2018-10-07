@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Paper,
@@ -11,6 +13,10 @@ import {
   ResponsiveContainer,
   XAxis,
 } from 'recharts';
+import {
+  actions as budgetActions,
+  getIsLoading, getBudget,
+} from '../redux/modules/BudgetReducer';
 import Loading from './LoadingComponent';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
@@ -157,4 +163,18 @@ DashboardComponent.propTypes = {
   /* outgoingsPerCategory: PropTypes.arrayOf(PropTypes.object).isRequired, */
 };
 
-export default DashboardComponent;
+const mapStateToProps = state => ({
+  isLoading: getIsLoading(state),
+  budget: getBudget(state),
+});
+
+const actions = {
+  ...budgetActions,
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DashboardComponent);
