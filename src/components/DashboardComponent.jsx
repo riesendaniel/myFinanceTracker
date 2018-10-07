@@ -7,11 +7,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import {
+  ResponsiveContainer,
+  CartesianGrid, XAxis, YAxis,
   BarChart, Bar,
   LineChart, Line,
   PieChart, Pie,
-  ResponsiveContainer,
-  XAxis,
+  Cell,
+  Legend,
+  Tooltip,
 } from 'recharts';
 import {
   actions as budgetActions,
@@ -40,6 +43,7 @@ class DashboardComponent extends Component {
       /* income, */
       /* outgoingsPerCategory, */
     } = this.props;
+    const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
       <Paper>
         <Typography variant="headline" component="h2">Übersicht</Typography>
@@ -68,19 +72,31 @@ class DashboardComponent extends Component {
             <DashboardChartComponent
               title="monatliche Ausgaben pro Kategorie"
               content={(
-                <PieChart width={200} height={200}>
-                  <Pie
-                    innerRadius="20"
-                    outerRadius="50"
-                    data={[
-                      { category: 'Haushalt', amount: 500 },
-                      { category: 'Essen & Getränke', amount: 250 },
-                      { category: 'Auto', amount: 750 },
-                    ]}
-                    dataKey="amount"
-                    nameKey="category"
-                  />
-                </PieChart>
+                <ResponsiveContainer>
+                  <PieChart>
+                    <Pie
+                      innerRadius="60"
+                      outerRadius="80"
+                      paddingAngle="3"
+                      data={[
+                        { category: 'Haushalt', amount: 500 },
+                        { category: 'Essen & Getränke', amount: 250 },
+                        { category: 'Auto', amount: 750 },
+                      ]}
+                      dataKey="amount"
+                      nameKey="category"
+                    >
+                      {[
+                        { category: 'Haushalt', amount: 500 },
+                        { category: 'Essen & Getränke', amount: 250 },
+                        { category: 'Auto', amount: 750 },
+                      ].map((entry, index) => (
+                        <Cell fill={colors[index]} />
+                      ))}
+                    </Pie>
+                    <Legend layout="vertical" align="right" verticalAlign="middle" />
+                  </PieChart>
+                </ResponsiveContainer>
               )}
             />
             <DashboardChartComponent
@@ -94,9 +110,12 @@ class DashboardComponent extends Component {
                       { category: 'Auto', amount: 750, budget: 150 },
                     ]}
                   >
-                    <Bar dataKey="amount" />
-                    <Bar dataKey="budget" />
+                    <Tooltip />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Bar dataKey="budget" fill="green" />
+                    <Bar dataKey="amount" fill="red" />
                     <XAxis dataKey="category" />
+                    <YAxis />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -143,7 +162,11 @@ class DashboardComponent extends Component {
                   <BarChart
                     data={budget}
                   >
-                    <Bar dataKey="monthly" />
+                    <Bar dataKey="monthly">
+                      {budget.map((entry, index) => (
+                        <Cell fill={colors[index]} />
+                      ))}
+                    </Bar>
                     <XAxis dataKey="category" />
                   </BarChart>
                 </ResponsiveContainer>
