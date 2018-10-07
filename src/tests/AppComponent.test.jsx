@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import App from './AppContainer';
+import App from '../components/AppComponent';
 import createStore from '../redux/store';
 
 const initialState = {};

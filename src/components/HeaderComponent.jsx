@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -7,6 +9,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import {
+  actions,
+} from '../redux/modules/AppReducer';
 
 const styles = theme => ({
   toolbar: {
@@ -18,7 +23,7 @@ const styles = theme => ({
   },
 });
 
-class Header extends Component {
+class HeaderComponent extends Component {
   handleClick = () => {
     const {
       toggleMenu,
@@ -43,9 +48,19 @@ class Header extends Component {
   }
 }
 
-Header.propTypes = {
+HeaderComponent.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const HeaderWithStyles = withStyles(styles)(HeaderComponent);
+
+const mapStateToProps = () => ({
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(HeaderWithStyles);

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   FormControl,
@@ -8,6 +10,13 @@ import {
 import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+  getGrossPay,
+} from '../redux/modules/IncomeReducer';
 
 class IncomeGrossPayComponent extends Component {
   state = {
@@ -91,4 +100,14 @@ IncomeGrossPayComponent.propTypes = {
   grossPay: PropTypes.number.isRequired,
 };
 
-export default IncomeGrossPayComponent;
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
+  grossPay: getGrossPay(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(IncomeGrossPayComponent);

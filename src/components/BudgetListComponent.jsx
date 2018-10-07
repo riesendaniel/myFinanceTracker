@@ -4,8 +4,8 @@ import {
   Card, CardContent, CardHeader,
   Table, TableBody, TableCell, TableHead, TableFooter, TableRow,
 } from '@material-ui/core';
-import BudgetListItem from '../container/BudgetListItemContainer';
-import BudgetListSummary from '../container/BudgetListSummaryContainer';
+import BudgetListItem from './BudgetListItemComponent';
+import BudgetListSummary from './BudgetListSummaryComponent';
 
 const BudgetListComponent = (props) => {
   const { list, title } = props;

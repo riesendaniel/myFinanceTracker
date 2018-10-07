@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+  getIsLoading, getGrossPay, getNetPay,
+} from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
-import IncomeGrossPay from '../container/IncomeGrossPayContainer';
-import IncomeDeductions from '../container/IncomeDeductionsContainer';
+import IncomeGrossPay from './IncomeGrossPayComponent';
+import IncomeDeductions from './IncomeDeductionsComponent';
 
 class IncomeComponent extends Component {
   componentDidMount = async () => {
@@ -46,4 +55,16 @@ IncomeComponent.propTypes = {
   netPay: PropTypes.number.isRequired,
 };
 
-export default IncomeComponent;
+const mapStateToProps = state => ({
+  isLoading: getIsLoading(state),
+  currency: getCurrency(state),
+  grossPay: getGrossPay(state),
+  netPay: getNetPay(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(IncomeComponent);
