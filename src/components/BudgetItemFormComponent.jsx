@@ -67,12 +67,13 @@ class BudgetItemFormComponent extends Component {
       open,
       budgetGroupFormIsOpen,
       budgetGroups,
+      currency,
     } = this.props;
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <BudgetGroupForm /> }
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.handleSubmit}>
           <FormControl>
             <InputLabel htmlFor="group-select">Gruppe</InputLabel>
             <Select
@@ -137,7 +138,7 @@ class BudgetItemFormComponent extends Component {
                 this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
               }}
               startAdornment={
-                <InputAdornment position="start">CHF</InputAdornment>
+                <InputAdornment position="start">{currency}</InputAdornment>
               }
             />
           </FormControl>
@@ -154,6 +155,7 @@ BudgetItemFormComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   budgetGroupFormIsOpen: PropTypes.func.isRequired,
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currency: PropTypes.string.isRequired,
 };
 
 export default BudgetItemFormComponent;

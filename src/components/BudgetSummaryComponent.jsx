@@ -6,7 +6,10 @@ import {
 } from '@material-ui/core';
 
 const BudgetSummaryComponent = (props) => {
-  const { budget } = props;
+  const {
+    budget,
+    currency,
+  } = props;
   return (
     <Card>
       <CardContent>
@@ -15,10 +18,10 @@ const BudgetSummaryComponent = (props) => {
             <TableRow>
               <TableCell>Total</TableCell>
               <TableCell numeric>
-                { Math.round(budget.reduce((total, item) => total + item.monthly, 0)) }
+                {`${Math.round(budget.reduce((total, item) => total + item.monthly, 0))} ${currency}`}
               </TableCell>
               <TableCell numeric>
-                { Math.round(budget.reduce((total, item) => total + item.yearly, 0)) }
+                {`${Math.round(budget.reduce((total, item) => total + item.yearly, 0))} ${currency}`}
               </TableCell>
               <TableCell />
             </TableRow>
@@ -31,6 +34,7 @@ const BudgetSummaryComponent = (props) => {
 
 BudgetSummaryComponent.propTypes = {
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
+  currency: PropTypes.string.isRequired,
 };
 
 export default BudgetSummaryComponent;

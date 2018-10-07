@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   Drawer, List, ListItem, ListItemIcon, ListItemText,
 } from '@material-ui/core';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
@@ -43,6 +44,12 @@ const Menu = (props) => {
                 <CompareIcon />
               </ListItemIcon>
               <ListItemText primary="Budget" />
+            </ListItem>
+            <ListItem button component={Link} to="/income">
+              <ListItemIcon>
+                <AttachMoneyIcon />
+              </ListItemIcon>
+              <ListItemText primary="Einkommen" />
             </ListItem>
             <ListItem button component={Link} to="/outgoings">
               <ListItemIcon>

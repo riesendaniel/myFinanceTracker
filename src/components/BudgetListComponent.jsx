@@ -5,7 +5,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableFooter, TableRow,
 } from '@material-ui/core';
 import BudgetListItem from '../container/BudgetListItemContainer';
-import BudgetListSummary from './BudgetListSummaryComponent';
+import BudgetListSummary from '../container/BudgetListSummaryContainer';
 
 const BudgetListComponent = (props) => {
   const { list, title } = props;
