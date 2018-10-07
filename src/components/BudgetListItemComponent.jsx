@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import {
   IconButton,
   TableCell, TableRow,
@@ -8,10 +7,17 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import history from '../helper/history';
 
 class BudgetListItemComponent extends Component {
-  state = {
-    redirect: false,
+  handleEdit = () => {
+    const {
+      item,
+    } = this.props;
+    history.push({
+      pathname: '/budget/edit',
+      state: { item },
+    });
   }
 
   handleDelete = () => {
@@ -24,17 +30,6 @@ class BudgetListItemComponent extends Component {
       currency,
       item,
     } = this.props;
-    const { redirect } = this.state;
-    if (redirect) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/budget/edit',
-            state: { item },
-          }}
-        />
-      );
-    }
     return (
       <TableRow key={item.id}>
         <TableCell component="th">{item.category}</TableCell>
@@ -49,7 +44,7 @@ class BudgetListItemComponent extends Component {
           </Typography>
         </TableCell>
         <TableCell>
-          <IconButton onClick={() => this.setState({ redirect: true })}>
+          <IconButton onClick={this.handleEdit}>
             <EditIcon />
           </IconButton>
           <IconButton onClick={this.handleDelete}>

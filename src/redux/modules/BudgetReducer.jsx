@@ -1,3 +1,5 @@
+import history from '../../helper/history';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
@@ -94,13 +96,15 @@ export const doAddBudgetGroup = groupName => (
   addBudgetGroup(groupName)
 );
 
-export const doAddBudgetEntry = entry => (
-  addBudgetEntry(entry)
-);
+export const doAddBudgetEntry = entry => (dispatch) => {
+  dispatch(addBudgetEntry(entry));
+  history.push('/budget');
+};
 
-export const doUpdateBudgetEntry = entry => (
-  updateBudgetEntry(entry)
-);
+export const doUpdateBudgetEntry = entry => (dispatch) => {
+  dispatch(updateBudgetEntry(entry));
+  history.push('/budget');
+};
 
 export const doDeleteBudgetEntry = id => (
   deleteBudgetEntry(id)

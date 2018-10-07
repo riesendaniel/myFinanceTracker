@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import {
   Button,
   FormControl, FormControlLabel,
@@ -18,7 +17,6 @@ import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
 class BudgetItemFormComponent extends Component {
   state = {
-    redirect: false,
     budgetEntry: {
       id: null,
       group: '',
@@ -59,12 +57,10 @@ class BudgetItemFormComponent extends Component {
     } else {
       await doAddBudgetEntry({ ...budgetEntry });
     }
-    this.setState({ redirect: true });
   }
 
   render = () => {
     const {
-      redirect,
       budgetEntry,
     } = this.state;
     const {
@@ -73,9 +69,6 @@ class BudgetItemFormComponent extends Component {
       budgetGroups,
       currency,
     } = this.props;
-    if (redirect) {
-      return <Redirect to="/budget" />;
-    }
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
