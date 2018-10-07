@@ -11,7 +11,6 @@ import {
 import history from '../helper/history';
 import Budget from './BudgetComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
-import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
 import MainCategoryListComponent from './MainCategoryListComponent';
