@@ -6,6 +6,7 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {
   ResponsiveContainer,
   CartesianGrid, XAxis, YAxis,
@@ -17,9 +18,19 @@ import {
   Tooltip,
 } from 'recharts';
 import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
   actions as budgetActions,
-  getIsLoading, getBudget,
+  getIsLoading, getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
+import {
+  getOutgoings,
+} from '../redux/modules/OutgoingReducer';
+import {
+  actions as incomeActions,
+  getNetPay,
+} from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
@@ -28,21 +39,32 @@ class DashboardComponent extends Component {
   componentDidMount = async () => {
     const {
       doLoadBudget,
-      /* doLoadIncome, */
+      doLoadIncome,
       /* doCalculateOutgoingsPerCategory, */
     } = this.props;
     await doLoadBudget();
-    /* await doLoadIncome(); */
+    await doLoadIncome();
     /* await doCalculateOutgoingsPerCategory(); */
   }
+
+  handleAddOutgoing = () => {
+    // TODO: Diese Funktion muss noch getestet werden.
+    const { history } = this.props;
+    history.push('/outgoings/edit');
+  };
 
   render = () => {
     const {
       isLoading,
       budget,
-      /* income, */
+      currency,
+      monthlyBudgetSum,
+      netPay,
+      outgoings,
       /* outgoingsPerCategory, */
     } = this.props;
+    // TODO: temporäre Variablen entfernen (Framework für Zeit-Handling verwenden)
+    const outgoingsActualMonth = 300;
     const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
       <Paper>
@@ -51,33 +73,36 @@ class DashboardComponent extends Component {
           <div>
             <DashboardInfoComponent
               title="Ausgaben"
-              value="300.- CHF"
+              value={`${outgoingsActualMonth} ${currency}`}
             />
             <DashboardInfoComponent
-              title="Einkommen"
-              value="5430.- CHF"
+              title="Einkommen (Netto)"
+              value={`${netPay} ${currency}`}
             />
             <DashboardInfoComponent
               title="Bilanz"
-              value="5130.- CHF"
+              value={`${netPay - outgoingsActualMonth} ${currency}`}
             />
             <DashboardInfoComponent
               title="budgetierte Bilanz"
-              value="1200.- CHF"
+              /* TODO: Dies geht von der Annahme aus, dass im Budget nur Ausgaben erfasst werden. */
+              value={`${netPay - monthlyBudgetSum} ${currency}`}
             />
             <DashboardInfoComponent
               title="Ausgabe hinzufügen"
-              value="+"
+              value={<AddCircleIcon />}
+              onClick={this.handleAddOutgoing}
             />
             <DashboardChartComponent
               title="monatliche Ausgaben pro Kategorie"
               content={(
                 <ResponsiveContainer>
                   <PieChart>
+                    <Tooltip />
                     <Pie
                       innerRadius="60"
                       outerRadius="80"
-                      paddingAngle="3"
+                      paddingAngle="4"
                       data={[
                         { category: 'Haushalt', amount: 500 },
                         { category: 'Essen & Getränke', amount: 250 },
@@ -111,9 +136,9 @@ class DashboardComponent extends Component {
                     ]}
                   >
                     <Tooltip />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Bar dataKey="budget" fill="green" />
-                    <Bar dataKey="amount" fill="red" />
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                    <Bar dataKey="budget" fill="#00C49F" />
+                    <Bar dataKey="amount" fill="#FF8042" />
                     <XAxis dataKey="category" />
                     <YAxis />
                   </BarChart>
@@ -140,8 +165,11 @@ class DashboardComponent extends Component {
                       { month: 'Dez', amount: 1900 },
                     ]}
                   >
-                    <Line dataKey="amount" />
+                    <Tooltip />
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                    <Line dataKey="amount" stroke="#FF8042" />
                     <XAxis dataKey="month" />
+                    <YAxis />
                   </LineChart>
                 </ResponsiveContainer>
               )}
@@ -149,10 +177,17 @@ class DashboardComponent extends Component {
             <DashboardChartComponent
               title="letzte Ausgaben"
               content={(
-                <div>
-                  <div>Auto 100.- CHF</div>
-                  <div>Essen 300.- CHF</div>
-                </div>
+                <ul>
+                  {outgoings.filter((value, index) => index < 10)
+                    .map(outgoing => (
+                      <li>
+                        <span>{outgoing.date}</span>
+                        <span>{outgoing.title}</span>
+                        <span>{`${outgoing.amount} ${currency}`}</span>
+                      </li>
+                    ))
+                  }
+                </ul>
               )}
             />
             <DashboardChartComponent
@@ -162,12 +197,15 @@ class DashboardComponent extends Component {
                   <BarChart
                     data={budget}
                   >
+                    <Tooltip />
                     <Bar dataKey="monthly">
                       {budget.map((entry, index) => (
                         <Cell fill={colors[index]} />
                       ))}
                     </Bar>
+                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <XAxis dataKey="category" />
+                    <YAxis />
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -181,18 +219,27 @@ class DashboardComponent extends Component {
 
 DashboardComponent.propTypes = {
   isLoading: PropTypes.bool.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /* income: PropTypes.objectOf(PropTypes.string).isRequired, */
+  currency: PropTypes.string.isRequired,
+  monthlyBudgetSum: PropTypes.number.isRequired,
+  netPay: PropTypes.number.isRequired,
+  outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
   /* outgoingsPerCategory: PropTypes.arrayOf(PropTypes.object).isRequired, */
 };
 
 const mapStateToProps = state => ({
   isLoading: getIsLoading(state),
   budget: getBudget(state),
+  currency: getCurrency(state),
+  monthlyBudgetSum: getMonthlyBudgetSum(state),
+  netPay: getNetPay(state),
+  outgoings: getOutgoings(state),
 });
 
 const actions = {
   ...budgetActions,
+  ...incomeActions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
