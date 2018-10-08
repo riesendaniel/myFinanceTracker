@@ -1,12 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Router, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import {
+  actions,
+  getMenuState,
+} from '../redux/modules/AppReducer';
 import history from '../helper/history';
-import Budget from '../container/BudgetContainer';
-import BudgetItemForm from '../container/BudgetItemFormContainer';
-import Header from '../container/HeaderContainer';
-import Income from '../container/IncomeContainer';
+import Budget from './BudgetComponent';
+import BudgetItemForm from './BudgetItemFormComponent';
+import Header from './HeaderComponent';
+import Income from './IncomeComponent';
 import Menu from './MenuComponent';
 import OutgoingContainer from '../container/OutgoingContainer';
 
@@ -19,7 +25,7 @@ const styles = theme => ({
   },
 });
 
-const App = (props) => {
+const AppComponent = (props) => {
   const { classes, menuState } = props;
   return (
     <div className="App">
@@ -45,9 +51,20 @@ const App = (props) => {
   );
 };
 
-App.propTypes = {
+AppComponent.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   menuState: PropTypes.string.isRequired,
 };
 
-export default withStyles(styles)(App);
+const AppWithStyles = withStyles(styles)(AppComponent);
+
+const mapStateToProps = state => ({
+  menuState: getMenuState(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AppWithStyles);

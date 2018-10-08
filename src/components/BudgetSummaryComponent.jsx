@@ -1,9 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Card, CardContent,
   Table, TableCell, TableFooter, TableRow,
 } from '@material-ui/core';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+} from '../redux/modules/BudgetReducer';
 
 const BudgetSummaryComponent = (props) => {
   const {
@@ -37,4 +45,13 @@ BudgetSummaryComponent.propTypes = {
   currency: PropTypes.string.isRequired,
 };
 
-export default BudgetSummaryComponent;
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BudgetSummaryComponent);

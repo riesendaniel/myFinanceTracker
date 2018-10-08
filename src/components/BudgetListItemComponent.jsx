@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   IconButton,
@@ -8,6 +10,12 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import history from '../helper/history';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+} from '../redux/modules/BudgetReducer';
 
 class BudgetListItemComponent extends Component {
   handleEdit = () => {
@@ -68,4 +76,13 @@ BudgetListItemComponent.propTypes = {
   }).isRequired,
 };
 
-export default BudgetListItemComponent;
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BudgetListItemComponent);

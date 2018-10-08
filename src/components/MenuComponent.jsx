@@ -10,7 +10,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
 
-const Menu = (props) => {
+const MenuComponent = (props) => {
   const { width } = props;
 
   const styles = theme => ({
@@ -20,7 +20,7 @@ const Menu = (props) => {
     toolbarPlaceholder: theme.mixins.toolbar,
   });
 
-  const Unstyled = (props) => {
+  const Menu = (props) => {
     const { classes } = props;
     return (
       <div className="Menu">
@@ -63,16 +63,16 @@ const Menu = (props) => {
     );
   };
 
-  Unstyled.propTypes = {
+  Menu.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
   };
 
-  const Styled = withStyles(styles)(Unstyled);
-  return <Styled />;
+  const MenuWithStyles = withStyles(styles)(Menu);
+  return <MenuWithStyles />;
 };
 
-Menu.propTypes = {
+MenuComponent.propTypes = {
   width: PropTypes.string.isRequired,
 };
 
-export default Menu;
+export default MenuComponent;
