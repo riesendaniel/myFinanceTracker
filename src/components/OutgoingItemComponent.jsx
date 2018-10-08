@@ -16,13 +16,15 @@ class OutgoingItemComponent extends Component {
     };
 
     render() {
+        const { outgoing } = this.props;
+
         return (
-            <TableRow key={this.props.outgoing.id}>
-                <TableCell>{this.props.outgoing.outgoingTitle}</TableCell>
-                <TableCell>{this.props.outgoing.outgoingDate}</TableCell>
-                <TableCell>{this.props.outgoing.outgoingCategory}</TableCell>
-                <TableCell>{this.props.outgoing.outgoingAmount}</TableCell>
-                <TableCell>{this.props.outgoing.outgoingCurrency}</TableCell>
+            <TableRow key={outgoing.id}>
+                <TableCell>{outgoing.outgoingTitle}</TableCell>
+                <TableCell>{outgoing.outgoingDate}</TableCell>
+                <TableCell>{outgoing.outgoingCategory}</TableCell>
+                <TableCell>{outgoing.outgoingAmount}</TableCell>
+                <TableCell>{outgoing.outgoingCurrency}</TableCell>
             </TableRow>
         );
     }

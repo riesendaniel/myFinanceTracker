@@ -72,12 +72,6 @@ class NewOutgoingComponent extends Component {
                     }}
                 />
 
-                <DateTimePicker
-                    onChange={onChange}
-                    format="DD MMM YYYY"
-                    time={showTime}
-                    value={!value ? null : new Date(value)}
-
                 <IconButton
                     aria-label="add outgoing"
                     onClick={this.addOutgoing}

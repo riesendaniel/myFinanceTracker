@@ -23,11 +23,13 @@ class OutgoingListComponent extends Component {
     }
 
     render() {
+        const { outgoings, isLoading } = this.props;
+
         return (
             <Paper>
                 <h2>Ausgaben</h2>
 
-                {this.props.isLoading ? <Loading/> : (
+                {isLoading ? <Loading/> : (
                     <div>
                         <Route render={({history}) => (
                             <IconButton type='button' onClick={() => {
@@ -47,14 +49,14 @@ class OutgoingListComponent extends Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.props.outgoings.map(row => {
+                                {outgoings.map(row => {
                                     return (
                                         <OutgoingItemComponent key={row.id} outgoing={row}/>
                                     );
                                 })}
                             </TableBody>
                         </Table>
-                        <OutgoingSummaryComponent outgoings={this.props.outgoings} />
+                        <OutgoingSummaryComponent outgoings={outgoings} />
                     </div>
                 )}
             </Paper>
