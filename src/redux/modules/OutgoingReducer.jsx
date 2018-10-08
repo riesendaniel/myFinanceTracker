@@ -76,7 +76,7 @@ const initialState = {
             "outgoingDate": "17.08.2018",
             "outgoingCategory": "Tanken",
             "outgoingTitle": "Benzin für mein Auto",
-            "outgoingAmount": "100.00",
+            "outgoingAmount": 100.00,
             "outgoingCurrency": "CHF"
         },
         {
@@ -84,7 +84,7 @@ const initialState = {
             "outgoingDate": "20.08.2018",
             "outgoingCategory": "Essen",
             "outgoingTitle": "Mitagessen",
-            "outgoingAmount": "9.50",
+            "outgoingAmount": 9.50,
             "outgoingCurrency": "CHF"
         }
     ]

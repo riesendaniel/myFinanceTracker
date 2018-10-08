@@ -8,6 +8,7 @@ import OutgoingItemComponent from "./OutgoingItemComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
+import OutgoingSummaryComponent from "./OutgoingSummaryComponent";
 
 class OutgoingListComponent extends Component {
 
@@ -53,6 +54,7 @@ class OutgoingListComponent extends Component {
                                 })}
                             </TableBody>
                         </Table>
+                        <OutgoingSummaryComponent outgoings={this.props.outgoings} />
                     </div>
                 )}
             </Paper>

@@ -3,9 +3,10 @@ import AddIcon from '@material-ui/icons/Add';
 import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} from '@material-ui/core';
 import {Redirect} from 'react-router-dom';
 import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
-import { bindActionCreators } from 'redux';
+import moment from 'moment';
+import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
 
@@ -14,7 +15,7 @@ class NewOutgoingComponent extends Component {
         outgoing: {
             id: generateUuid(),
             outgoingTitle: '',
-            outgoingAmount: '',
+            outgoingAmount: 0,
             outgoingCategory: '',
             outgoingDate: '',
             outgoingCurrency: 'CHF'
@@ -30,7 +31,7 @@ class NewOutgoingComponent extends Component {
                     autoComplete="on"
                     value={this.state.outgoing.outgoingTitle}
                     onChange={(event) => {
-                        this.setState({outgoing: { ...this.state.outgoing, outgoingTitle: event.target.value}})
+                        this.setState({outgoing: {...this.state.outgoing, outgoingTitle: event.target.value}})
                     }}
                 />
                 <FormControl>
@@ -40,7 +41,12 @@ class NewOutgoingComponent extends Component {
                         type="number"
                         value={this.state.outgoing.outgoingAmount}
                         onChange={(event) => {
-                            this.setState({outgoing: { ...this.state.outgoing, outgoingAmount: event.target.value}})
+                            this.setState({
+                                outgoing: {
+                                    ...this.state.outgoing,
+                                    outgoingAmount: Number(event.target.value)
+                                }
+                            })
                         }}
                         startAdornment={
                             <InputAdornment position="start">CHF</InputAdornment>
@@ -52,18 +58,26 @@ class NewOutgoingComponent extends Component {
                     autoComplete="on"
                     value={this.state.outgoing.outgoingCategory}
                     onChange={(event) => {
-                        this.setState({outgoing: { ...this.state.outgoing, outgoingCategory: event.target.value}})
+                        this.setState({outgoing: {...this.state.outgoing, outgoingCategory: event.target.value}})
                     }}
                 />
+
                 <TextField
-                    id="outgoing-categorie" name="outgoingCategorie" placeholder="Datum auswählen"
+                    id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
                     autoComplete="on"
                     type="date"
                     value={this.state.outgoing.outgoingDate}
                     onChange={(event) => {
-                        this.setState({outgoing: { ...this.state.outgoing, outgoingDate: event.target.value}})
+                        this.setState({outgoing: {...this.state.outgoing, outgoingDate: event.target.value}})
                     }}
                 />
+
+                <DateTimePicker
+                    onChange={onChange}
+                    format="DD MMM YYYY"
+                    time={showTime}
+                    value={!value ? null : new Date(value)}
+
                 <IconButton
                     aria-label="add outgoing"
                     onClick={this.addOutgoing}
@@ -77,14 +91,24 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
+            if (this.state.outgoing.outgoingDate) {
+                this.setState({
+                    outgoing: {
+                        ...this.state.outgoing,
+                        outgoingDate2: moment(this.state.outgoing.outgoingDate).format('DD.MM.YYYY')
+                    }
+                })
+            }
             this.props.dispatch(doAddOutgoing(this.state.outgoing));
-            this.setState({isOutgoingSaved: true, outgoing: {
+            this.setState({
+                isOutgoingSaved: true, outgoing: {
                     outgoingTitle: '',
-                    outgoingAmount: '',
+                    outgoingAmount: 0,
                     outgoingCategory: '',
                     outgoingDate: '',
                     outgoingCurrency: ''
-                }});
+                }
+            });
         } catch (e) {
             console.log(e);
         }

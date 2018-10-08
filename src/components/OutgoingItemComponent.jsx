@@ -10,7 +10,7 @@ class OutgoingItemComponent extends Component {
             outgoingTitle: PropTypes.string.isRequired,
             outgoingDate: PropTypes.string.isRequired,
             outgoingCategory: PropTypes.string.isRequired,
-            outgoingAmount: PropTypes.string.isRequired,
+            outgoingAmount: PropTypes.number.isRequired,
             outgoingCurrency: PropTypes.string.isRequired
         }).isRequired,
     };
