@@ -36,8 +36,8 @@ const App = (props) => {
                 <Route path="/budget" component={Budget} />
                 <Route path="/outgoings" component={OutgoingListComponent} />
                 <Route path="/outgoing/edit" component={NewOutgoingComponent} />
-                <Route path="/" />
-                <Route component={NotFound}/>
+                <Route path="/" exact />
+                <Route path="*" component={NotFound}/>
             </Switch>
           </main>
         </div>
