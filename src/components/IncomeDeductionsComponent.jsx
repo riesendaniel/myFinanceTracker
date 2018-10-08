@@ -1,9 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Table, TableBody, TableRow, TableCell, TableFooter,
 } from '@material-ui/core';
-import IncomDeductionsItem from '../container/IncomeDeductionsItemContainer';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+  getDeductions, getTotalDeductions,
+} from '../redux/modules/IncomeReducer';
+import IncomDeductionsItem from './IncomeDeductionsItemComponent';
 
 const IncomeDeductionsComponent = (props) => {
   const emptyDeduction = {
@@ -46,4 +55,15 @@ IncomeDeductionsComponent.propTypes = {
   totalDeductions: PropTypes.number.isRequired,
 };
 
-export default IncomeDeductionsComponent;
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
+  deductions: getDeductions(state),
+  totalDeductions: getTotalDeductions(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(IncomeDeductionsComponent);

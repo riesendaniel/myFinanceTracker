@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   BottomNavigation, BottomNavigationAction,
@@ -6,9 +8,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {
+  actions,
+  getIsLoading, getBudget, getBudgetGroups,
+} from '../redux/modules/BudgetReducer';
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
-import BudgetSummary from '../container/BudgetSummaryContainer';
+import BudgetSummary from './BudgetSummaryComponent';
 
 class BudgetComponent extends Component {
   componentDidMount = async () => {
@@ -64,4 +70,15 @@ BudgetComponent.propTypes = {
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default BudgetComponent;
+const mapStateToProps = state => ({
+  isLoading: getIsLoading(state),
+  budgetGroups: getBudgetGroups(state),
+  budget: getBudget(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BudgetComponent);

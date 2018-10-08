@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Button,
   Dialog, DialogActions, DialogContent,
   TextField,
 } from '@material-ui/core';
+import {
+  actions,
+  getIsBudgetGroupFormOpen,
+} from '../redux/modules/BudgetReducer';
 
 class BudgetGroupFormComponent extends Component {
   state = {
@@ -63,4 +69,13 @@ BudgetGroupFormComponent.propTypes = {
   open: PropTypes.bool.isRequired,
 };
 
-export default BudgetGroupFormComponent;
+const mapStateToProps = state => ({
+  open: getIsBudgetGroupFormOpen(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BudgetGroupFormComponent);

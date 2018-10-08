@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   FormControl,
@@ -12,6 +14,12 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import {
+  getCurrency,
+} from '../redux/modules/AppReducer';
+import {
+  actions,
+} from '../redux/modules/IncomeReducer';
 
 class IncomeDeductionsItemComponent extends Component {
   state = {
@@ -160,4 +168,13 @@ IncomeDeductionsItemComponent.defaultProps = {
   editable: false,
 };
 
-export default IncomeDeductionsItemComponent;
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(IncomeDeductionsItemComponent);
