@@ -48,7 +48,7 @@ const Menu = (props) => {
               <ListItemIcon>
                 <MoneyIcon />
               </ListItemIcon>
-              <ListItemText primary="Outgoings" />
+              <ListItemText primary="Ausgaben" />
             </ListItem>
           </List>
         </Drawer>
