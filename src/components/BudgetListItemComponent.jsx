@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import {
   IconButton,
   TableCell, TableRow,
@@ -8,10 +7,17 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import history from '../helper/history';
 
 class BudgetListItemComponent extends Component {
-  state = {
-    redirect: false,
+  handleEdit = () => {
+    const {
+      item,
+    } = this.props;
+    history.push({
+      pathname: '/budget/edit',
+      state: { item },
+    });
   }
 
   handleDelete = () => {
@@ -20,33 +26,25 @@ class BudgetListItemComponent extends Component {
   }
 
   render = () => {
-    const { item } = this.props;
-    const { redirect } = this.state;
-    if (redirect) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/budget/edit',
-            state: { item },
-          }}
-        />
-      );
-    }
+    const {
+      currency,
+      item,
+    } = this.props;
     return (
       <TableRow key={item.id}>
         <TableCell component="th">{item.category}</TableCell>
         <TableCell numeric>
           <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
-            {Math.round(item.monthly)}
+            {`${Math.round(item.monthly)} ${currency}`}
           </Typography>
         </TableCell>
         <TableCell numeric>
           <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
-            {Math.round(item.yearly)}
+            {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
         </TableCell>
         <TableCell>
-          <IconButton onClick={() => this.setState({ redirect: true })}>
+          <IconButton onClick={this.handleEdit}>
             <EditIcon />
           </IconButton>
           <IconButton onClick={this.handleDelete}>
@@ -60,6 +58,7 @@ class BudgetListItemComponent extends Component {
 
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
+  currency: PropTypes.string.isRequired,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,

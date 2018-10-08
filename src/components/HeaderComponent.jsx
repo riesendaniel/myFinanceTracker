@@ -19,7 +19,7 @@ const styles = theme => ({
 });
 
 class Header extends Component {
-  handleClick() {
+  handleClick = () => {
     const {
       toggleMenu,
     } = this.props;
@@ -33,7 +33,7 @@ class Header extends Component {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Typography variant="title">myFinanceTracker</Typography>
-            <IconButton onClick={this.handleClick.bind(this)} aria-label="Menu">
+            <IconButton onClick={this.handleClick} aria-label="Menu">
               <MenuIcon />
             </IconButton>
           </Toolbar>

@@ -8,7 +8,7 @@ import {
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
-import BudgetSummary from './BudgetSummaryComponent';
+import BudgetSummary from '../container/BudgetSummaryContainer';
 
 class BudgetComponent extends Component {
   componentDidMount = async () => {

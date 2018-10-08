@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 import {
   Button,
   FormControl, FormControlLabel,
@@ -18,7 +17,6 @@ import BudgetGroupForm from '../container/BudgetGroupFormContainer';
 
 class BudgetItemFormComponent extends Component {
   state = {
-    redirect: false,
     budgetEntry: {
       id: null,
       group: '',
@@ -59,27 +57,23 @@ class BudgetItemFormComponent extends Component {
     } else {
       await doAddBudgetEntry({ ...budgetEntry });
     }
-    this.setState({ redirect: true });
   }
 
   render = () => {
     const {
-      redirect,
       budgetEntry,
     } = this.state;
     const {
       open,
       budgetGroupFormIsOpen,
       budgetGroups,
+      currency,
     } = this.props;
-    if (redirect) {
-      return <Redirect to="/budget" />;
-    }
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <BudgetGroupForm /> }
-        <form onSubmit={this.handleSubmit.bind(this)}>
+        <form onSubmit={this.handleSubmit}>
           <FormControl>
             <InputLabel htmlFor="group-select">Gruppe</InputLabel>
             <Select
@@ -144,7 +138,7 @@ class BudgetItemFormComponent extends Component {
                 this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
               }}
               startAdornment={
-                <InputAdornment position="start">CHF</InputAdornment>
+                <InputAdornment position="start">{currency}</InputAdornment>
               }
             />
           </FormControl>
@@ -161,6 +155,7 @@ BudgetItemFormComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   budgetGroupFormIsOpen: PropTypes.func.isRequired,
   budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
+  currency: PropTypes.string.isRequired,
 };
 
 export default BudgetItemFormComponent;

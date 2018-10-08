@@ -2,11 +2,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import {
-  actions,
+  getCurrency,
 } from '../redux/modules/AppReducer';
-import HeaderComponent from '../components/HeaderComponent';
+import {
+  actions,
+} from '../redux/modules/IncomeReducer';
+import IncomeDeductionsItemComponent from '../components/IncomeDeductionsItemComponent';
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  currency: getCurrency(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -14,4 +18,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(HeaderComponent);
+)(IncomeDeductionsItemComponent);

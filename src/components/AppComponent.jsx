@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+import history from '../helper/history';
 import Budget from '../container/BudgetContainer';
 import BudgetItemForm from '../container/BudgetItemFormContainer';
 import Header from '../container/HeaderContainer';
+import Income from '../container/IncomeContainer';
 import Menu from './MenuComponent';
 import NotFound from "./NotFound";
 import NewOutgoingComponent from "./NewOutgoingComponent";
@@ -23,7 +25,7 @@ const App = (props) => {
   const { classes, menuState } = props;
   return (
     <div className="App">
-      <Router>
+      <Router history={history}>
         <div>
           <header>
             <Header />
@@ -32,12 +34,13 @@ const App = (props) => {
           <div className={classes.toolbarPlaceholder} />
           <main className={menuState === 'open' ? classes.main : undefined}>
             <Switch>
-                <Route path="/budget/edit" component={BudgetItemForm} />
-                <Route path="/budget" component={Budget} />
-                <Route path="/outgoings" component={OutgoingListComponent} />
-                <Route path="/outgoing/edit" component={NewOutgoingComponent} />
-                <Route path="/" exact />
-                <Route path="*" component={NotFound}/>
+              <Route path="/budget/edit" component={BudgetItemForm} />
+              <Route path="/budget" component={Budget} />
+              <Route path="/income" component={Income} />
+              <Route path="/outgoings" component={OutgoingListComponent} />
+              <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+              <Route path="/" exact />
+              <Route path="*" component={NotFound}/>
             </Switch>
           </main>
         </div>

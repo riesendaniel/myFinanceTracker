@@ -5,14 +5,14 @@ import {
   getCurrency,
 } from '../redux/modules/AppReducer';
 import {
-  actions, getIsBudgetGroupFormOpen, getBudgetGroups,
-} from '../redux/modules/BudgetReducer';
-import BudgetItemFormComponent from '../components/BudgetItemFormComponent';
+  actions, getDeductions, getTotalDeductions,
+} from '../redux/modules/IncomeReducer';
+import IncomeDeductionsComponent from '../components/IncomeDeductionsComponent';
 
 const mapStateToProps = state => ({
-  open: getIsBudgetGroupFormOpen(state),
-  budgetGroups: getBudgetGroups(state),
   currency: getCurrency(state),
+  deductions: getDeductions(state),
+  totalDeductions: getTotalDeductions(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -20,4 +20,4 @@ const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetItemFormComponent);
+)(IncomeDeductionsComponent);
