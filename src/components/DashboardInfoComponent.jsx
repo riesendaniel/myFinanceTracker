@@ -6,24 +6,23 @@ import {
 
 const DashboardInfoComponent = (props) => {
   const {
-    /* image, */
+    icon,
     title,
     value,
   } = props;
   return (
     <Card>
       <CardHeader
+        avatar={icon}
         title={title}
-      >
-        {/* {image} */}
-      </CardHeader>
+      />
       <CardContent>{value}</CardContent>
     </Card>
   );
 };
 
 DashboardInfoComponent.propTypes = {
-  /* image: PropTypes.element.isRequired, */
+  icon: PropTypes.element.isRequired,
   title: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
 };

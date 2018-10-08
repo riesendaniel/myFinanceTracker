@@ -4,9 +4,14 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Paper,
+  Table, TableHead, TableBody, TableRow, TableCell,
   Typography,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import CompareIcon from '@material-ui/icons/Compare';
+import MoneyIcon from '@material-ui/icons/Money';
 import {
   ResponsiveContainer,
   CartesianGrid, XAxis, YAxis,
@@ -72,23 +77,28 @@ class DashboardComponent extends Component {
         { isLoading ? <Loading /> : (
           <div>
             <DashboardInfoComponent
+              icon={<MoneyIcon />}
               title="Ausgaben"
               value={`${outgoingsActualMonth} ${currency}`}
             />
             <DashboardInfoComponent
+              icon={<AttachMoneyIcon />}
               title="Einkommen (Netto)"
               value={`${netPay} ${currency}`}
             />
             <DashboardInfoComponent
+              icon={<CompareIcon />}
               title="Bilanz"
               value={`${netPay - outgoingsActualMonth} ${currency}`}
             />
             <DashboardInfoComponent
+              icon={<CompareIcon />}
               title="budgetierte Bilanz"
               /* TODO: Dies geht von der Annahme aus, dass im Budget nur Ausgaben erfasst werden. */
               value={`${netPay - monthlyBudgetSum} ${currency}`}
             />
             <DashboardInfoComponent
+              icon={<AddIcon />}
               title="Ausgabe hinzufügen"
               value={<AddCircleIcon />}
               onClick={this.handleAddOutgoing}
@@ -176,18 +186,28 @@ class DashboardComponent extends Component {
             />
             <DashboardChartComponent
               title="letzte Ausgaben"
+              /* TODO: hier könnte/sollte die Liste des Outgoings-Komponenten verwendet werden */
               content={(
-                <ul>
-                  {outgoings.filter((value, index) => index < 10)
-                    .map(outgoing => (
-                      <li>
-                        <span>{outgoing.date}</span>
-                        <span>{outgoing.title}</span>
-                        <span>{`${outgoing.amount} ${currency}`}</span>
-                      </li>
-                    ))
-                  }
-                </ul>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Datum</TableCell>
+                      <TableCell>Beschreibung</TableCell>
+                      <TableCell>Betrag</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {outgoings.filter((value, index) => index < 5)
+                      .map(outgoing => (
+                        <TableRow key={outgoing.id}>
+                          <TableCell>{outgoing.date}</TableCell>
+                          <TableCell>{outgoing.title}</TableCell>
+                          <TableCell>{`${outgoing.amount} ${currency}`}</TableCell>
+                        </TableRow>
+                      ))
+                    }
+                  </TableBody>
+                </Table>
               )}
             />
             <DashboardChartComponent
