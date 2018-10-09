@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} from '@material-ui/core';
-import {Redirect} from 'react-router-dom';
 import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
 import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
@@ -10,7 +9,6 @@ import {bindActionCreators} from 'redux';
 class NewOutgoingComponent extends Component {
 
     state = {
-        isOutgoingSaved: false,
         outgoing: {
             id: generateUuid(),
             outgoingTitle: '',
@@ -24,7 +22,6 @@ class NewOutgoingComponent extends Component {
     render() {
         return (
             <FormControl onSubmit={this.addOutgoing}>
-                {this.state.isOutgoingSaved && <Redirect to='/outgoings' push/>}
                 <TextField
                     id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
                     autoComplete="on"
@@ -86,7 +83,7 @@ class NewOutgoingComponent extends Component {
         try {
             this.props.dispatch(doAddOutgoing(this.state.outgoing));
             this.setState({
-                isOutgoingSaved: true, outgoing: {
+                outgoing: {
                     outgoingTitle: '',
                     outgoingAmount: 0,
                     outgoingCategory: '',

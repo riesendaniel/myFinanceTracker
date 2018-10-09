@@ -1,3 +1,5 @@
+import history from '../../helper/history';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
@@ -20,9 +22,10 @@ const doLoadOutgoings = () => (dispatch, getState) => {
     }, 1000);
 };
 
-export const doAddOutgoing = entry => (
-    addOutgoing(entry)
-);
+export const doAddOutgoing = entry => (dispatch) => {
+    dispatch(addOutgoing(entry));
+    history.push('/outgoings');
+};
 
 // ------------------------------------
 // Actions
