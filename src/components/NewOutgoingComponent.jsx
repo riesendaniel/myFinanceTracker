@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import AddIcon from '@material-ui/icons/Add';
-import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} from '@material-ui/core';
-import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
+import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
+import {actions} from '../redux/modules/OutgoingReducer'
+import {getBudgetGroups} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
 import {bindActionCreators} from 'redux';
@@ -49,15 +50,21 @@ class NewOutgoingComponent extends Component {
                         }
                     />
                 </FormControl>
-                <TextField
-                    id="outgoing-categorie" name="outgoingCategorie" type="text" placeholder="Kategorie eingeben"
-                    autoComplete="on"
-                    value={this.state.outgoing.outgoingCategory}
-                    onChange={(event) => {
-                        this.setState({outgoing: {...this.state.outgoing, outgoingCategory: event.target.value}})
-                    }}
-                />
-
+                <FormControl>
+                    <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
+                    <Select
+                        value={this.state.outgoing.outgoingCategory}
+                        onChange={(event) => {
+                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategory: event.target.value}})
+                        }}
+                        inputProps={{
+                            name: 'group',
+                            id: 'group-select',
+                        }}
+                    >
+                        { this.props.groups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>) }
+                    </Select>
+                </FormControl>
                 <TextField
                     id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
                     autoComplete="on"
@@ -81,7 +88,7 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
-            this.props.dispatch(doAddOutgoing(this.state.outgoing));
+            this.props.doAddOutgoing(this.state.outgoing);
             this.setState({
                 outgoing: {
                     outgoingTitle: '',
@@ -97,11 +104,15 @@ class NewOutgoingComponent extends Component {
     }
 }
 
+const mapStateToProps = state => ({
+    groups: getBudgetGroups(state)
+});
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(actions, dispatch);
 };
 
 export default connect(
-    mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps,
 )(NewOutgoingComponent);
