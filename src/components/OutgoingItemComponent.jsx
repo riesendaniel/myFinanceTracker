@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {TableCell, TableRow} from '@material-ui/core';
+import moment from "moment/moment";
 
 class OutgoingItemComponent extends Component {
 
@@ -21,7 +22,7 @@ class OutgoingItemComponent extends Component {
         return (
             <TableRow key={outgoing.id}>
                 <TableCell>{outgoing.outgoingTitle}</TableCell>
-                <TableCell>{outgoing.outgoingDate}</TableCell>
+                <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
                 <TableCell>{outgoing.outgoingCategory}</TableCell>
                 <TableCell>{outgoing.outgoingAmount}</TableCell>
                 <TableCell>{outgoing.outgoingCurrency}</TableCell>

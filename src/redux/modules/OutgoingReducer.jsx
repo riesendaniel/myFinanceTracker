@@ -73,7 +73,7 @@ const initialState = {
     outgoings: [
         {
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e1111",
-            "outgoingDate": "17.08.2018",
+            "outgoingDate": "2018-08-01",
             "outgoingCategory": "Tanken",
             "outgoingTitle": "Benzin für mein Auto",
             "outgoingAmount": 100.00,
@@ -81,7 +81,7 @@ const initialState = {
         },
         {
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e2222",
-            "outgoingDate": "20.08.2018",
+            "outgoingDate": "2018-07-05",
             "outgoingCategory": "Essen",
             "outgoingTitle": "Mitagessen",
             "outgoingAmount": 9.50,

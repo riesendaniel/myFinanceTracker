@@ -5,7 +5,6 @@ import {Redirect} from 'react-router-dom';
 import {actions, doAddOutgoing} from '../redux/modules/OutgoingReducer'
 import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
-import moment from 'moment';
 import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
@@ -85,14 +84,6 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
-            if (this.state.outgoing.outgoingDate) {
-                this.setState({
-                    outgoing: {
-                        ...this.state.outgoing,
-                        outgoingDate2: moment(this.state.outgoing.outgoingDate).format('DD.MM.YYYY')
-                    }
-                })
-            }
             this.props.dispatch(doAddOutgoing(this.state.outgoing));
             this.setState({
                 isOutgoingSaved: true, outgoing: {
