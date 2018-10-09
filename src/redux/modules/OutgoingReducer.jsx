@@ -1,4 +1,5 @@
 import history from '../../helper/history';
+import {getOutgoingValues} from "../../helper/firebase";
 
 // ------------------------------------
 // Selectors
@@ -12,15 +13,15 @@ export const getIsLoading = state => state.outgoings.isLoading;
 // Async Action Creators
 // ------------------------------------
 
-const doLoadOutgoings = () => (dispatch, getState) => {
-    dispatch(isLoading(true));
-    setTimeout(() => {
-
-        const result = {outgoings: getState().outgoings};
-        dispatch(isLoading(false));
-        return result;
-    }, 1000);
-};
+export function doLoadOutgoings() {
+    return (dispatch) => {
+        dispatch(isLoading(true));
+        setTimeout(() => {
+            dispatch(getOutgoingValues());
+            dispatch(isLoading(false));
+        }, 1000);
+    };
+}
 
 export const doAddOutgoing = entry => (dispatch) => {
     dispatch(addOutgoing(entry));
@@ -43,6 +44,8 @@ const ADD_OUTGOING = 'ADD_OUTGOING';
 
 const OUTGOING_IS_LOADING = 'OUTGOING_IS_LOADING';
 
+const LOADED_OUTGOINGS = 'LOADED_OUTGOINGS';
+
 // ------------------------------------
 // Action Creators
 // ------------------------------------
@@ -56,6 +59,10 @@ const isLoading = status => ({
     status,
 });
 
+export function loadedOutgoings(outgoings) {
+    return {type: LOADED_OUTGOINGS, payload: outgoings};
+}
+
 // ------------------------------------
 // Action Handlers
 // ------------------------------------
@@ -65,6 +72,9 @@ const ACTION_HANDLERS = {
     },
     [OUTGOING_IS_LOADING]: (state, action) => (
         {...state, isLoading: action.status}
+    ),
+    [LOADED_OUTGOINGS]: (state, action) => (
+        {...state, outgoings: action.payload}
     )
 };
 
@@ -74,7 +84,7 @@ const ACTION_HANDLERS = {
 const initialState = {
     isLoading: false,
     outgoings: [
-        {
+        /*{
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e1111",
             "outgoingDate": "2018-08-01",
             "outgoingCategory": "Tanken",
@@ -89,7 +99,7 @@ const initialState = {
             "outgoingTitle": "Mitagessen",
             "outgoingAmount": 9.50,
             "outgoingCurrency": "CHF"
-        }
+        }*/
     ]
 };
 export default function reducer(state = initialState, action) {
