@@ -13,6 +13,7 @@ import Budget from './BudgetComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
+import MainCategoryListComponent from './MainCategoryListComponent';
 import Menu from './MenuComponent';
 import NotFound from "./NotFound";
 import NewOutgoingComponent from "./NewOutgoingComponent";
@@ -45,8 +46,9 @@ const AppComponent = (props) => {
               <Route path="/income" component={Income} />
               <Route path="/outgoings" component={OutgoingListComponent} />
               <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+              <Route path="/maincategories" component={MainCategoryListComponent} />
               <Route path="/" exact />
-              <Route path="*" component={NotFound}/>
+              <Route path="*" component={NotFound} />
             </Switch>
           </main>
         </div>
