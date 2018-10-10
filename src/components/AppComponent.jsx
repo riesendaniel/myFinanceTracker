@@ -14,7 +14,9 @@ import BudgetItemForm from './BudgetItemFormComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
 import Menu from './MenuComponent';
-import OutgoingContainer from '../container/OutgoingContainer';
+import NotFound from "./NotFound";
+import NewOutgoingComponent from "./NewOutgoingComponent";
+import OutgoingListComponent from "./OutgoingListComponent";
 
 const menuWidth = '300px';
 
@@ -41,8 +43,10 @@ const AppComponent = (props) => {
               <Route path="/budget/edit" component={BudgetItemForm} />
               <Route path="/budget" component={Budget} />
               <Route path="/income" component={Income} />
-              <Route path="/outgoings" component={OutgoingContainer} />
-              <Route path="/" />
+              <Route path="/outgoings" component={OutgoingListComponent} />
+              <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+              <Route path="/" exact />
+              <Route path="*" component={NotFound}/>
             </Switch>
           </main>
         </div>
