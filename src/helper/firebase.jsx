@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import {generateUuid} from "./helper";
-import {loadedOutgoings} from "../redux/modules/OutgoingReducer";
+import {loadedOutgoings, addOutgoing} from "../redux/modules/OutgoingReducer";
 
 let database;
 
@@ -38,15 +38,18 @@ export function getOutgoingValues() {
     };
 }
 
-export const addOutgoing = () => {
-    return firebase.database().ref('/outgoing').push({
-        id: generateUuid(),
-        outgoingDate: '2018-08-01',
-        outgoingCategory: 'Tanken',
-        outgoingTitle: 'Benzin für mein Auto',
-        outgoingAmount: 100.00,
-        outgoingCurrency: 'CHF'
-    })
+export const addNewOutgoing = (entry) => {
+    return (dispatch) => {
+        firebase.database().ref('/outgoing').push({
+            id: generateUuid(),
+            outgoingDate: entry.outgoingDate,
+            outgoingCategory: entry.outgoingCategory,
+            outgoingTitle: entry.outgoingTitle,
+            outgoingAmount: entry.outgoingAmount,
+            outgoingCurrency: entry.outgoingCurrency
+        });
+        dispatch(addOutgoing(entry));
+    };
 }
 
 export const addBudget = (id, name) => {

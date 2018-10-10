@@ -1,5 +1,5 @@
 import history from '../../helper/history';
-import {getOutgoingValues} from "../../helper/firebase";
+import {getOutgoingValues, addNewOutgoing} from "../../helper/firebase";
 
 // ------------------------------------
 // Selectors
@@ -23,10 +23,12 @@ export function doLoadOutgoings() {
     };
 }
 
-export const doAddOutgoing = entry => (dispatch) => {
-    dispatch(addOutgoing(entry));
-    history.push('/outgoings');
-};
+export function doAddOutgoing(entry) {
+    return (dispatch) => {
+        dispatch(addNewOutgoing(entry));
+        history.push('/outgoings');
+    };
+}
 
 // ------------------------------------
 // Actions
@@ -49,7 +51,7 @@ const LOADED_OUTGOINGS = 'LOADED_OUTGOINGS';
 // ------------------------------------
 // Action Creators
 // ------------------------------------
-const addOutgoing = payload => ({
+export const addOutgoing = payload => ({
     type: ADD_OUTGOING,
     payload
 });
@@ -83,24 +85,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
     isLoading: false,
-    outgoings: [
-        /*{
-            "id": "75d652ad-db2c-ba8d-c666-996c8f1e1111",
-            "outgoingDate": "2018-08-01",
-            "outgoingCategory": "Tanken",
-            "outgoingTitle": "Benzin für mein Auto",
-            "outgoingAmount": 100.00,
-            "outgoingCurrency": "CHF"
-        },
-        {
-            "id": "75d652ad-db2c-ba8d-c666-996c8f1e2222",
-            "outgoingDate": "2018-07-05",
-            "outgoingCategory": "Essen",
-            "outgoingTitle": "Mitagessen",
-            "outgoingAmount": 9.50,
-            "outgoingCurrency": "CHF"
-        }*/
-    ]
+    outgoings: []
 };
 export default function reducer(state = initialState, action) {
     const handler = ACTION_HANDLERS[action.type];
