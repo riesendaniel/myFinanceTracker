@@ -7,7 +7,7 @@ import Loading from './LoadingComponent';
 import OutgoingItemComponent from "./OutgoingItemComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
+import { actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
 import OutgoingSummaryComponent from "./OutgoingSummaryComponent";
 
 class OutgoingListComponent extends Component {
@@ -68,7 +68,7 @@ class OutgoingListComponent extends Component {
 
 const mapStateToProps = state => ({
     isLoading: getIsLoading(state),
-    outgoings: getOutgoings(state),
+    outgoings: getOutgoings(state)
 });
 
 const mapDispatchToProps = dispatch => {
