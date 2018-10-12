@@ -1,26 +1,32 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
-import {actions} from '../redux/modules/OutgoingReducer'
-import {getBudgetGroups} from "../redux/modules/BudgetReducer";
+import {actions as outgoingActions} from '../redux/modules/OutgoingReducer'
+import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
 import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
 
+    static propTypes = {
+        categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+    };
+
     state = {
         outgoing: {
             id: generateUuid(),
             outgoingTitle: '',
             outgoingAmount: 0,
-            outgoingCategory: '',
+            outgoingCategoryId: null,
             outgoingDate: '',
             outgoingCurrency: 'CHF'
         },
     };
 
     render() {
+        const { categories } = this.props;
         return (
             <FormControl onSubmit={this.addOutgoing}>
                 <TextField
@@ -53,16 +59,16 @@ class NewOutgoingComponent extends Component {
                 <FormControl>
                     <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
                     <Select
-                        value={this.state.outgoing.outgoingCategory}
+                        value={this.state.outgoing.outgoingCategoryId}
                         onChange={(event) => {
-                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategory: event.target.value}})
+                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
                         }}
                         inputProps={{
                             name: 'group',
                             id: 'group-select',
                         }}
                     >
-                        { this.props.groups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>) }
+                        { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.description}</MenuItem>) }
                     </Select>
                 </FormControl>
                 <TextField
@@ -93,7 +99,7 @@ class NewOutgoingComponent extends Component {
                 outgoing: {
                     outgoingTitle: '',
                     outgoingAmount: 0,
-                    outgoingCategory: '',
+                    outgoingCategoryId: null,
                     outgoingDate: '',
                     outgoingCurrency: ''
                 }
@@ -105,8 +111,13 @@ class NewOutgoingComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-    groups: getBudgetGroups(state)
+    categories: getCategories(state),
 });
+
+const actions = {
+    ...outgoingActions,
+    ...budgetActions,
+};
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(actions, dispatch);

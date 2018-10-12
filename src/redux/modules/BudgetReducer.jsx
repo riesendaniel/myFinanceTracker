@@ -6,21 +6,17 @@ import history from '../../helper/history';
 
 export const getIsLoading = state => state.budget.isLoading;
 
-export const getIsBudgetGroupFormOpen = state => state.budget.isBudgetGroupFormOpen;
-
-export const getBudgetGroups = state => state.budget.budgetGroups;
-
 export const getBudget = state => state.budget.budget;
+
+export const getCategories = state => state.budget.categories;
 
 
 // ------------------------------------
 // Action Types
 // ------------------------------------
 const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
-const BUDGET_GROUP_FORM_IS_OPEN = 'BUDGET_GROUP_FORM_IS_OPEN';
-const RECEIVE_BUDGET_GROUPS = 'RECEIVE_BUDGET_GROUPS';
 const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
-const ADD_BUDGET_GROUP = 'ADD_BUDGET_GROUP';
+const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
 const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
 const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
 const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
@@ -34,24 +30,13 @@ const isLoading = status => ({
   status,
 });
 
-const budgetGroupFormIsOpen = isOpen => ({
-  type: BUDGET_GROUP_FORM_IS_OPEN,
-  isOpen,
-});
-
-const receiveBudgetGroups = budgetGroups => ({
-  type: RECEIVE_BUDGET_GROUPS,
-  budgetGroups,
-});
-
 const receiveBudget = budget => ({
   type: RECEIVE_BUDGET,
   budget,
 });
 
-const addBudgetGroup = groupName => ({
-  type: ADD_BUDGET_GROUP,
-  groupName,
+const loadCategories = () => ({
+  type: LOAD_CATEGORIES,
 });
 
 const addBudgetEntry = entry => ({
@@ -73,42 +58,32 @@ const deleteBudgetEntry = id => ({
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
-
-const doLoadBudgetGroups = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const { budgetGroups } = getState().budget;
-    dispatch(isLoading(false));
-    return dispatch(receiveBudgetGroups(budgetGroups));
-  }, 1000);
-};
-
 const doLoadBudget = () => (dispatch, getState) => {
   dispatch(isLoading(true));
   setTimeout(() => {
     const { budget } = getState().budget;
     dispatch(isLoading(false));
-    return dispatch(receiveBudget(budget));
+    dispatch(receiveBudget(budget));
+    dispatch(loadCategories());
   }, 1000);
 };
 
-export const doAddBudgetGroup = groupName => (
-  addBudgetGroup(groupName)
-);
-
 export const doAddBudgetEntry = entry => (dispatch) => {
   dispatch(addBudgetEntry(entry));
+  dispatch(loadCategories());
   history.push('/budget');
 };
 
 export const doUpdateBudgetEntry = entry => (dispatch) => {
   dispatch(updateBudgetEntry(entry));
+  dispatch(loadCategories());
   history.push('/budget');
 };
 
-export const doDeleteBudgetEntry = id => (
-  deleteBudgetEntry(id)
-);
+export const doDeleteBudgetEntry = id => (dispatch) => {
+  dispatch(deleteBudgetEntry(id));
+  dispatch(loadCategories());
+};
 
 
 // ------------------------------------
@@ -116,13 +91,10 @@ export const doDeleteBudgetEntry = id => (
 // ------------------------------------
 
 export const actions = {
-  doLoadBudgetGroups,
   doLoadBudget,
-  doAddBudgetGroup,
   doAddBudgetEntry,
   doUpdateBudgetEntry,
   doDeleteBudgetEntry,
-  budgetGroupFormIsOpen,
 };
 
 
@@ -133,20 +105,20 @@ const ACTION_HANDLERS = {
   [BUDGET_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
-  [BUDGET_GROUP_FORM_IS_OPEN]: (state, action) => (
-    { ...state, isBudgetGroupFormOpen: action.isOpen }
-  ),
-  [RECEIVE_BUDGET_GROUPS]: (state, action) => {
-    const budgetGroups = [...action.budgetGroups];
-    return { ...state, budgetGroups };
-  },
   [RECEIVE_BUDGET]: (state, action) => {
     const budget = [...action.budget];
     return { ...state, budget };
   },
-  [ADD_BUDGET_GROUP]: (state, action) => {
-    const budgetGroups = [...state.budgetGroups, action.groupName];
-    return { ...state, budgetGroups };
+  [LOAD_CATEGORIES]: (state) => {
+    const categories = [];
+    for (let i = 0; i < state.budget.length; i++) {
+      const budgetEntry = state.budget[i];
+      categories.push({
+        id: budgetEntry.id,
+        description: budgetEntry.category,
+      });
+    }
+    return { ...state, categories };
   },
   [ADD_BUDGET_ENTRY]: (state, action) => {
     const budget = [...state.budget, action.entry];
@@ -167,21 +139,11 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  isBudgetGroupFormOpen: false,
-  budgetGroups: [
-    'Wohnen',
-    'Haushalt',
-    'Gesundheit & Körper',
-    'Freizeit',
-    'Reisen',
-    'Versicherungen',
-    'Steuern',
-    'Sparen & Anlegen',
-  ],
+  categories: [],
   budget: [
     {
       id: 1,
-      group: 'Haushalt',
+      mainCategoryId: 2,
       category: 'Unterhalt',
       period: 'monthly',
       monthly: 100,
@@ -189,7 +151,7 @@ const initialState = {
     },
     {
       id: 2,
-      group: 'Haushalt',
+      mainCategoryId: 2,
       category: 'Essen & Getränke',
       period: 'monthly',
       monthly: 250,
@@ -197,11 +159,19 @@ const initialState = {
     },
     {
       id: 3,
-      group: 'Mobilität',
+      mainCategoryId: 9,
       category: 'öffentlicher Verkehr',
       period: 'yearly',
       monthly: 200,
       yearly: 2400,
+    },
+    {
+      id: 4,
+      mainCategoryId: 5,
+      category: 'Tanken',
+      period: 'monthly',
+      monthly: 100,
+      yearly: 1200,
     },
   ],
 };

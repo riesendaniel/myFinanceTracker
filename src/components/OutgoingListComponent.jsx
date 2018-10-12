@@ -7,7 +7,8 @@ import Loading from './LoadingComponent';
 import OutgoingItemComponent from "./OutgoingItemComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { actions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
+import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
+import { actions as outgoingActions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
 import OutgoingSummaryComponent from "./OutgoingSummaryComponent";
 
 class OutgoingListComponent extends Component {
@@ -15,16 +16,17 @@ class OutgoingListComponent extends Component {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         outgoings: PropTypes.array.isRequired,
+        categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     };
 
     async componentDidMount() {
-        const {doLoadOutgoings} = this.props;
+        const {doLoadOutgoings, doLoadBudget} = this.props;
         await doLoadOutgoings();
+        await doLoadBudget();
     }
 
     render() {
-        const { outgoings, isLoading } = this.props;
-
+        const { outgoings, isLoading, categories } = this.props;
         return (
             <Paper>
                 <h2>Ausgaben</h2>
@@ -50,6 +52,11 @@ class OutgoingListComponent extends Component {
                             </TableHead>
                             <TableBody>
                                 {outgoings.map(row => {
+                                    const category = categories.filter(item => item.id === row.outgoingCategoryId);
+                                    if (category.length > 0) {
+                                        row.outgoingCategory = category[0].description;
+                                    }
+                                    console.log(row);
                                     return (
                                         <OutgoingItemComponent key={row.id} outgoing={row}/>
                                     );
@@ -68,8 +75,14 @@ class OutgoingListComponent extends Component {
 
 const mapStateToProps = state => ({
     isLoading: getIsLoading(state),
-    outgoings: getOutgoings(state)
+    outgoings: getOutgoings(state),
+    categories: getCategories(state),
 });
+
+const actions = {
+    ...budgetActions,
+    ...outgoingActions,
+};
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators(actions, dispatch);
