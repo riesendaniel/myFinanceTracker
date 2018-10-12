@@ -111,7 +111,7 @@ const ACTION_HANDLERS = {
   },
   [LOAD_CATEGORIES]: (state) => {
     const categories = [];
-    for (let i = 0; i < state.budget.length; i++) {
+    for (let i = 0; i < state.budget.length; i += 1) {
       const budgetEntry = state.budget[i];
       categories.push({
         id: budgetEntry.id,
