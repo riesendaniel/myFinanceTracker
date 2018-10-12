@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
-import {actions as outgoingActions} from '../redux/modules/OutgoingReducer'
+import {actions as outgoingActions} from '../redux/modules/OutgoingReducer';
+import { getCurrency } from '../redux/modules/AppReducer';
 import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
 import {generateUuid} from '../helper/helper'
@@ -11,6 +12,7 @@ import {bindActionCreators} from 'redux';
 class NewOutgoingComponent extends Component {
 
     static propTypes = {
+        currency: PropTypes.string.isRequired,
         categories: PropTypes.arrayOf(PropTypes.object).isRequired,
     };
 
@@ -21,12 +23,11 @@ class NewOutgoingComponent extends Component {
             outgoingAmount: 0,
             outgoingCategoryId: null,
             outgoingDate: '',
-            outgoingCurrency: 'CHF'
         },
     };
 
     render() {
-        const { categories } = this.props;
+        const { currency, categories } = this.props;
         return (
             <FormControl onSubmit={this.addOutgoing}>
                 <TextField
@@ -52,7 +53,7 @@ class NewOutgoingComponent extends Component {
                             })
                         }}
                         startAdornment={
-                            <InputAdornment position="start">CHF</InputAdornment>
+                            <InputAdornment position="start">{currency}</InputAdornment>
                         }
                     />
                 </FormControl>
@@ -111,6 +112,7 @@ class NewOutgoingComponent extends Component {
 }
 
 const mapStateToProps = state => ({
+    currency: getCurrency(state),
     categories: getCategories(state),
 });
 

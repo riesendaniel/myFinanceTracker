@@ -47,7 +47,6 @@ class OutgoingListComponent extends Component {
                                     <TableCell>Datum</TableCell>
                                     <TableCell>Kategorie</TableCell>
                                     <TableCell>Betrag</TableCell>
-                                    <TableCell>Währung</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

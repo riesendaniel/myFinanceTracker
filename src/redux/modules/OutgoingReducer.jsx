@@ -80,7 +80,6 @@ const initialState = {
             "outgoingCategoryId": 4,
             "outgoingTitle": "Benzin für mein Auto",
             "outgoingAmount": 100.00,
-            "outgoingCurrency": "CHF"
         },
         {
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e2222",
@@ -88,7 +87,6 @@ const initialState = {
             "outgoingCategoryId": 2,
             "outgoingTitle": "Mitagessen",
             "outgoingAmount": 9.50,
-            "outgoingCurrency": "CHF"
         }
     ]
 };
