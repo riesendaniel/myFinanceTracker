@@ -21,8 +21,8 @@ class OutgoingListComponent extends Component {
 
     async componentDidMount() {
         const {doLoadOutgoings, doLoadBudget} = this.props;
-        await doLoadOutgoings();
         await doLoadBudget();
+        await doLoadOutgoings();
     }
 
     render() {
