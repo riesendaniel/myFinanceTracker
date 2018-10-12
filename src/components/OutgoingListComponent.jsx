@@ -55,7 +55,6 @@ class OutgoingListComponent extends Component {
                                     if (category.length > 0) {
                                         row.outgoingCategory = category[0].description;
                                     }
-                                    console.log(row);
                                     return (
                                         <OutgoingItemComponent key={row.id} outgoing={row}/>
                                     );
