@@ -17,16 +17,24 @@ export function doLoadOutgoings() {
     return (dispatch) => {
         dispatch(isLoading(true));
         setTimeout(() => {
-            dispatch(getOutgoingValues());
-            dispatch(isLoading(false));
+            getOutgoingValues().then(outgoingList => {
+                dispatch(loadedOutgoings(outgoingList));
+                dispatch(isLoading(false));
+            }).catch(error => {
+                console.error(error)
+                dispatch(isLoading(false));
+            })
         }, 1000);
     };
 }
 
 export function doAddOutgoing(entry) {
     return (dispatch) => {
-        dispatch(addNewOutgoing(entry));
-        history.push('/outgoings');
+        addNewOutgoing(entry).then(entry => {
+                dispatch(addOutgoing(entry));
+                history.push('/outgoings');
+            }
+        );
     };
 }
 
@@ -51,7 +59,7 @@ const LOADED_OUTGOINGS = 'LOADED_OUTGOINGS';
 // ------------------------------------
 // Action Creators
 // ------------------------------------
-export const addOutgoing = payload => ({
+const addOutgoing = payload => ({
     type: ADD_OUTGOING,
     payload
 });
@@ -61,7 +69,7 @@ const isLoading = status => ({
     status,
 });
 
-export function loadedOutgoings(outgoings) {
+function loadedOutgoings(outgoings) {
     return {type: LOADED_OUTGOINGS, payload: outgoings};
 }
 

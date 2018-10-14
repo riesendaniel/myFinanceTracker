@@ -1,7 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import {generateUuid} from "./helper";
-import {loadedOutgoings, addOutgoing} from "../redux/modules/OutgoingReducer";
 
 let database;
 
@@ -26,20 +25,22 @@ export const getBudgetValues = () => {
 }
 
 export function getOutgoingValues() {
-    return (dispatch) => {
+    return new Promise((resolve, reject) => {
         var outgoingList = [];
         database.ref("/outgoing").once("value").then((snapshot) => {
             snapshot.forEach(function (childSnapshot) {
                 var childData = childSnapshot.val();
                 outgoingList.push(childData);
             });
-            dispatch(loadedOutgoings(outgoingList));
+            resolve(outgoingList);
+        }).catch(error => {
+            reject(error)
         });
-    };
+    });
 }
 
 export const addNewOutgoing = (entry) => {
-    return (dispatch) => {
+    return new Promise((resolve, reject) => {
         firebase.database().ref('/outgoing').push({
             id: generateUuid(),
             outgoingDate: entry.outgoingDate,
@@ -48,8 +49,8 @@ export const addNewOutgoing = (entry) => {
             outgoingAmount: entry.outgoingAmount,
             outgoingCurrency: entry.outgoingCurrency
         });
-        dispatch(addOutgoing(entry));
-    };
+        resolve(entry);
+    });
 }
 
 export const addBudget = (id, name) => {
