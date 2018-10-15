@@ -1,6 +1,5 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
-import {generateUuid} from "./helper";
 
 let database;
 
@@ -14,14 +13,66 @@ export const init = () => {
 }
 
 export const getBudgetValues = () => {
-    var budgetList = [];
-    database.ref("/budget").once("value").then((snapshot) => {
-        snapshot.forEach(function (childSnapshot) {
-            var childData = childSnapshot.val();
-            budgetList.push(childData);
+    return new Promise((resolve, reject) => {
+        var budgetList = [];
+        database.ref("/budget").once("value").then((snapshot) => {
+            snapshot.forEach(function (childSnapshot) {
+                var key = childSnapshot.key;
+                var curBudget = childSnapshot.val();
+                curBudget.id = key;
+                budgetList.push(curBudget);
+            });
+            resolve(budgetList);
+        }).catch(error => {
+            reject(error);
         });
     });
-    return budgetList;
+}
+
+export const updateBudget = (budget) => {
+    return new Promise((resolve, reject) => {
+        const id = budget.id;
+        delete budget.id;
+        firebase.database().ref('/budget').child(id).set(budget).then(budget => {
+            resolve(budget);
+        }).catch(error => {
+            reject(error);
+        });
+    });
+}
+
+export const addNewBudget = (budget) => {
+    return new Promise((resolve, reject) => {
+            firebase.database().ref('/budget').push({
+                group: budget.group,
+                category: budget.category,
+                period: budget.period,
+                monthly: budget.monthly,
+                yearly: budget.yearly
+            }).then(budget => {
+                resolve(budget);
+            }).catch(error => {
+                reject(error);
+            });
+        }
+    );
+}
+
+export const getIncomeValues = () => {
+    return new Promise((resolve, reject) => {
+        var incomeList = [];
+        database.ref("/income").once("value").then((snapshot) => {
+            snapshot.forEach(function (childSnapshot) {
+                var key = childSnapshot.key;
+                var curIncome = childSnapshot.val();
+                curIncome.id = key;
+                incomeList.push(curIncome);
+            });
+            resolve(incomeList);
+        }).catch(error => {
+            reject(error);
+        });
+    });
 }
 
 export function getOutgoingValues() {
@@ -29,40 +80,31 @@ export function getOutgoingValues() {
         var outgoingList = [];
         database.ref("/outgoing").once("value").then((snapshot) => {
             snapshot.forEach(function (childSnapshot) {
-                var childData = childSnapshot.val();
-                outgoingList.push(childData);
+                var key = childSnapshot.key;
+                var curOutgoing = childSnapshot.val();
+                curOutgoing.id = key;
+                outgoingList.push(curOutgoing);
             });
             resolve(outgoingList);
         }).catch(error => {
-            reject(error)
+            reject(error);
         });
     });
 }
 
-export const addNewOutgoing = (entry) => {
+export const addNewOutgoing = (outgoing) => {
     return new Promise((resolve, reject) => {
-        firebase.database().ref('/outgoing').push({
-            id: generateUuid(),
-            outgoingDate: entry.outgoingDate,
-            outgoingCategory: entry.outgoingCategory,
-            outgoingTitle: entry.outgoingTitle,
-            outgoingAmount: entry.outgoingAmount,
-            outgoingCurrency: entry.outgoingCurrency
-        });
-        resolve(entry);
-    });
-}
-
-export const addBudget = (id, name) => {
-    //const key = firebase.database().ref('budget').child().key;
-    //return new Promise((resolve, reject) => {
-    return firebase.database().ref('budget/').push({
-        id: generateUuid(),
-        group: "Haushalt",
-        category: "Unterhalt",
-        period: 'monthly',
-        monthly: 100,
-        yearly: 1200
-        //});
-    })
+            firebase.database().ref('/outgoing').push({
+                outgoingDate: outgoing.outgoingDate,
+                outgoingCategory: outgoing.outgoingCategory,
+                outgoingTitle: outgoing.outgoingTitle,
+                outgoingAmount: outgoing.outgoingAmount,
+                outgoingCurrency: outgoing.outgoingCurrency
+            }).then(outgoing => {
+                resolve(outgoing);
+            }).catch(error => {
+                reject(error);
+            });
+        }
+    );
 }

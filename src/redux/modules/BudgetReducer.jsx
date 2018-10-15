@@ -1,4 +1,5 @@
 import history from '../../helper/history';
+import {getBudgetValues, addNewBudget, updateBudget} from "../../helper/firebase";
 
 // ------------------------------------
 // Selectors
@@ -83,28 +84,47 @@ const doLoadBudgetGroups = () => (dispatch, getState) => {
   }, 1000);
 };
 
-const doLoadBudget = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const { budget } = getState().budget;
-    dispatch(isLoading(false));
-    return dispatch(receiveBudget(budget));
-  }, 1000);
-};
+
+const doLoadBudget = ()  => {
+    return (dispatch) => {
+        dispatch(isLoading(true));
+        setTimeout(() => {
+            getBudgetValues().then(budget => {
+                dispatch(receiveBudget(budget));
+                dispatch(isLoading(false));
+            }).catch(error => {
+                console.error(error)
+                dispatch(isLoading(false));
+            })
+        }, 1000);
+    };
+}
 
 export const doAddBudgetGroup = groupName => (
   addBudgetGroup(groupName)
 );
 
-export const doAddBudgetEntry = entry => (dispatch) => {
-  dispatch(addBudgetEntry(entry));
-  history.push('/budget');
-};
+export function doAddBudgetEntry(entry) {
+    return (dispatch) => {
+        addNewBudget(entry).then(entry => {
+                dispatch(addBudgetEntry(entry));
+                history.push('/budget');
+            }
+        );
+    };
+}
 
-export const doUpdateBudgetEntry = entry => (dispatch) => {
-  dispatch(updateBudgetEntry(entry));
-  history.push('/budget');
-};
+
+
+export function doUpdateBudgetEntry(entry) {
+    return (dispatch) => {
+        updateBudget(entry).then(entry => {
+            dispatch(updateBudgetEntry(entry));
+            history.push('/budget');
+            }
+        );
+    };
+}
 
 export const doDeleteBudgetEntry = id => (
   deleteBudgetEntry(id)
@@ -178,32 +198,7 @@ const initialState = {
     'Steuern',
     'Sparen & Anlegen',
   ],
-  budget: [
-    {
-      id: 1,
-      group: 'Haushalt',
-      category: 'Unterhalt',
-      period: 'monthly',
-      monthly: 100,
-      yearly: 1200,
-    },
-    {
-      id: 2,
-      group: 'Haushalt',
-      category: 'Essen & Getränke',
-      period: 'monthly',
-      monthly: 250,
-      yearly: 3000,
-    },
-    {
-      id: 3,
-      group: 'Mobilität',
-      category: 'öffentlicher Verkehr',
-      period: 'yearly',
-      monthly: 200,
-      yearly: 2400,
-    },
-  ],
+  budget: [],
 };
 
 export default function reducer(state = initialState, action) {

@@ -72,7 +72,7 @@ BudgetListItemComponent.propTypes = {
     category: PropTypes.string.isRequired,
     period: PropTypes.string.isRequired,
     monthly: PropTypes.number.isRequired,
-    yearly: PropTypes.string.isRequired,
+    yearly: PropTypes.number.isRequired,
   }).isRequired,
 };
 

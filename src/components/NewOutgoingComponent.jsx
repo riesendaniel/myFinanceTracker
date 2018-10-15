@@ -4,14 +4,12 @@ import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, M
 import {actions} from '../redux/modules/OutgoingReducer'
 import {getBudgetGroups} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
-import {generateUuid} from '../helper/helper'
 import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
 
     state = {
         outgoing: {
-            id: generateUuid(),
             outgoingTitle: '',
             outgoingAmount: 0,
             outgoingCategory: '',
