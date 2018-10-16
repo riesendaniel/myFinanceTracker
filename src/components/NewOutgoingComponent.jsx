@@ -1,17 +1,24 @@
 import React, {Component} from 'react';
-import AddIcon from '@material-ui/icons/Add';
-import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
+import {
+    FormControl,
+    IconButton,
+    Input,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField
+} from '@material-ui/core';
 import {actions} from '../redux/modules/OutgoingReducer'
 import {getBudgetGroups} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
-import {generateUuid} from '../helper/helper'
 import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
 
     state = {
         outgoing: {
-            id: generateUuid(),
             outgoingTitle: '',
             outgoingAmount: 0,
             outgoingCategory: '',
@@ -19,6 +26,23 @@ class NewOutgoingComponent extends Component {
             outgoingCurrency: 'CHF'
         },
     };
+
+    componentDidMount = () => {
+        const {location} = this.props;
+        if (location.state && location.state.outgoing) {
+            const {outgoing} = location.state;
+            this.setState({
+                outgoing: {
+                    id: outgoing.id,
+                    outgoingTitle: outgoing.outgoingTitle,
+                    outgoingAmount: outgoing.outgoingAmount,
+                    outgoingCategory: outgoing.outgoingCategory,
+                    outgoingDate: outgoing.outgoingDate,
+                    outgoingCurrency: 'CHF'
+                },
+            });
+        }
+    }
 
     render() {
         return (
@@ -55,14 +79,14 @@ class NewOutgoingComponent extends Component {
                     <Select
                         value={this.state.outgoing.outgoingCategory}
                         onChange={(event) => {
-                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategory: event.target.value}})
+                            this.setState({outgoing: {...this.state.outgoing, outgoingCategory: event.target.value}})
                         }}
                         inputProps={{
                             name: 'group',
                             id: 'group-select',
                         }}
                     >
-                        { this.props.groups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>) }
+                        {this.props.groups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>)}
                     </Select>
                 </FormControl>
                 <TextField
@@ -79,7 +103,7 @@ class NewOutgoingComponent extends Component {
                     aria-label="add outgoing"
                     onClick={this.addOutgoing}
                 >
-                    <AddIcon/>
+                    <SaveIcon/>
                 </IconButton>
             </FormControl>
 
@@ -88,7 +112,11 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
-            this.props.doAddOutgoing(this.state.outgoing);
+            if (this.state.outgoing.id) {
+                this.props.doUpdateOutgoing(this.state.outgoing);
+            } else {
+                this.props.doAddOutgoing(this.state.outgoing);
+            }
             this.setState({
                 outgoing: {
                     outgoingTitle: '',

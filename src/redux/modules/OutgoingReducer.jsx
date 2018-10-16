@@ -27,13 +27,29 @@ export const doAddOutgoing = entry => (dispatch) => {
     history.push('/outgoings');
 };
 
+export function doUpdateOutgoing(entry) {
+    return (dispatch) => {
+        console.log('Eintrag wurde geändert: ' + entry);
+        history.push('/outgoings');
+    };
+}
+
+export function doDeleteOutgoing(id) {
+    return (dispatch) => {
+        console.log('Eintrag wurde gelöscht: ' + id);
+        history.push('/outgoings');
+    };
+}
+
 // ------------------------------------
 // Actions
 // ------------------------------------
 
 export const actions = {
     doLoadOutgoings,
-    doAddOutgoing
+    doAddOutgoing,
+    doUpdateOutgoing,
+    doDeleteOutgoing
 };
 
 // ------------------------------------

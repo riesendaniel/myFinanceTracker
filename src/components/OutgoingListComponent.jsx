@@ -18,7 +18,7 @@ class OutgoingListComponent extends Component {
     };
 
     async componentDidMount() {
-        const {doLoadOutgoings} = this.props;
+        const { doLoadOutgoings } = this.props;
         await doLoadOutgoings();
     }
 
@@ -46,6 +46,7 @@ class OutgoingListComponent extends Component {
                                     <TableCell>Kategorie</TableCell>
                                     <TableCell>Betrag</TableCell>
                                     <TableCell>Währung</TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
