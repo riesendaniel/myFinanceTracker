@@ -1,5 +1,5 @@
 import history from '../../helper/history';
-import {getBudgetValues, addNewBudget, updateBudget} from "../../helper/firebase";
+import {addNewBudget, deleteBudget, getBudgetValues, updateBudget} from "../../helper/firebase";
 
 // ------------------------------------
 // Selectors
@@ -31,43 +31,43 @@ const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 // Action Creators
 // ------------------------------------
 const isLoading = status => ({
-  type: BUDGET_IS_LOADING,
-  status,
+    type: BUDGET_IS_LOADING,
+    status,
 });
 
 const budgetGroupFormIsOpen = isOpen => ({
-  type: BUDGET_GROUP_FORM_IS_OPEN,
-  isOpen,
+    type: BUDGET_GROUP_FORM_IS_OPEN,
+    isOpen,
 });
 
 const receiveBudgetGroups = budgetGroups => ({
-  type: RECEIVE_BUDGET_GROUPS,
-  budgetGroups,
+    type: RECEIVE_BUDGET_GROUPS,
+    budgetGroups,
 });
 
 const receiveBudget = budget => ({
-  type: RECEIVE_BUDGET,
-  budget,
+    type: RECEIVE_BUDGET,
+    budget,
 });
 
 const addBudgetGroup = groupName => ({
-  type: ADD_BUDGET_GROUP,
-  groupName,
+    type: ADD_BUDGET_GROUP,
+    groupName,
 });
 
 const addBudgetEntry = entry => ({
-  type: ADD_BUDGET_ENTRY,
-  entry,
+    type: ADD_BUDGET_ENTRY,
+    entry,
 });
 
 const updateBudgetEntry = entry => ({
-  type: UPDATE_BUDGET_ENTRY,
-  entry,
+    type: UPDATE_BUDGET_ENTRY,
+    entry,
 });
 
 const deleteBudgetEntry = id => ({
-  type: DELETE_BUDGET_ENTRY,
-  id,
+    type: DELETE_BUDGET_ENTRY,
+    id,
 });
 
 
@@ -75,17 +75,18 @@ const deleteBudgetEntry = id => ({
 // Async Action Creators
 // ------------------------------------
 
+//TODO loading
 const doLoadBudgetGroups = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const { budgetGroups } = getState().budget;
-    dispatch(isLoading(false));
-    return dispatch(receiveBudgetGroups(budgetGroups));
-  }, 1000);
+    dispatch(isLoading(true));
+    setTimeout(() => {
+        const {budgetGroups} = getState().budget;
+        dispatch(isLoading(false));
+        return dispatch(receiveBudgetGroups(budgetGroups));
+    }, 1000);
 };
 
 
-const doLoadBudget = ()  => {
+const doLoadBudget = () => {
     return (dispatch) => {
         dispatch(isLoading(true));
         setTimeout(() => {
@@ -101,34 +102,43 @@ const doLoadBudget = ()  => {
 }
 
 export const doAddBudgetGroup = groupName => (
-  addBudgetGroup(groupName)
+    addBudgetGroup(groupName)
 );
 
 export function doAddBudgetEntry(entry) {
     return (dispatch) => {
         addNewBudget(entry).then(entry => {
+                console.log('ok');
                 dispatch(addBudgetEntry(entry));
                 history.push('/budget');
             }
-        );
+        ).catch(error => {
+            console.log('nok');
+            console.error(error);
+        });
     };
 }
-
 
 
 export function doUpdateBudgetEntry(entry) {
     return (dispatch) => {
         updateBudget(entry).then(entry => {
-            dispatch(updateBudgetEntry(entry));
-            history.push('/budget');
+                dispatch(updateBudgetEntry(entry));
+                history.push('/budget');
             }
-        );
+        ).catch(error => {
+            console.error(error)
+        })
     };
 }
 
-export const doDeleteBudgetEntry = id => (
-  deleteBudgetEntry(id)
-);
+export function doDeleteBudgetEntry(id) {
+    return (dispatch) => {
+        deleteBudget(id).then(
+            dispatch(deleteBudgetEntry(id))
+        );
+    };
+}
 
 
 // ------------------------------------
@@ -136,13 +146,13 @@ export const doDeleteBudgetEntry = id => (
 // ------------------------------------
 
 export const actions = {
-  doLoadBudgetGroups,
-  doLoadBudget,
-  doAddBudgetGroup,
-  doAddBudgetEntry,
-  doUpdateBudgetEntry,
-  doDeleteBudgetEntry,
-  budgetGroupFormIsOpen,
+    doLoadBudgetGroups,
+    doLoadBudget,
+    doAddBudgetGroup,
+    doAddBudgetEntry,
+    doUpdateBudgetEntry,
+    doDeleteBudgetEntry,
+    budgetGroupFormIsOpen,
 };
 
 
@@ -150,58 +160,58 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [BUDGET_IS_LOADING]: (state, action) => (
-    { ...state, isLoading: action.status }
-  ),
-  [BUDGET_GROUP_FORM_IS_OPEN]: (state, action) => (
-    { ...state, isBudgetGroupFormOpen: action.isOpen }
-  ),
-  [RECEIVE_BUDGET_GROUPS]: (state, action) => {
-    const budgetGroups = [...action.budgetGroups];
-    return { ...state, budgetGroups };
-  },
-  [RECEIVE_BUDGET]: (state, action) => {
-    const budget = [...action.budget];
-    return { ...state, budget };
-  },
-  [ADD_BUDGET_GROUP]: (state, action) => {
-    const budgetGroups = [...state.budgetGroups, action.groupName];
-    return { ...state, budgetGroups };
-  },
-  [ADD_BUDGET_ENTRY]: (state, action) => {
-    const budget = [...state.budget, action.entry];
-    return { ...state, budget };
-  },
-  [UPDATE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
-    return { ...state, budget };
-  },
-  [DELETE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.filter(entry => entry.id !== action.id);
-    return { ...state, budget };
-  },
+    [BUDGET_IS_LOADING]: (state, action) => (
+        {...state, isLoading: action.status}
+    ),
+    [BUDGET_GROUP_FORM_IS_OPEN]: (state, action) => (
+        {...state, isBudgetGroupFormOpen: action.isOpen}
+    ),
+    [RECEIVE_BUDGET_GROUPS]: (state, action) => {
+        const budgetGroups = [...action.budgetGroups];
+        return {...state, budgetGroups};
+    },
+    [RECEIVE_BUDGET]: (state, action) => {
+        const budget = [...action.budget];
+        return {...state, budget};
+    },
+    [ADD_BUDGET_GROUP]: (state, action) => {
+        const budgetGroups = [...state.budgetGroups, action.groupName];
+        return {...state, budgetGroups};
+    },
+    [ADD_BUDGET_ENTRY]: (state, action) => {
+        const budget = [...state.budget, action.entry];
+        return {...state, budget};
+    },
+    [UPDATE_BUDGET_ENTRY]: (state, action) => {
+        const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
+        return {...state, budget};
+    },
+    [DELETE_BUDGET_ENTRY]: (state, action) => {
+        const budget = state.budget.filter(entry => entry.id !== action.id);
+        return {...state, budget};
+    },
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
-  isBudgetGroupFormOpen: false,
-  budgetGroups: [
-    'Wohnen',
-    'Haushalt',
-    'Gesundheit & Körper',
-    'Freizeit',
-    'Reisen',
-    'Versicherungen',
-    'Steuern',
-    'Sparen & Anlegen',
-  ],
-  budget: [],
+    isLoading: false,
+    isBudgetGroupFormOpen: false,
+    budgetGroups: [
+        'Wohnen',
+        'Haushalt',
+        'Gesundheit & Körper',
+        'Freizeit',
+        'Reisen',
+        'Versicherungen',
+        'Steuern',
+        'Sparen & Anlegen',
+    ],
+    budget: [],
 };
 
 export default function reducer(state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+    const handler = ACTION_HANDLERS[action.type];
+    return handler ? handler(state, action) : state;
 }

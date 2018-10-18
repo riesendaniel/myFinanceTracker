@@ -33,7 +33,16 @@ export const updateBudget = (budget) => {
     return new Promise((resolve, reject) => {
         const id = budget.id;
         delete budget.id;
-        firebase.database().ref('/budget').child(id).set(budget).then(budget => {
+        //TODO Fehlerhandling
+        firebase.database().ref('/budget').child(id).set(budget);
+        resolve(budget);
+    });
+}
+
+export const deleteBudget = (id) => {
+    return new Promise((resolve, reject) => {
+        //TODO Fehlerhandling
+        firebase.database().ref('/budget').child(id).remove().then(budget => {
             resolve(budget);
         }).catch(error => {
             reject(error);
@@ -41,19 +50,33 @@ export const updateBudget = (budget) => {
     });
 }
 
-export const addNewBudget = (budget) => {
+export function addNewBudget(budget) {
     return new Promise((resolve, reject) => {
-            firebase.database().ref('/budget').push({
+            //TODO Fehlerhandling
+            let test;
+            const ref = firebase.database().ref('/budget').push({
                 group: budget.group,
                 category: budget.category,
                 period: budget.period,
                 monthly: budget.monthly,
                 yearly: budget.yearly
-            }).then(budget => {
-                resolve(budget);
-            }).catch(error => {
-                reject(error);
             });
+            /*, function (error) {
+                            if (error) {
+                                test = error;
+                                console.log('lueg für din scheiss')
+                                reject(error);
+                            }
+                            else {
+                            console.log('de mirco het 10-0 verlore')
+                            const key = ref.key;
+                            budget.id = key;
+                            resolve(budget);
+                        }
+                        });*/
+            const key = ref.key;
+            budget.id = key;
+            resolve(budget);
         }
     );
 }
