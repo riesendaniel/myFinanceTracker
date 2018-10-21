@@ -9,9 +9,12 @@ const DashboardInfoComponent = (props) => {
     icon,
     title,
     value,
+    clickFn,
   } = props;
   return (
-    <Card>
+    <Card
+      onClick={clickFn}
+    >
       <CardHeader
         avatar={icon}
         title={title}
@@ -25,6 +28,11 @@ DashboardInfoComponent.propTypes = {
   icon: PropTypes.element.isRequired,
   title: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
+  clickFn: PropTypes.func,
+};
+
+DashboardInfoComponent.defaultProps = {
+  clickFn: undefined,
 };
 
 export default DashboardInfoComponent;

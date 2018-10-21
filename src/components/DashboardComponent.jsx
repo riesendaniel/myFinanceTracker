@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import {
   Paper,
   Table, TableHead, TableBody, TableRow, TableCell,
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
 import MoneyIcon from '@material-ui/icons/Money';
@@ -30,7 +30,10 @@ import {
   getIsLoading, getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
 import {
+  actions as outgoingActions,
   getOutgoings,
+  getCurrentMonthsOutgoingSum, getCurrentMonthsOutgoingsByCategory,
+  getLastTwelveMonthsOutgoingSum,
 } from '../redux/modules/OutgoingReducer';
 import {
   actions as incomeActions,
@@ -45,18 +48,33 @@ class DashboardComponent extends Component {
     const {
       doLoadBudget,
       doLoadIncome,
-      /* doCalculateOutgoingsPerCategory, */
+      doLoadOutgoings,
     } = this.props;
     await doLoadBudget();
     await doLoadIncome();
-    /* await doCalculateOutgoingsPerCategory(); */
+    await doLoadOutgoings();
   }
 
   handleAddOutgoing = () => {
-    // TODO: Diese Funktion muss noch getestet werden.
     const { history } = this.props;
-    history.push('/outgoings/edit');
+    history.push('/outgoing/edit');
   };
+
+  mergeBudgetAndOutgoings = (budget, outgoingsByCategory) => {
+    return budget.map((entry) => {
+      const outgoingSum = outgoingsByCategory.find(outgoing => outgoing.id === entry.id);
+      const balance = {
+        id: entry.id,
+        category: entry.category,
+        budget: entry.monthly,
+        outgoing: 0,
+      };
+      if (typeof outgoingSum !== 'undefined') {
+        balance.outgoing = outgoingSum.amount;
+      }
+      return balance;
+    });
+  }
 
   render = () => {
     const {
@@ -66,10 +84,14 @@ class DashboardComponent extends Component {
       monthlyBudgetSum,
       netPay,
       outgoings,
-      /* outgoingsPerCategory, */
+      currentMonthsOutgoingSum,
+      currentMonthsOutgoingsByCategory,
+      lastTwelveMonthsOutgoingSum,
     } = this.props;
-    // TODO: temporäre Variablen entfernen (Framework für Zeit-Handling verwenden)
-    const outgoingsActualMonth = 300;
+    const currentMonthsBalance = this.mergeBudgetAndOutgoings(
+      budget, currentMonthsOutgoingsByCategory,
+    );
+    // TODO: temporäre Variablen entfernen
     const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
       <Paper>
@@ -79,7 +101,7 @@ class DashboardComponent extends Component {
             <DashboardInfoComponent
               icon={<MoneyIcon />}
               title="Ausgaben"
-              value={`${outgoingsActualMonth} ${currency}`}
+              value={`${currentMonthsOutgoingSum} ${currency}`}
             />
             <DashboardInfoComponent
               icon={<AttachMoneyIcon />}
@@ -89,7 +111,7 @@ class DashboardComponent extends Component {
             <DashboardInfoComponent
               icon={<CompareIcon />}
               title="Bilanz"
-              value={`${netPay - outgoingsActualMonth} ${currency}`}
+              value={`${netPay - currentMonthsOutgoingSum} ${currency}`}
             />
             <DashboardInfoComponent
               icon={<CompareIcon />}
@@ -100,8 +122,8 @@ class DashboardComponent extends Component {
             <DashboardInfoComponent
               icon={<AddIcon />}
               title="Ausgabe hinzufügen"
-              value={<AddCircleIcon />}
-              onClick={this.handleAddOutgoing}
+              value="neue Ausgabe hinzufügen"
+              clickFn={this.handleAddOutgoing}
             />
             <DashboardChartComponent
               title="monatliche Ausgaben pro Kategorie"
@@ -110,23 +132,15 @@ class DashboardComponent extends Component {
                   <PieChart>
                     <Tooltip />
                     <Pie
-                      innerRadius="60"
-                      outerRadius="80"
-                      paddingAngle="4"
-                      data={[
-                        { category: 'Haushalt', amount: 500 },
-                        { category: 'Essen & Getränke', amount: 250 },
-                        { category: 'Auto', amount: 750 },
-                      ]}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={4}
+                      data={currentMonthsOutgoingsByCategory}
                       dataKey="amount"
                       nameKey="category"
                     >
-                      {[
-                        { category: 'Haushalt', amount: 500 },
-                        { category: 'Essen & Getränke', amount: 250 },
-                        { category: 'Auto', amount: 750 },
-                      ].map((entry, index) => (
-                        <Cell fill={colors[index]} />
+                      {currentMonthsOutgoingsByCategory.map((entry, index) => (
+                        <Cell key={entry.id} fill={colors[index]} />
                       ))}
                     </Pie>
                     <Legend layout="vertical" align="right" verticalAlign="middle" />
@@ -139,16 +153,12 @@ class DashboardComponent extends Component {
               content={(
                 <ResponsiveContainer>
                   <BarChart
-                    data={[
-                      { category: 'Haushalt', amount: 500, budget: 500 },
-                      { category: 'Essen & Getränke', amount: 250, budget: 450 },
-                      { category: 'Auto', amount: 750, budget: 150 },
-                    ]}
+                    data={currentMonthsBalance}
                   >
                     <Tooltip />
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <Bar dataKey="budget" fill="#00C49F" />
-                    <Bar dataKey="amount" fill="#FF8042" />
+                    <Bar dataKey="outgoing" fill="#FF8042" />
                     <XAxis dataKey="category" />
                     <YAxis />
                   </BarChart>
@@ -160,20 +170,7 @@ class DashboardComponent extends Component {
               content={(
                 <ResponsiveContainer>
                   <LineChart
-                    data={[
-                      { month: 'Jan', amount: 1500 },
-                      { month: 'Feb', amount: 2300 },
-                      { month: 'Mrz', amount: 2400 },
-                      { month: 'Apr', amount: 1800 },
-                      { month: 'Mai', amount: 2700 },
-                      { month: 'Juni', amount: 2000 },
-                      { month: 'Juli', amount: 2000 },
-                      { month: 'Aug', amount: 3500 },
-                      { month: 'Sept', amount: 2800 },
-                      { month: 'Okt', amount: 1800 },
-                      { month: 'Nov', amount: 2400 },
-                      { month: 'Dez', amount: 1900 },
-                    ]}
+                    data={lastTwelveMonthsOutgoingSum}
                   >
                     <Tooltip />
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -186,7 +183,6 @@ class DashboardComponent extends Component {
             />
             <DashboardChartComponent
               title="letzte Ausgaben"
-              /* TODO: hier könnte/sollte die Liste des Outgoings-Komponenten verwendet werden */
               content={(
                 <Table>
                   <TableHead>
@@ -200,9 +196,9 @@ class DashboardComponent extends Component {
                     {outgoings.filter((value, index) => index < 5)
                       .map(outgoing => (
                         <TableRow key={outgoing.id}>
-                          <TableCell>{outgoing.date}</TableCell>
-                          <TableCell>{outgoing.title}</TableCell>
-                          <TableCell>{`${outgoing.amount} ${currency}`}</TableCell>
+                          <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
+                          <TableCell>{outgoing.outgoingTitle}</TableCell>
+                          <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
                         </TableRow>
                       ))
                     }
@@ -245,7 +241,9 @@ DashboardComponent.propTypes = {
   monthlyBudgetSum: PropTypes.number.isRequired,
   netPay: PropTypes.number.isRequired,
   outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /* outgoingsPerCategory: PropTypes.arrayOf(PropTypes.object).isRequired, */
+  currentMonthsOutgoingSum: PropTypes.number.isRequired,
+  currentMonthsOutgoingsByCategory: PropTypes.arrayOf(PropTypes.object).isRequired,
+  lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -255,11 +253,15 @@ const mapStateToProps = state => ({
   monthlyBudgetSum: getMonthlyBudgetSum(state),
   netPay: getNetPay(state),
   outgoings: getOutgoings(state),
+  currentMonthsOutgoingSum: getCurrentMonthsOutgoingSum(state),
+  currentMonthsOutgoingsByCategory: getCurrentMonthsOutgoingsByCategory(state),
+  lastTwelveMonthsOutgoingSum: getLastTwelveMonthsOutgoingSum(state),
 });
 
 const actions = {
   ...budgetActions,
   ...incomeActions,
+  ...outgoingActions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
