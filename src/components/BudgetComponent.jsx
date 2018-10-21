@@ -75,7 +75,7 @@ BudgetComponent.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  mainCategories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
