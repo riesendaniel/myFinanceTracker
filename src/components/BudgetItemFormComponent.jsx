@@ -23,8 +23,9 @@ import {
 } from '../redux/modules/BudgetReducer';
 import {
   actions as mainCategoryActions,
-  getMainCategories,
+  getIsLoading, getMainCategories,
 } from '../redux/modules/MainCategoryReducer';
+import Loading from './LoadingComponent';
 import MainCategoryList from './MainCategoryListComponent';
 
 class BudgetItemFormComponent extends Component {
@@ -82,6 +83,7 @@ class BudgetItemFormComponent extends Component {
       budgetEntry,
     } = this.state;
     const {
+      isLoading,
       mainCategories,
       currency,
     } = this.props;
@@ -90,33 +92,37 @@ class BudgetItemFormComponent extends Component {
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
         <form onSubmit={this.handleSubmit}>
-          <FormControl>
-            <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
-            <Select
-              value={budgetEntry.mainCategoryId}
-              onChange={(event) => {
-                this.setState({
-                  budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
-                });
-              }}
-              inputProps={{
-                name: 'mainCategory',
-                id: 'main-category-select',
-              }}
-            >
-              { mainCategories.map(mainCategory => (
-                <MenuItem key={mainCategory.id} value={mainCategory.id}>
-                  {mainCategory.description}
-                </MenuItem>
-              )) }
-            </Select>
-          </FormControl>
-          <IconButton
-            aria-label="Gruppe hinzufügen"
-            onClick={() => this.setState({ open: true })}
-          >
-            <EditIcon />
-          </IconButton>
+          { isLoading ? <Loading /> : (
+            <div>
+              <FormControl>
+                <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
+                <Select
+                  value={budgetEntry.mainCategoryId}
+                  onChange={(event) => {
+                    this.setState({
+                      budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
+                    });
+                  }}
+                  inputProps={{
+                    name: 'mainCategory',
+                    id: 'main-category-select',
+                  }}
+                >
+                  { mainCategories.map(mainCategory => (
+                    <MenuItem key={mainCategory.id} value={mainCategory.id}>
+                      {mainCategory.description}
+                    </MenuItem>
+                  )) }
+                </Select>
+              </FormControl>
+              <IconButton
+                aria-label="Gruppe hinzufügen"
+                onClick={() => this.setState({ open: true })}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>
+          )}
           <FormControl>
             <TextField
               id="category"
@@ -173,6 +179,7 @@ class BudgetItemFormComponent extends Component {
 
 BudgetItemFormComponent.propTypes = {
   location: PropTypes.shape({ state: PropTypes.object }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
   doLoadMainCategories: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
   mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -180,6 +187,7 @@ BudgetItemFormComponent.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  isLoading: getIsLoading(state),
   mainCategories: getMainCategories(state),
   currency: getCurrency(state),
 });

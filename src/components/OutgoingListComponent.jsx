@@ -7,8 +7,8 @@ import Loading from './LoadingComponent';
 import OutgoingItemComponent from "./OutgoingItemComponent";
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
-import { actions as outgoingActions, getOutgoings, getIsLoading} from '../redux/modules/OutgoingReducer';
+import { actions as budgetActions, getCategories, getIsLoading as getBudgetIsLoading } from '../redux/modules/BudgetReducer';
+import { actions as outgoingActions, getOutgoings, getIsLoading as getOutgoingIsLoading } from '../redux/modules/OutgoingReducer';
 import OutgoingSummaryComponent from "./OutgoingSummaryComponent";
 
 class OutgoingListComponent extends Component {
@@ -72,7 +72,7 @@ class OutgoingListComponent extends Component {
 
 
 const mapStateToProps = state => ({
-    isLoading: getIsLoading(state),
+    isLoading: getOutgoingIsLoading(state) || getBudgetIsLoading(state),
     outgoings: getOutgoings(state),
     categories: getCategories(state),
 });

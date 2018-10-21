@@ -10,11 +10,11 @@ import {
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {
   actions as budgetActions,
-  getIsLoading, getBudget,
+  getIsLoading as getBudgetIsLoading, getBudget,
 } from '../redux/modules/BudgetReducer';
 import {
   actions as mainCategoryActions,
-  getMainCategories,
+  getIsLoading as getMainCategoryIsLoading, getMainCategories,
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
@@ -79,7 +79,7 @@ BudgetComponent.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoading: getBudgetIsLoading(state) || getMainCategoryIsLoading(state),
   mainCategories: getMainCategories(state),
   budget: getBudget(state),
 });

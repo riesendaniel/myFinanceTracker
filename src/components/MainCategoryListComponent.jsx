@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import {
   actions,
-  getMainCategories,
+  getIsLoading, getMainCategories,
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import MainCategoryListItem from './MainCategoryListItemComponent';
@@ -82,6 +82,7 @@ MainCategoryListComponent.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  isLoading: getIsLoading(state),
   mainCategories: getMainCategories(state),
 });
 
