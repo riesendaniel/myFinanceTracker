@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import randomColor from 'randomcolor';
 import {
   Button,
   Dialog, DialogActions, DialogContent,
@@ -39,7 +40,7 @@ class MainCategoryListComponent extends Component {
   render = () => {
     const emptyMainCategory = {
       description: '',
-      color: '',
+      color: randomColor(),
     };
     const {
       open,
