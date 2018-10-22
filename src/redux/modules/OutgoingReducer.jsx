@@ -131,6 +131,7 @@ const ACTION_HANDLERS = {
                     currentMonthsOutgoingsByCategory.push({
                         id: category.id,
                         category: category.description,
+                        color: category.color,
                         amount,
                     });
                 }

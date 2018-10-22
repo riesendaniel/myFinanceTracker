@@ -133,6 +133,7 @@ const ACTION_HANDLERS = {
       categories.push({
         id: budgetEntry.id,
         description: budgetEntry.category,
+        color: budgetEntry.color,
       });
     }
     return { ...state, categories };
@@ -168,6 +169,7 @@ const initialState = {
       id: 1,
       mainCategoryId: 2,
       category: 'Unterhalt',
+      color: '#FF0000',
       period: 'monthly',
       monthly: 100,
       yearly: 1200,
@@ -176,6 +178,7 @@ const initialState = {
       id: 2,
       mainCategoryId: 2,
       category: 'Essen & Getränke',
+      color: '#FF9900',
       period: 'monthly',
       monthly: 250,
       yearly: 3000,
@@ -184,6 +187,7 @@ const initialState = {
       id: 3,
       mainCategoryId: 9,
       category: 'öffentlicher Verkehr',
+      color: '#FF0099',
       period: 'yearly',
       monthly: 200,
       yearly: 2400,
@@ -192,6 +196,7 @@ const initialState = {
       id: 4,
       mainCategoryId: 5,
       category: 'Tanken',
+      color: '#FF9999',
       period: 'monthly',
       monthly: 100,
       yearly: 1200,

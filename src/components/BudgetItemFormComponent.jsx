@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import randomColor from 'randomcolor';
 import {
   Button,
   FormControl, FormControlLabel,
@@ -35,6 +36,7 @@ class BudgetItemFormComponent extends Component {
       id: null,
       mainCategoryId: null,
       category: '',
+      color: randomColor(),
       period: 'monthly',
       amount: 0,
     },
@@ -52,6 +54,7 @@ class BudgetItemFormComponent extends Component {
           id: item.id,
           mainCategoryId: item.mainCategoryId,
           category: item.category,
+          color: item.color,
           period: item.period,
           amount: item.period === 'monthly' ? item.monthly : item.yearly,
         },
@@ -130,6 +133,18 @@ class BudgetItemFormComponent extends Component {
               value={budgetEntry.category}
               onChange={(event) => {
                 this.setState({ budgetEntry: { ...budgetEntry, category: event.target.value } });
+              }}
+            />
+          </FormControl>
+          <FormControl>
+            <InputLabel htmlFor="color">Farbe</InputLabel>
+            <Input
+              id="color"
+              name="color"
+              type="color"
+              value={budgetEntry.color}
+              onChange={(event) => {
+                this.setState({ budgetEntry: { ...budgetEntry, color: event.target.value } });
               }}
             />
           </FormControl>

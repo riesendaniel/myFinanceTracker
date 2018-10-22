@@ -63,21 +63,20 @@ class DashboardComponent extends Component {
     history.push('/outgoing/edit');
   };
 
-  mergeBudgetAndOutgoings = (budget, outgoingsByCategory) => {
-    return budget.map((entry) => {
-      const outgoingSum = outgoingsByCategory.find(outgoing => outgoing.id === entry.id);
-      const balance = {
-        id: entry.id,
-        category: entry.category,
-        budget: entry.monthly,
-        outgoing: 0,
-      };
-      if (typeof outgoingSum !== 'undefined') {
-        balance.outgoing = outgoingSum.amount;
-      }
-      return balance;
-    });
-  }
+  mergeBudgetAndOutgoings = (budget, outgoingsByCategory) => budget.map((entry) => {
+    const outgoingSum = outgoingsByCategory.find(outgoing => outgoing.id === entry.id);
+    const balance = {
+      id: entry.id,
+      category: entry.category,
+      color: entry.color,
+      budget: entry.monthly,
+      outgoing: 0,
+    };
+    if (typeof outgoingSum !== 'undefined') {
+      balance.outgoing = outgoingSum.amount;
+    }
+    return balance;
+  });
 
   render = () => {
     const {
@@ -94,8 +93,6 @@ class DashboardComponent extends Component {
     const currentMonthsBalance = this.mergeBudgetAndOutgoings(
       budget, currentMonthsOutgoingsByCategory,
     );
-    // TODO: temporäre Variablen entfernen
-    const colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     return (
       <Paper>
         <Typography variant="headline" component="h2">Übersicht</Typography>
@@ -142,8 +139,8 @@ class DashboardComponent extends Component {
                       dataKey="amount"
                       nameKey="category"
                     >
-                      {currentMonthsOutgoingsByCategory.map((entry, index) => (
-                        <Cell key={entry.id} fill={colors[index]} />
+                      {currentMonthsOutgoingsByCategory.map(entry => (
+                        <Cell key={entry.id} fill={entry.color} />
                       ))}
                     </Pie>
                     <Legend layout="vertical" align="right" verticalAlign="middle" />
@@ -218,8 +215,8 @@ class DashboardComponent extends Component {
                   >
                     <Tooltip />
                     <Bar dataKey="monthly">
-                      {budget.map((entry, index) => (
-                        <Cell fill={colors[index]} />
+                      {budget.map(entry => (
+                        <Cell fill={entry.color} />
                       ))}
                     </Bar>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
