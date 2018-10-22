@@ -14,21 +14,26 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
 import {
-  actions,
-  getIsBudgetGroupFormOpen, getBudgetGroups,
+  actions as budgetActions,
 } from '../redux/modules/BudgetReducer';
-import BudgetGroupForm from './BudgetGroupFormComponent';
+import {
+  actions as mainCategoryActions,
+  getIsLoading, getMainCategories,
+} from '../redux/modules/MainCategoryReducer';
+import Loading from './LoadingComponent';
+import MainCategoryList from './MainCategoryListComponent';
 
 class BudgetItemFormComponent extends Component {
   state = {
+    open: false,
     budgetEntry: {
       id: null,
-      group: '',
+      mainCategoryId: null,
       category: '',
       period: 'monthly',
       amount: 0,
@@ -36,19 +41,23 @@ class BudgetItemFormComponent extends Component {
   };
 
   componentDidMount = () => {
-    const { location } = this.props;
+    const {
+      location,
+      doLoadMainCategories,
+    } = this.props;
     if (location.state && location.state.item) {
       const { item } = location.state;
       this.setState({
         budgetEntry: {
           id: item.id,
-          group: item.group,
+          mainCategoryId: item.mainCategoryId,
           category: item.category,
           period: item.period,
           amount: item.period === 'monthly' ? item.monthly : item.yearly,
         },
       });
     }
+    doLoadMainCategories();
   }
 
   handleSubmit = async () => {
@@ -70,40 +79,50 @@ class BudgetItemFormComponent extends Component {
 
   render = () => {
     const {
+      open,
       budgetEntry,
     } = this.state;
     const {
-      open,
-      budgetGroupFormIsOpen,
-      budgetGroups,
+      isLoading,
+      mainCategories,
       currency,
     } = this.props;
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
-        { open && <BudgetGroupForm /> }
+        { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
         <form onSubmit={this.handleSubmit}>
-          <FormControl>
-            <InputLabel htmlFor="group-select">Gruppe</InputLabel>
-            <Select
-              value={budgetEntry.group}
-              onChange={(event) => {
-                this.setState({ budgetEntry: { ...budgetEntry, group: event.target.value } });
-              }}
-              inputProps={{
-                name: 'group',
-                id: 'group-select',
-              }}
-            >
-              { budgetGroups.map(group => <MenuItem key={group} value={group}>{group}</MenuItem>) }
-            </Select>
-          </FormControl>
-          <IconButton
-            aria-label="Gruppe hinzufügen"
-            onClick={() => budgetGroupFormIsOpen(true)}
-          >
-            <AddIcon />
-          </IconButton>
+          { isLoading ? <Loading /> : (
+            <div>
+              <FormControl>
+                <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
+                <Select
+                  value={budgetEntry.mainCategoryId}
+                  onChange={(event) => {
+                    this.setState({
+                      budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
+                    });
+                  }}
+                  inputProps={{
+                    name: 'mainCategory',
+                    id: 'main-category-select',
+                  }}
+                >
+                  { mainCategories.map(mainCategory => (
+                    <MenuItem key={mainCategory.id} value={mainCategory.id}>
+                      {mainCategory.description}
+                    </MenuItem>
+                  )) }
+                </Select>
+              </FormControl>
+              <IconButton
+                aria-label="Gruppe hinzufügen"
+                onClick={() => this.setState({ open: true })}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>
+          )}
           <FormControl>
             <TextField
               id="category"
@@ -160,18 +179,23 @@ class BudgetItemFormComponent extends Component {
 
 BudgetItemFormComponent.propTypes = {
   location: PropTypes.shape({ state: PropTypes.object }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  doLoadMainCategories: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  budgetGroupFormIsOpen: PropTypes.func.isRequired,
-  budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
+  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  open: getIsBudgetGroupFormOpen(state),
-  budgetGroups: getBudgetGroups(state),
+  isLoading: getIsLoading(state),
+  mainCategories: getMainCategories(state),
   currency: getCurrency(state),
 });
+
+const actions = {
+  ...budgetActions,
+  ...mainCategoryActions,
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
