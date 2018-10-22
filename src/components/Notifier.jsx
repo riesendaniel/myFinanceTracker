@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Snackbar } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 let openSnackbarFn;
 class Notifier extends Component {
@@ -38,6 +40,11 @@ class Notifier extends Component {
                 autoHideDuration={3000}
                 onClose={this.handleSnackbarClose}
                 open={this.state.open}
+                action={[
+                    <IconButton onClick={this.handleSnackbarClose} key="close">
+                        <CloseIcon/>
+                    </IconButton>,
+                ]}
             />
         );
     }
