@@ -1,8 +1,8 @@
-import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
+import React, { Component } from 'react';
+import { Snackbar } from '@material-ui/core';
 
 let openSnackbarFn;
-class Notifier extends React.Component {
+class Notifier extends Component {
     state = {
         open: false,
         message: '',
@@ -28,10 +28,7 @@ class Notifier extends React.Component {
 
     render() {
         const message = (
-            <span
-                id="snackbar-message-id"
-                dangerouslySetInnerHTML={{ __html: this.state.message }}
-            />
+            <span>{this.state.message}</span>
         );
 
         return (
@@ -46,7 +43,7 @@ class Notifier extends React.Component {
     }
 }
 
-export function openSnackbar({ message }) {
+export function addMessage({ message }) {
     openSnackbarFn({ message });
 }
 export default Notifier;
