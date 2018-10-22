@@ -27,16 +27,19 @@ import {
 } from '../redux/modules/AppReducer';
 import {
   actions as budgetActions,
-  getIsLoading, getBudget, getMonthlyBudgetSum,
+  getIsLoading as getBudgetIsLoading,
+  getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
 import {
   actions as outgoingActions,
+  getIsLoading as getOutgoingIsLoading,
   getOutgoings,
   getCurrentMonthsOutgoingSum, getCurrentMonthsOutgoingsByCategory,
   getLastTwelveMonthsOutgoingSum,
 } from '../redux/modules/OutgoingReducer';
 import {
   actions as incomeActions,
+  getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
@@ -247,7 +250,7 @@ DashboardComponent.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoading: getBudgetIsLoading(state) || getIncomeIsLoading(state) || getOutgoingIsLoading(state),
   budget: getBudget(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),
