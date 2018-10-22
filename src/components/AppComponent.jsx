@@ -18,6 +18,7 @@ import Menu from './MenuComponent';
 import NotFound from "./NotFound";
 import NewOutgoingComponent from "./NewOutgoingComponent";
 import OutgoingListComponent from "./OutgoingListComponent";
+import Notifier from "./Notifier";
 
 const menuWidth = '300px';
 
@@ -37,6 +38,7 @@ const AppComponent = (props) => {
           <header>
             <Header />
             { menuState === 'open' && <Menu width={menuWidth} /> }
+            <Notifier />
           </header>
           <div className={classes.toolbarPlaceholder} />
           <main className={menuState === 'open' ? classes.main : undefined}>
