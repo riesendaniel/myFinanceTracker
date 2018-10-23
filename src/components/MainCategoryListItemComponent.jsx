@@ -131,7 +131,7 @@ MainCategoryListItem.propTypes = {
   doUpdateMainCategory: PropTypes.func.isRequired,
   doDeleteMainCategory: PropTypes.func.isRequired,
   mainCategory: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     color: PropTypes.string.isRequired,
   }).isRequired,

@@ -33,7 +33,7 @@ class BudgetItemFormComponent extends Component {
     open: false,
     budgetEntry: {
       id: null,
-      mainCategoryId: null,
+      mainCategoryId: '',
       category: '',
       period: 'monthly',
       amount: 0,

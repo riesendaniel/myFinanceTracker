@@ -53,15 +53,14 @@ export const deleteBudget = (id) => {
 export function addNewBudget(budget) {
     return new Promise((resolve, reject) => {
             //TODO Fehlerhandling
-            let test;
             const ref = firebase.database().ref('/budget').push({
-                group: budget.group,
+                mainCategoryId: budget.mainCategoryId,
                 category: budget.category,
                 period: budget.period,
                 monthly: budget.monthly,
                 yearly: budget.yearly
             });
-            /*, function (error) {
+            /* , function (error) {
                             if (error) {
                                 test = error;
                                 console.log('lueg für din scheiss')

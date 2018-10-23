@@ -27,32 +27,32 @@ const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 // Action Creators
 // ------------------------------------
 const isLoading = status => ({
-  type: BUDGET_IS_LOADING,
-  status,
+    type: BUDGET_IS_LOADING,
+    status,
 });
 
 const receiveBudget = budget => ({
-  type: RECEIVE_BUDGET,
-  budget,
+    type: RECEIVE_BUDGET,
+    budget,
 });
 
 const loadCategories = () => ({
-  type: LOAD_CATEGORIES,
+    type: LOAD_CATEGORIES,
 });
 
 const addBudgetEntry = entry => ({
-  type: ADD_BUDGET_ENTRY,
-  entry,
+    type: ADD_BUDGET_ENTRY,
+    entry,
 });
 
 const updateBudgetEntry = entry => ({
-  type: UPDATE_BUDGET_ENTRY,
-  entry,
+    type: UPDATE_BUDGET_ENTRY,
+    entry,
 });
 
 const deleteBudgetEntry = id => ({
-  type: DELETE_BUDGET_ENTRY,
-  id,
+    type: DELETE_BUDGET_ENTRY,
+    id,
 });
 
 
@@ -104,9 +104,10 @@ export function doUpdateBudgetEntry(entry) {
 
 export function doDeleteBudgetEntry(id) {
     return (dispatch) => {
-        deleteBudget(id).then(
-            dispatch(deleteBudgetEntry(id))
-            dispatch(loadCategories());
+        deleteBudget(id).then(() => {
+                dispatch(deleteBudgetEntry(id));
+                dispatch(loadCategories());
+            }
         );
     };
 }
@@ -116,10 +117,10 @@ export function doDeleteBudgetEntry(id) {
 // ------------------------------------
 
 export const actions = {
-  doLoadBudget,
-  doAddBudgetEntry,
-  doUpdateBudgetEntry,
-  doDeleteBudgetEntry,
+    doLoadBudget,
+    doAddBudgetEntry,
+    doUpdateBudgetEntry,
+    doDeleteBudgetEntry,
 };
 
 
@@ -127,45 +128,45 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-  [BUDGET_IS_LOADING]: (state, action) => (
-    { ...state, isLoading: action.status }
-  ),
-  [RECEIVE_BUDGET]: (state, action) => {
-    const budget = [...action.budget];
-    return { ...state, budget };
-  },
-  [LOAD_CATEGORIES]: (state) => {
-    const categories = [];
-    for (let i = 0; i < state.budget.length; i += 1) {
-      const budgetEntry = state.budget[i];
-      categories.push({
-        id: budgetEntry.id,
-        description: budgetEntry.category,
-      });
-    }
-    return { ...state, categories };
-  },
-  [ADD_BUDGET_ENTRY]: (state, action) => {
-    const budget = [...state.budget, action.entry];
-    return { ...state, budget };
-  },
-  [UPDATE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
-    return { ...state, budget };
-  },
-  [DELETE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.filter(entry => entry.id !== action.id);
-    return { ...state, budget };
-  },
+    [BUDGET_IS_LOADING]: (state, action) => (
+        {...state, isLoading: action.status}
+    ),
+    [RECEIVE_BUDGET]: (state, action) => {
+        const budget = [...action.budget];
+        return {...state, budget};
+    },
+    [LOAD_CATEGORIES]: (state) => {
+        const categories = [];
+        for (let i = 0; i < state.budget.length; i += 1) {
+            const budgetEntry = state.budget[i];
+            categories.push({
+                id: budgetEntry.id,
+                description: budgetEntry.category,
+            });
+        }
+        return {...state, categories};
+    },
+    [ADD_BUDGET_ENTRY]: (state, action) => {
+        const budget = [...state.budget, action.entry];
+        return {...state, budget};
+    },
+    [UPDATE_BUDGET_ENTRY]: (state, action) => {
+        const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
+        return {...state, budget};
+    },
+    [DELETE_BUDGET_ENTRY]: (state, action) => {
+        const budget = state.budget.filter(entry => entry.id !== action.id);
+        return {...state, budget};
+    },
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
-  categories: [],
-  budget: [],
+    isLoading: false,
+    categories: [],
+    budget: [],
 };
 
 export default function reducer(state = initialState, action) {

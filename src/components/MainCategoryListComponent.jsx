@@ -56,7 +56,7 @@ class MainCategoryListComponent extends Component {
       >
         <DialogContent>
           { isLoading ? <Loading /> : (
-            <Table>
+            <Table>budget.group
               <TableBody>
                 {mainCategories.map(mainCategory => (
                   <MainCategoryListItem key={mainCategory.id} mainCategory={mainCategory} />
