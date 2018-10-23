@@ -1,17 +1,23 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 
+// ------------------------------------
+// Database init
+// ------------------------------------
 let database;
-
 export const init = () => {
-    let config = {
-        authDomain: "myfinancetracker-ch.firebaseapp.com",
-        databaseURL: "https://myfinancetracker-ch.firebaseio.com/"
-    };
-    firebase.initializeApp(config)
-    database = firebase.database();
-}
+  let config = {
+    authDomain: 'myfinancetracker-ch.firebaseapp.com',
+    databaseURL: 'https://myfinancetracker-ch.firebaseio.com/',
+    apiKey: 'AIzaSyCiOr3lhkNp8rueEEgudXYnrPnZwN2bMME'
+  };
+  firebase.initializeApp(config);
+  database = firebase.database();
+};
 
+// ------------------------------------
+// Budget
+// ------------------------------------
 export const getBudgetValues = () => {
     return new Promise((resolve, reject) => {
         var budgetList = [];
@@ -80,23 +86,32 @@ export function addNewBudget(budget) {
     );
 }
 
+// ------------------------------------
+// Income
+// ------------------------------------
 export const getIncomeValues = () => {
-    return new Promise((resolve, reject) => {
-        var incomeList = [];
-        database.ref("/income").once("value").then((snapshot) => {
-            snapshot.forEach(function (childSnapshot) {
-                var key = childSnapshot.key;
-                var curIncome = childSnapshot.val();
-                curIncome.id = key;
-                incomeList.push(curIncome);
-            });
-            resolve(incomeList);
-        }).catch(error => {
-            reject(error);
-        });
+  return new Promise((resolve, reject) => {
+    var income = [];
+    database.ref('/income2').once('value').then((snapshot) => {
+      //console.log(JSON.stringify(snapshot));
+      console.log(snapshot.val());
+      snapshot.forEach(function (childSnapshot) {
+        //var key = childSnapshot.key;
+        var curIncome = childSnapshot.val();
+        //console.log(childSnapshot.val());
+        income.push(curIncome);
+      });
+      console.log(income);
+      resolve(income);
+    }).catch(error => {
+      reject(error);
     });
-}
+  });
+};
 
+// ------------------------------------
+// Outgoing
+// ------------------------------------
 export function getOutgoingValues() {
     return new Promise((resolve, reject) => {
         var outgoingList = [];
@@ -114,19 +129,40 @@ export function getOutgoingValues() {
     });
 }
 
-export const addNewOutgoing = (outgoing) => {
-    return new Promise((resolve, reject) => {
-            firebase.database().ref('/outgoing').push({
-                outgoingDate: outgoing.outgoingDate,
-                outgoingCategory: outgoing.outgoingCategory,
-                outgoingTitle: outgoing.outgoingTitle,
-                outgoingAmount: outgoing.outgoingAmount,
-                outgoingCurrency: outgoing.outgoingCurrency
-            }).then(outgoing => {
-                resolve(outgoing);
-            }).catch(error => {
-                reject(error);
-            });
-        }
-    );
+export function addNewOutgoing(outgoing) {
+  return new Promise((resolve, reject) => {
+      const ref = firebase.database().ref('/outgoing').push({
+        outgoingDate: outgoing.outgoingDate,
+        outgoingCategory: outgoing.outgoingCategory,
+        outgoingTitle: outgoing.outgoingTitle,
+        outgoingAmount: outgoing.outgoingAmount,
+        outgoingCurrency: outgoing.outgoingCurrency
+      });
+      const key = ref.key;
+      outgoing.id = key;
+      resolve(outgoing);
+    }
+  );
 }
+
+export const updateOutgoing = (outgoing) => {
+  return new Promise((resolve, reject) => {
+    const id = outgoing.id;
+    delete outgoing.id;
+    //TODO Fehlerhandling
+    firebase.database().ref('/outgoing').child(id).set(outgoing);
+    resolve(outgoing);
+  });
+};
+
+export const deleteOutgoing = (id) => {
+  return new Promise((resolve, reject) => {
+    //TODO Fehlerhandling
+    firebase.database().ref('/outgoing').child(id).remove().then(outgoing => {
+      resolve(outgoing);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};
+
