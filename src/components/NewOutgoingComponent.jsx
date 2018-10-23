@@ -11,7 +11,6 @@ import {
     TextField
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
 import {actions as outgoingActions} from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
@@ -29,7 +28,7 @@ class NewOutgoingComponent extends Component {
         outgoing: {
             outgoingTitle: '',
             outgoingAmount: 0,
-            outgoingCategoryId: null,
+            outgoingCategoryId: '',
             outgoingDate: '',
         },
     };
@@ -45,6 +44,7 @@ class NewOutgoingComponent extends Component {
                     outgoingAmount: outgoing.outgoingAmount,
                     outgoingCategory: outgoing.outgoingCategory,
                     outgoingDate: outgoing.outgoingDate,
+                    outgoingCategoryId: '',
                     outgoingCurrency: 'CHF'
                 },
             });

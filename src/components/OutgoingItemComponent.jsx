@@ -4,12 +4,10 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {IconButton, TableCell, TableRow} from '@material-ui/core';
 import moment from "moment/moment";
-import { actions, getCurrency } from '../redux/modules/AppReducer';
+import { getCurrency } from '../redux/modules/AppReducer';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import {bindActionCreators} from "redux";
 import {actions} from "../redux/modules/OutgoingReducer";
-import {connect} from 'react-redux';
 import history from "../helper/history";
 
 class OutgoingItemComponent extends Component {
@@ -20,7 +18,7 @@ class OutgoingItemComponent extends Component {
             id: PropTypes.string.isRequired,
             outgoingTitle: PropTypes.string.isRequired,
             outgoingDate: PropTypes.string.isRequired,
-            outgoingCategory: PropTypes.string.isRequired,
+            outgoingCategoryId: PropTypes.number.isRequired,
             outgoingAmount: PropTypes.number.isRequired,
         }).isRequired,
     };
@@ -47,7 +45,7 @@ class OutgoingItemComponent extends Component {
             <TableRow key={outgoing.id}>
                 <TableCell>{outgoing.outgoingTitle}</TableCell>
                 <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
-                <TableCell>{outgoing.outgoingCategory}</TableCell>
+                <TableCell>{outgoing.outgoingCategoryId}</TableCell>
                 <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
                 <TableCell>
                     <IconButton onClick={this.handleEdit}>
