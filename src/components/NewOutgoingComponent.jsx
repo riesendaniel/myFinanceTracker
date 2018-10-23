@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
+import SaveIcon from '@material-ui/icons/Save';
+import {
+    FormControl,
+    IconButton,
+    Input,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
-import AddIcon from '@material-ui/icons/Add';
-import {FormControl, IconButton, Input, InputAdornment, InputLabel, TextField, MenuItem, Select} from '@material-ui/core';
 import {actions as outgoingActions} from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
 import {connect} from 'react-redux';
-import {generateUuid} from '../helper/helper'
 import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
@@ -18,13 +26,30 @@ class NewOutgoingComponent extends Component {
 
     state = {
         outgoing: {
-            id: generateUuid(),
             outgoingTitle: '',
             outgoingAmount: 0,
-            outgoingCategoryId: null,
+            outgoingCategoryId: '',
             outgoingDate: '',
         },
     };
+
+    componentDidMount = () => {
+        const {location} = this.props;
+        if (location.state && location.state.outgoing) {
+            const {outgoing} = location.state;
+            this.setState({
+                outgoing: {
+                    id: outgoing.id,
+                    outgoingTitle: outgoing.outgoingTitle,
+                    outgoingAmount: outgoing.outgoingAmount,
+                    outgoingCategory: outgoing.outgoingCategory,
+                    outgoingDate: outgoing.outgoingDate,
+                    outgoingCategoryId: '',
+                    outgoingCurrency: 'CHF'
+                },
+            });
+        }
+    }
 
     render() {
         const { currency, categories } = this.props;
@@ -86,7 +111,7 @@ class NewOutgoingComponent extends Component {
                     aria-label="add outgoing"
                     onClick={this.addOutgoing}
                 >
-                    <AddIcon/>
+                    <SaveIcon/>
                 </IconButton>
             </FormControl>
 
@@ -95,7 +120,11 @@ class NewOutgoingComponent extends Component {
 
     addOutgoing = () => {
         try {
-            this.props.doAddOutgoing(this.state.outgoing);
+            if (this.state.outgoing.id) {
+                this.props.doUpdateOutgoing(this.state.outgoing);
+            } else {
+                this.props.doAddOutgoing(this.state.outgoing);
+            }
             this.setState({
                 outgoing: {
                     outgoingTitle: '',
