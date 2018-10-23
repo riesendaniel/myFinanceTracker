@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {IconButton, TableCell, TableRow} from '@material-ui/core';
 import moment from "moment/moment";
+import { actions, getCurrency } from '../redux/modules/AppReducer';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import {bindActionCreators} from "redux";
@@ -19,7 +22,6 @@ class OutgoingItemComponent extends Component {
             outgoingDate: PropTypes.string.isRequired,
             outgoingCategory: PropTypes.string.isRequired,
             outgoingAmount: PropTypes.number.isRequired,
-            outgoingCurrency: PropTypes.string.isRequired
         }).isRequired,
     };
 
@@ -39,15 +41,14 @@ class OutgoingItemComponent extends Component {
     }
 
     render() {
-        const { outgoing } = this.props;
+        const { currency, outgoing } = this.props;
 
         return (
             <TableRow key={outgoing.id}>
                 <TableCell>{outgoing.outgoingTitle}</TableCell>
                 <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
                 <TableCell>{outgoing.outgoingCategory}</TableCell>
-                <TableCell>{outgoing.outgoingAmount}</TableCell>
-                <TableCell>{outgoing.outgoingCurrency}</TableCell>
+                <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
                 <TableCell>
                     <IconButton onClick={this.handleEdit}>
                         <EditIcon />
@@ -56,12 +57,14 @@ class OutgoingItemComponent extends Component {
                         <DeleteOutlineIcon />
                     </IconButton>
                 </TableCell>
+
             </TableRow>
         );
     }
 }
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+    currency: getCurrency(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

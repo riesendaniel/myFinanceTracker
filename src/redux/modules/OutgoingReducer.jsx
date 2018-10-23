@@ -93,18 +93,16 @@ const initialState = {
         {
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e1111",
             "outgoingDate": "2018-08-01",
-            "outgoingCategory": "Tanken",
+            "outgoingCategoryId": 4,
             "outgoingTitle": "Benzin für mein Auto",
             "outgoingAmount": 100.00,
-            "outgoingCurrency": "CHF"
         },
         {
             "id": "75d652ad-db2c-ba8d-c666-996c8f1e2222",
             "outgoingDate": "2018-07-05",
-            "outgoingCategory": "Essen",
+            "outgoingCategoryId": 2,
             "outgoingTitle": "Mitagessen",
             "outgoingAmount": 9.50,
-            "outgoingCurrency": "CHF"
         }
     ]
 };

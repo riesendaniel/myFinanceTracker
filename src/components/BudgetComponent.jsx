@@ -9,9 +9,13 @@ import {
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import {
-  actions,
-  getIsLoading, getBudget, getBudgetGroups,
+  actions as budgetActions,
+  getIsLoading as getBudgetIsLoading, getBudget,
 } from '../redux/modules/BudgetReducer';
+import {
+  actions as mainCategoryActions,
+  getIsLoading as getMainCategoryIsLoading, getMainCategories,
+} from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
@@ -19,9 +23,10 @@ import BudgetSummary from './BudgetSummaryComponent';
 class BudgetComponent extends Component {
   componentDidMount = async () => {
     const {
-      doLoadBudgetGroups, doLoadBudget,
+      doLoadMainCategories,
+      doLoadBudget,
     } = this.props;
-    await doLoadBudgetGroups();
+    await doLoadMainCategories();
     await doLoadBudget();
   }
 
@@ -36,7 +41,8 @@ class BudgetComponent extends Component {
   render = () => {
     const {
       isLoading,
-      budget, budgetGroups,
+      budget,
+      mainCategories,
     } = this.props;
 
     return (
@@ -44,9 +50,11 @@ class BudgetComponent extends Component {
         <Typography variant="headline" component="h2">Budget</Typography>
         { isLoading ? <Loading /> : (
           <div>
-            { budgetGroups.map((group) => {
-              const list = budget.filter(item => item.group === group);
-              return list.length !== 0 && <BudgetList key={group} title={group} list={list} />;
+            { mainCategories.map((mainCategory) => {
+              const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
+              return list.length !== 0 && (
+                <BudgetList key={mainCategory.id} title={mainCategory.description} list={list} />
+              );
             }) }
             <BudgetSummary budget={budget} />
             <BottomNavigation
@@ -63,18 +71,23 @@ class BudgetComponent extends Component {
 }
 
 BudgetComponent.propTypes = {
-  doLoadBudgetGroups: PropTypes.func.isRequired,
+  doLoadMainCategories: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  budgetGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
+  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
-  budgetGroups: getBudgetGroups(state),
+  isLoading: getBudgetIsLoading(state) || getMainCategoryIsLoading(state),
+  mainCategories: getMainCategories(state),
   budget: getBudget(state),
 });
+
+const actions = {
+  ...budgetActions,
+  ...mainCategoryActions,
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
