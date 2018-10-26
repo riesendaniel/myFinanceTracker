@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import 'moment/locale/de';
 import {
   Paper,
   Table, TableHead, TableBody, TableRow, TableCell,
@@ -45,6 +46,8 @@ import {
 import Loading from './LoadingComponent';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
+
+moment.locale('de');
 
 class DashboardComponent extends Component {
   componentDidMount = async () => {
@@ -93,6 +96,7 @@ class DashboardComponent extends Component {
     const currentMonthsBalance = this.mergeBudgetAndOutgoings(
       budget, currentMonthsOutgoingsByCategory,
     );
+    const currentMonth = moment().format('MMMM');
     return (
       <Paper>
         <Typography variant="headline" component="h2">Übersicht</Typography>
@@ -100,22 +104,22 @@ class DashboardComponent extends Component {
           <div>
             <DashboardInfoComponent
               icon={<MoneyIcon />}
-              title="Ausgaben"
+              title={`Ausgaben im ${currentMonth}`}
               value={`${currentMonthsOutgoingSum} ${currency}`}
             />
             <DashboardInfoComponent
               icon={<AttachMoneyIcon />}
-              title="Einkommen (Netto)"
+              title={`Einkommen (Netto) im ${currentMonth}`}
               value={`${netPay} ${currency}`}
             />
             <DashboardInfoComponent
               icon={<CompareIcon />}
-              title="Bilanz"
+              title={`Gespartes Einkommen im ${currentMonth}`}
               value={`${netPay - currentMonthsOutgoingSum} ${currency}`}
             />
             <DashboardInfoComponent
               icon={<CompareIcon />}
-              title="budgetierte Bilanz"
+              title={`Budgetierte Ersparnisse im ${currentMonth}`}
               /* TODO: Dies geht von der Annahme aus, dass im Budget nur Ausgaben erfasst werden. */
               value={`${netPay - monthlyBudgetSum} ${currency}`}
             />
@@ -126,7 +130,7 @@ class DashboardComponent extends Component {
               clickFn={this.handleAddOutgoing}
             />
             <DashboardChartComponent
-              title="monatliche Ausgaben pro Kategorie"
+              title={`Ausgaben im ${currentMonth} pro Kategorie`}
               content={(
                 <ResponsiveContainer>
                   <PieChart>
@@ -149,7 +153,7 @@ class DashboardComponent extends Component {
               )}
             />
             <DashboardChartComponent
-              title="Bilanz des Monats"
+              title={`Bilanz des Monats ${currentMonth}`}
               content={(
                 <ResponsiveContainer>
                   <BarChart
@@ -182,7 +186,7 @@ class DashboardComponent extends Component {
               )}
             />
             <DashboardChartComponent
-              title="letzte Ausgaben"
+              title="letzte fünf Ausgaben"
               content={(
                 <Table>
                   <TableHead>
