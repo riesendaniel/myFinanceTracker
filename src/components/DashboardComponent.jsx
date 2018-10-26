@@ -114,7 +114,7 @@ class DashboardComponent extends Component {
             />
             <DashboardInfoComponent
               icon={<CompareIcon />}
-              title={`Gespartes Einkommen im ${currentMonth}`}
+              title={`Ersparnisse im ${currentMonth}`}
               value={`${netPay - currentMonthsOutgoingSum} ${currency}`}
             />
             <DashboardInfoComponent
