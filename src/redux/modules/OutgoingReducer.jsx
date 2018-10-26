@@ -149,7 +149,7 @@ const ACTION_HANDLERS = {
             const amount = outgoingsByMonth.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
             lastTwelveMonthsOutgoingSum.push({
                 id: i,
-                month,
+                month: moment(month).format('MMM \'YY'),
                 amount,
             });
         }
