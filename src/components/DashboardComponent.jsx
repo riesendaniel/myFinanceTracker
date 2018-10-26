@@ -119,7 +119,7 @@ class DashboardComponent extends Component {
             />
             <DashboardInfoComponent
               icon={<CompareIcon />}
-              title={`Budgetierte Ersparnisse im ${currentMonth}`}
+              title="Budgetierte Ersparnisse"
               /* TODO: Dies geht von der Annahme aus, dass im Budget nur Ausgaben erfasst werden. */
               value={`${netPay - monthlyBudgetSum} ${currency}`}
             />
