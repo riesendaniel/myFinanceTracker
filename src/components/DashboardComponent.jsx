@@ -220,7 +220,7 @@ class DashboardComponent extends Component {
                     <Tooltip />
                     <Bar dataKey="monthly">
                       {budget.map(entry => (
-                        <Cell fill={entry.color} />
+                        <Cell key={entry.id} fill={entry.color} />
                       ))}
                     </Bar>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -242,12 +242,18 @@ DashboardComponent.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
-  monthlyBudgetSum: PropTypes.number.isRequired,
-  netPay: PropTypes.number.isRequired,
+  monthlyBudgetSum: PropTypes.number,
+  netPay: PropTypes.number,
   outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currentMonthsOutgoingSum: PropTypes.number.isRequired,
+  currentMonthsOutgoingSum: PropTypes.number,
   currentMonthsOutgoingsByCategory: PropTypes.arrayOf(PropTypes.object).isRequired,
   lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+DashboardComponent.defaultProps = {
+  monthlyBudgetSum: 0,
+  netPay: 0,
+  currentMonthsOutgoingSum: 0,
 };
 
 const mapStateToProps = state => ({
