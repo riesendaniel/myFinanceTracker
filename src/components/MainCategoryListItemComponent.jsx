@@ -84,20 +84,6 @@ class MainCategoryListItem extends Component {
             />
           </FormControl>
         </TableCell>
-        <TableCell>
-          <FormControl>
-            {editable && <InputLabel htmlFor="color">Farbe</InputLabel>}
-            <Input
-              id="color"
-              name="color"
-              type="color"
-              value={mainCategory.color}
-              onChange={event => this.handleInputChange(event)}
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
-          </FormControl>
-        </TableCell>
         { editable ? (
           <TableCell>
             <IconButton onClick={this.saveMainCategory}>
@@ -133,7 +119,6 @@ MainCategoryListItem.propTypes = {
   mainCategory: PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
   }).isRequired,
   editable: PropTypes.bool,
 };
