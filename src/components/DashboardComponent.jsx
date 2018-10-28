@@ -134,7 +134,7 @@ class DashboardComponent extends Component {
               content={(
                 <ResponsiveContainer>
                   <PieChart>
-                    <Tooltip />
+                    <Tooltip formatter={value => `${value} ${currency}`} />
                     <Pie
                       innerRadius={60}
                       outerRadius={80}
@@ -159,10 +159,10 @@ class DashboardComponent extends Component {
                   <BarChart
                     data={currentMonthsBalance}
                   >
-                    <Tooltip />
+                    <Tooltip formatter={value => `${value} ${currency}`} />
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <Bar dataKey="budget" fill="#00C49F" />
-                    <Bar dataKey="outgoing" fill="#FF8042" />
+                    <Bar name="Budget" dataKey="budget" fill="#00C49F" />
+                    <Bar name="Ausgaben" dataKey="outgoing" fill="#FF8042" />
                     <XAxis dataKey="category" />
                     <YAxis />
                   </BarChart>
@@ -176,9 +176,9 @@ class DashboardComponent extends Component {
                   <LineChart
                     data={lastTwelveMonthsOutgoingSum}
                   >
-                    <Tooltip />
+                    <Tooltip formatter={value => `${value} ${currency}`} />
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <Line dataKey="amount" stroke="#FF8042" />
+                    <Line name="Betrag" dataKey="amount" stroke="#FF8042" />
                     <XAxis dataKey="month" />
                     <YAxis />
                   </LineChart>
@@ -217,8 +217,8 @@ class DashboardComponent extends Component {
                   <BarChart
                     data={budget}
                   >
-                    <Tooltip />
-                    <Bar dataKey="monthly">
+                    <Tooltip formatter={value => `${value} ${currency}`} />
+                    <Bar name="Budget" dataKey="monthly">
                       {budget.map(entry => (
                         <Cell key={entry.id} fill={entry.color} />
                       ))}
