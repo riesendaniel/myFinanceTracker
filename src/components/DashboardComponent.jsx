@@ -20,6 +20,7 @@ import {
   LineChart, Line,
   PieChart, Pie,
   Cell,
+  Label,
   Legend,
   Tooltip,
 } from 'recharts';
@@ -164,7 +165,14 @@ class DashboardComponent extends Component {
                     <Bar name="Budget" dataKey="budget" fill="#00C49F" />
                     <Bar name="Ausgaben" dataKey="outgoing" fill="#FF8042" />
                     <XAxis dataKey="category" />
-                    <YAxis />
+                    <YAxis>
+                      <Label
+                        value={`Betrag [${currency}]`}
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={10}
+                      />
+                    </YAxis>
                   </BarChart>
                 </ResponsiveContainer>
               )}
@@ -179,8 +187,15 @@ class DashboardComponent extends Component {
                     <Tooltip formatter={value => `${value} ${currency}`} />
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <Line name="Betrag" dataKey="amount" stroke="#FF8042" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
+                    <XAxis dataKey="month" textAnchor="end" angle={-45} height={55} />
+                    <YAxis>
+                      <Label
+                        value={`Betrag [${currency}]`}
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={10}
+                      />
+                    </YAxis>
                   </LineChart>
                 </ResponsiveContainer>
               )}
@@ -225,7 +240,14 @@ class DashboardComponent extends Component {
                     </Bar>
                     <CartesianGrid vertical={false} strokeDasharray="3 3" />
                     <XAxis dataKey="category" />
-                    <YAxis />
+                    <YAxis>
+                      <Label
+                        value={`Betrag [${currency}]`}
+                        angle={-90}
+                        position="insideBottomLeft"
+                        offset={10}
+                      />
+                    </YAxis>
                   </BarChart>
                 </ResponsiveContainer>
               )}
