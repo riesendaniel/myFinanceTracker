@@ -5,14 +5,12 @@ import {
   Paper,
   Table,
   TableBody,
-  TableCell,
-  TableHead,
-  TableRow
 } from '@material-ui/core';
 import { Route } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
+import OutgoingTableHead from './OutgoingTableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -37,7 +35,7 @@ class OutgoingListComponent extends Component {
   };
 
   state = {
-    rowsPerPage: 1,
+    rowsPerPage: 5,
     page: 0,
     order: 'asc',
     orderBy: 'calories',
@@ -64,27 +62,18 @@ class OutgoingListComponent extends Component {
               }}> <AddIcon/></IconButton>
             )}/>
 
-
             <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Titel</TableCell>
-                  <TableCell>Datum</TableCell>
-                  <TableCell>Kategorie</TableCell>
-                  <TableCell>Betrag</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableHead>
-              <EnhancedTableHead
+              <OutgoingTableHead
                 numSelected={this.state.selected.length}
                 order={this.state.order}
                 orderBy={this.state.orderBy}
-                onSelectAllClick={this.handleSelectAllClick}
                 onRequestSort={this.handleRequestSort}
                 rowCount={outgoings.length}
               />
               <TableBody>
-                {outgoings.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+
+                { this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy))
+                  .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                   .map(row => {
                     const category = categories.filter(item => item.id === row.outgoingCategoryId);
                     if (category.length > 0) {
@@ -111,6 +100,30 @@ class OutgoingListComponent extends Component {
         )}
       </Paper>
     );
+  }
+
+  stableSort(array, cmp) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = cmp(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map(el => el[0]);
+  }
+
+  getSorting(order, orderBy) {
+    return order === 'desc' ? (a, b) => this.desc(a, b, orderBy) : (a, b) => -this.desc(a, b, orderBy);
+  }
+
+  desc(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
   }
 
   handleChangePage = (event, page) => {
