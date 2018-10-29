@@ -37,7 +37,7 @@ class OutgoingListComponent extends Component {
     order: 'asc',
     searchValue: '',
     filterData: [],
-    orderBy: 'calories',
+    orderBy: 'outgoingDate',
     selected: [],
   };
 
