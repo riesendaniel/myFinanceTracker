@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-} from '@material-ui/core';
+import { IconButton, Paper, Table, TableBody, } from '@material-ui/core';
 import { Route } from 'react-router-dom';
 import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
@@ -25,6 +20,8 @@ import {
   getOutgoings
 } from '../redux/modules/OutgoingReducer';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
+import TextField from '@material-ui/core/TextField/TextField';
+import moment from 'moment';
 
 class OutgoingListComponent extends Component {
 
@@ -38,6 +35,8 @@ class OutgoingListComponent extends Component {
     rowsPerPage: 5,
     page: 0,
     order: 'asc',
+    searchValue: '',
+    filterData: [],
     orderBy: 'calories',
     selected: [],
   };
@@ -62,6 +61,9 @@ class OutgoingListComponent extends Component {
               }}> <AddIcon/></IconButton>
             )}/>
 
+            <TextField placeholder=".. suche .." onChange={this.handleSearch}
+                       value={this.state.searchValue}/>
+
             <Table>
               <OutgoingTableHead
                 numSelected={this.state.selected.length}
@@ -70,9 +72,10 @@ class OutgoingListComponent extends Component {
                 onRequestSort={this.handleRequestSort}
                 rowCount={outgoings.length}
               />
+
               <TableBody>
 
-                { this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy))
+                {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
                   .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                   .map(row => {
                     const category = categories.filter(item => item.id === row.outgoingCategoryId);
@@ -102,6 +105,19 @@ class OutgoingListComponent extends Component {
     );
   }
 
+  handleSearch = event => {
+    this.setState({ searchValue: event.target.value });
+  };
+
+  filterTable(array) {
+    if (this.state.searchValue !== '') {
+      return array.filter(o => o.outgoingTitle.toLowerCase()
+        .includes(this.state.searchValue.toLowerCase()) || moment(o.outgoingDate)
+        .format('DD.MM.YYYY').includes(this.state.searchValue.toLowerCase()));
+    }
+    return array;
+  }
+
   stableSort(array, cmp) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -111,6 +127,7 @@ class OutgoingListComponent extends Component {
     });
     return stabilizedThis.map(el => el[0]);
   }
+
 
   getSorting(order, orderBy) {
     return order === 'desc' ? (a, b) => this.desc(a, b, orderBy) : (a, b) => -this.desc(a, b, orderBy);

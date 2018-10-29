@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TableHead, TableCell, TableRow, TableSortLabel } from '@material-ui/core';
+import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -48,13 +48,42 @@ class OutgoingTableHead extends Component {
     );
   }
 }
-
 const rows = [
-  { id: 'outgoingTitle', numeric: false, disablePadding: false, disableSort: false, label: 'Titel' },
-  { id: 'outgoingDate', numeric: false, disablePadding: false, disableSort: false, label: 'Datum' },
-  { id: 'outgoingCategoryId', numeric: false, disablePadding: false, disableSort: false, label: 'Kategorie' },
-  { id: 'outgoingAmount', numeric: false, disablePadding: false, disableSort: false, label: 'Betrag' },
-  { id: 'buttons', numeric: false, disablePadding: false, disableSort: true, label: 'Aktion' },
+  {
+    id: 'outgoingTitle',
+    numeric: false,
+    disablePadding: false,
+    disableSort: false,
+    label: 'Titel'
+  },
+  {
+    id: 'outgoingDate',
+    numeric: false,
+    disablePadding: false,
+    disableSort: false,
+    label: 'Datum'
+  },
+  {
+    id: 'outgoingCategoryId',
+    numeric: false,
+    disablePadding: false,
+    disableSort: false,
+    label: 'Kategorie'
+  },
+  {
+    id: 'outgoingAmount',
+    numeric: false,
+    disablePadding: false,
+    disableSort: false,
+    label: 'Betrag'
+  },
+  {
+    id: 'buttons',
+    numeric: false,
+    disablePadding: false,
+    disableSort: true,
+    label: 'Aktion'
+  },
 ];
 
 OutgoingTableHead.propTypes = {
