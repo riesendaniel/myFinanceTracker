@@ -73,7 +73,7 @@ class BudgetItemFormComponent extends Component {
     if (budgetEntry.id) {
       await doUpdateBudgetEntry({ ...budgetEntry });
     } else {
-      doAddBudgetEntry({ ...budgetEntry });
+      await doAddBudgetEntry({ ...budgetEntry });
     }
   }
 
