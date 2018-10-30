@@ -4,7 +4,7 @@ import {
   addNewOutgoing,
   deleteOutgoing,
   updateOutgoing
-} from '../../helper/firebase';
+} from '../database';
 
 // ------------------------------------
 // Selectors

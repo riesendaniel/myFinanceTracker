@@ -1,5 +1,5 @@
 import history from '../../helper/history';
-import {addNewBudget, deleteBudget, getBudgetValues, updateBudget} from "../../helper/firebase";
+import {addNewBudget, deleteBudget, getBudgetValues, updateBudget} from "../database";
 
 // ------------------------------------
 // Selectors

@@ -1,19 +1,4 @@
-import firebase from 'firebase/app';
-import 'firebase/database';
-
-// ------------------------------------
-// Database init
-// ------------------------------------
-let database;
-export const init = () => {
-  let config = {
-    authDomain: 'myfinancetracker-ch.firebaseapp.com',
-    databaseURL: 'https://myfinancetracker-ch.firebaseio.com/',
-    apiKey: 'AIzaSyCiOr3lhkNp8rueEEgudXYnrPnZwN2bMME'
-  };
-  firebase.initializeApp(config);
-  database = firebase.database();
-};
+import {database } from '../config/firebase';
 
 // ------------------------------------
 // Budget
@@ -40,7 +25,7 @@ export const updateBudget = (budget) => {
         const id = budget.id;
         delete budget.id;
         //TODO Fehlerhandling
-        firebase.database().ref('/budget').child(id).set(budget);
+        database.ref('/budget').child(id).set(budget);
         resolve(budget);
     });
 }
@@ -48,7 +33,7 @@ export const updateBudget = (budget) => {
 export const deleteBudget = (id) => {
     return new Promise((resolve, reject) => {
         //TODO Fehlerhandling
-        firebase.database().ref('/budget').child(id).remove().then(budget => {
+      database.ref('/budget').child(id).remove().then(budget => {
             resolve(budget);
         }).catch(error => {
             reject(error);
@@ -59,7 +44,7 @@ export const deleteBudget = (id) => {
 export function addNewBudget(budget) {
     return new Promise((resolve, reject) => {
             //TODO Fehlerhandling
-            const ref = firebase.database().ref('/budget').push({
+            const ref = database.ref('/budget').push({
                 mainCategoryId: budget.mainCategoryId,
                 category: budget.category,
                 period: budget.period,
@@ -131,7 +116,7 @@ export function getOutgoingValues() {
 
 export function addNewOutgoing(outgoing) {
   return new Promise((resolve, reject) => {
-      const ref = firebase.database().ref('/outgoing').push({
+      const ref = database.ref('/outgoing').push({
         outgoingDate: outgoing.outgoingDate,
         outgoingCategory: outgoing.outgoingCategory,
         outgoingTitle: outgoing.outgoingTitle,
@@ -150,7 +135,7 @@ export const updateOutgoing = (outgoing) => {
     const id = outgoing.id;
     delete outgoing.id;
     //TODO Fehlerhandling
-    firebase.database().ref('/outgoing').child(id).set(outgoing);
+    database.ref('/outgoing').child(id).set(outgoing);
     resolve(outgoing);
   });
 };
@@ -158,7 +143,7 @@ export const updateOutgoing = (outgoing) => {
 export const deleteOutgoing = (id) => {
   return new Promise((resolve, reject) => {
     //TODO Fehlerhandling
-    firebase.database().ref('/outgoing').child(id).remove().then(outgoing => {
+    database.ref('/outgoing').child(id).remove().then(outgoing => {
       resolve(outgoing);
     }).catch(error => {
       reject(error);
