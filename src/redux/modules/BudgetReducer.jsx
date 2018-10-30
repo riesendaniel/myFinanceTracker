@@ -65,6 +65,7 @@ const doLoadBudget = () => {
         setTimeout(() => {
             getBudgetValues().then(budget => {
                 dispatch(receiveBudget(budget));
+                dispatch(loadCategories());
                 dispatch(isLoading(false));
             }).catch(error => {
                 console.error(error)

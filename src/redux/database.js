@@ -118,10 +118,9 @@ export function addNewOutgoing(outgoing) {
   return new Promise((resolve, reject) => {
       const ref = database.ref('/outgoing').push({
         outgoingDate: outgoing.outgoingDate,
-        outgoingCategory: outgoing.outgoingCategory,
+        outgoingCategoryId: outgoing.outgoingCategoryId,
         outgoingTitle: outgoing.outgoingTitle,
         outgoingAmount: outgoing.outgoingAmount,
-        outgoingCurrency: outgoing.outgoingCurrency
       });
       const key = ref.key;
       outgoing.id = key;
