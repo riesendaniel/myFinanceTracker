@@ -150,3 +150,56 @@ export const deleteOutgoing = (id) => {
   });
 };
 
+// ------------------------------------
+// Main Categories
+// ------------------------------------
+export function getCategoryValues() {
+  return new Promise((resolve, reject) => {
+    var categories = [];
+    database.ref("/categories").once("value").then((snapshot) => {
+      snapshot.forEach(function (childSnapshot) {
+        var key = childSnapshot.key;
+        var category = childSnapshot.val();
+        category.id = key;
+        categories.push(category);
+      });
+      resolve(categories);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+}
+
+export function addNewCategory(category) {
+  return new Promise((resolve, reject) => {
+      const ref = database.ref('/categories').push({
+        description: category.description,
+        color: category.color,
+      });
+      const key = ref.key;
+      category.id = key;
+      resolve(category);
+    }
+  );
+}
+
+export const updateCategory = (category) => {
+  return new Promise((resolve, reject) => {
+    const id = category.id;
+    delete category.id;
+    //TODO Fehlerhandling
+    database.ref('/categories').child(id).set(category);
+    resolve(category);
+  });
+};
+
+export const deleteCategory = (id) => {
+  return new Promise((resolve, reject) => {
+    //TODO Fehlerhandling
+    database.ref('/categories').child(id).remove().then(category => {
+      resolve(category);
+    }).catch(error => {
+      reject(error);
+    });
+  });
+};

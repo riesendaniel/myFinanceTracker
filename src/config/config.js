@@ -6,5 +6,3 @@ export const firebaseConfig = {
   databaseURL: 'https://myfinancetracker-ch.firebaseio.com/',
   apiKey: 'AIzaSyCiOr3lhkNp8rueEEgudXYnrPnZwN2bMME'
 }
-
-//exoirt database = firebase.database();

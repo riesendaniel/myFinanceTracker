@@ -1,3 +1,10 @@
+import {
+  getCategoryValues,
+  updateCategory,
+  deleteCategory,
+  addNewCategory,
+} from '../database';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
@@ -54,29 +61,49 @@ const deleteMainCategory = id => ({
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
-const doLoadMainCategories = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const {
-      mainCategories,
-    } = getState().mainCategory;
-    dispatch(receiveMainCategories(mainCategories));
-    dispatch(isLoading(false));
-  }, 1000);
-};
+const doLoadMainCategories = () => {
+  return (dispatch) => {
+    dispatch(isLoading(true));
+      getCategoryValues().then(mainCategories => {
+        dispatch(receiveMainCategories(mainCategories));
+        dispatch(isLoading(false));
+      }).catch(error => {
+        console.error(error)
+        dispatch(isLoading(false));
+      })
+  };
+}
 
-const doAddMainCategory = mainCategory => (dispatch) => {
-  dispatch(addMainCategory(mainCategory));
-};
+export function doAddMainCategory(entry) {
+  return (dispatch) => {
+    addNewCategory(entry).then(entry => {
+        dispatch(addMainCategory(entry));
+      }
+    ).catch(error => {
+      console.error(error);
+    });
+  };
+}
 
-const doUpdateMainCategory = mainCategory => (dispatch) => {
-  dispatch(updateMainCategory(mainCategory));
-};
+export function doUpdateMainCategory(entry) {
+  return (dispatch) => {
+    updateCategory(entry).then(entry => {
+        dispatch(updateMainCategory(entry));
+      }
+    ).catch(error => {
+      console.error(error)
+    })
+  };
+}
 
-const doDeleteMainCategory = id => (dispatch) => {
-  dispatch(deleteMainCategory(id));
-};
-
+export function doDeleteMainCategory(id) {
+  return (dispatch) => {
+    deleteCategory(id).then(() => {
+        dispatch(deleteMainCategory(id));
+      }
+    );
+  };
+}
 
 // ------------------------------------
 // Actions
@@ -130,48 +157,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  mainCategories: [
-    {
-      id: 1,
-      description: 'Wohnen',
-      color: '#FF0000',
-    },
-    {
-      id: 2,
-      description: 'Haushalt',
-      color: '#FF9900',
-    },
-    {
-      id: 3,
-      description: 'Gesundheit & Körper',
-      color: '#FF0099',
-    },
-    {
-      id: 4,
-      description: 'Freizeit',
-      color: '#FF9999',
-    },
-    {
-      id: 5,
-      description: 'Reisen',
-      color: '#00FF00',
-    },
-    {
-      id: 6,
-      description: 'Versicherungen',
-      color: '#99FF00',
-    },
-    {
-      id: 7,
-      description: 'Steuern',
-      color: '#99FF99',
-    },
-    {
-      id: 8,
-      description: 'Sparen & Anlegen',
-      color: '#0000FF',
-    },
-  ],
+  mainCategories: [],
 };
 
 export default function reducer(state = initialState, action) {
