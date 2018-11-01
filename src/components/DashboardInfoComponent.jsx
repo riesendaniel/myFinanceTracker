@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Card, CardHeader, CardContent,
+  Grid,
 } from '@material-ui/core';
 
 const DashboardInfoComponent = (props) => {
@@ -12,15 +13,17 @@ const DashboardInfoComponent = (props) => {
     clickFn,
   } = props;
   return (
-    <Card
-      onClick={clickFn}
-    >
-      <CardHeader
-        avatar={icon}
-        title={title}
-      />
-      <CardContent>{value}</CardContent>
-    </Card>
+    <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+      <Card
+        onClick={clickFn}
+      >
+        <CardHeader
+          avatar={icon}
+          title={title}
+        />
+        <CardContent>{value}</CardContent>
+      </Card>
+    </Grid>
   );
 };
 
