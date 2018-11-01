@@ -21,7 +21,6 @@ export const getIsLoading = state => state.outgoings.isLoading;
 export function doLoadOutgoings() {
   return (dispatch) => {
     dispatch(isLoading(true));
-    setTimeout(() => {
       getOutgoingValues().then(outgoingList => {
         dispatch(loadedOutgoings(outgoingList));
         dispatch(isLoading(false));
@@ -29,7 +28,6 @@ export function doLoadOutgoings() {
         console.error(error);
         dispatch(isLoading(false));
       });
-    }, 1000);
   };
 }
 
@@ -39,7 +37,9 @@ export function doAddOutgoing(entry) {
         dispatch(addOutgoing(entry));
         history.push('/outgoings');
       }
-    );
+    ).catch(error => {
+      console.error(error);
+    });
   };
 }
 
@@ -61,7 +61,9 @@ export function doDeleteOutgoing(id) {
         dispatch(deleteOutgoingEntry(id));
         history.push('/outgoings');
       }
-    );
+    ).catch(error => {
+      console.error(error);
+    });
   };
 }
 
