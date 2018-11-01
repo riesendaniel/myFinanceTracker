@@ -33,7 +33,7 @@ class BudgetItemFormComponent extends Component {
     open: false,
     budgetEntry: {
       id: null,
-      mainCategoryId: '',
+      mainCategoryId: null,
       category: '',
       period: 'monthly',
       amount: 0,
@@ -97,7 +97,7 @@ class BudgetItemFormComponent extends Component {
               <FormControl>
                 <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
                 <Select
-                  value={budgetEntry.mainCategoryId}
+                  value={budgetEntry.mainCategoryId || ''}
                   onChange={(event) => {
                     this.setState({
                       budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
