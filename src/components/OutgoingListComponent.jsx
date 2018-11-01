@@ -61,16 +61,14 @@ class OutgoingListComponent extends Component {
               }}> <AddIcon/></IconButton>
             )}/>
 
-            <TextField placeholder=".. suche .." onChange={this.handleSearch}
+            <TextField placeholder="Nach einem Inhalt suchen.." onChange={this.handleSearch}
                        value={this.state.searchValue}/>
 
             <Table>
               <OutgoingTableHead
-                numSelected={this.state.selected.length}
                 order={this.state.order}
                 orderBy={this.state.orderBy}
                 onRequestSort={this.handleRequestSort}
-                rowCount={outgoings.length}
               />
 
               <TableBody>
@@ -91,9 +89,11 @@ class OutgoingListComponent extends Component {
 
             <TablePagination
               component="div"
-              count={outgoings.length}
+              count={this.filterTable(outgoings).length}
               rowsPerPage={this.state.rowsPerPage}
               page={this.state.page}
+              labelRowsPerPage="Einträge pro Seite"
+              labelDisplayedRows={({ from, to, count }) => `zeige ${from} bis ${to} von total ${count} Einträgen`}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
