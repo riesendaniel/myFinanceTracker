@@ -28,7 +28,7 @@ class NewOutgoingComponent extends Component {
         outgoing: {
             outgoingTitle: '',
             outgoingAmount: 0,
-            outgoingCategoryId: '',
+            outgoingCategoryId: null,
             outgoingDate: '',
         },
     };
@@ -44,7 +44,7 @@ class NewOutgoingComponent extends Component {
                     outgoingAmount: outgoing.outgoingAmount,
                     outgoingCategory: outgoing.outgoingCategory,
                     outgoingDate: outgoing.outgoingDate,
-                    outgoingCategoryId: '',
+                    outgoingCategoryId: null,
                     outgoingCurrency: 'CHF'
                 },
             });
@@ -85,7 +85,7 @@ class NewOutgoingComponent extends Component {
                 <FormControl>
                     <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
                     <Select
-                        value={this.state.outgoing.outgoingCategoryId}
+                        value={this.state.outgoing.outgoingCategoryId || ''}
                         onChange={(event) => {
                             this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
                         }}
