@@ -29,7 +29,9 @@ const menuWidth = '300px';
 const styles = theme => ({
   toolbarPlaceholder: theme.mixins.toolbar,
   main: {
-    marginRight: menuWidth,
+    [theme.breakpoints.up('lg')]: {
+      marginRight: menuWidth,
+    },
   },
   circularProgressWrapper: {
     display: "flex",
