@@ -62,7 +62,6 @@ const deleteBudgetEntry = id => ({
 const doLoadBudget = () => {
     return (dispatch) => {
         dispatch(isLoading(true));
-        setTimeout(() => {
             getBudgetValues().then(budget => {
                 dispatch(receiveBudget(budget));
                 dispatch(loadCategories());
@@ -71,7 +70,6 @@ const doLoadBudget = () => {
                 console.error(error)
                 dispatch(isLoading(false));
             })
-        }, 1000);
     };
 }
 
