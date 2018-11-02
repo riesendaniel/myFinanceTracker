@@ -4,8 +4,18 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { IconButton, Paper, Table, TableBody, TablePagination, TextField} from '@material-ui/core';
+import {
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TablePagination,
+  TextField,
+  Select,
+  MenuItem, InputLabel
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import ClearButton from '@material-ui/icons/Clear';
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
@@ -37,6 +47,7 @@ class OutgoingListComponent extends Component {
     filterData: [],
     orderBy: 'outgoingDate',
     selected: [],
+    filterValue: null,
   };
 
   async componentDidMount() {
@@ -61,6 +72,17 @@ class OutgoingListComponent extends Component {
 
             <TextField placeholder="Nach einem Inhalt suchen.." onChange={this.handleSearch}
                        value={this.state.searchValue}/>
+
+            <InputLabel htmlFor="category-select">Nach Kategorie Filtern:</InputLabel>
+            <Select value={this.state.filterValue || ''} onChange={(event) => {
+              this.setState({ filterValue: event.target.value } );
+            }} inputProps={{
+              id: 'ategory-select',
+            }}>
+              { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
+            </Select>
+
+            <ClearButton onClick={() => this.setState({ filterValue: null, searchValue: ''  })}/>
 
             <Table>
               <OutgoingTableHead
@@ -96,7 +118,7 @@ class OutgoingListComponent extends Component {
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
 
-            <OutgoingSummaryComponent outgoings={outgoings}/>
+            <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
           </div>
         )}
       </Paper>
@@ -108,12 +130,14 @@ class OutgoingListComponent extends Component {
   };
 
   filterTable(array) {
-    if (this.state.searchValue !== '') {
-      return array.filter(o => o.outgoingTitle.toLowerCase()
+    const newArray = !this.state.filterValue ? array : array.filter(o => o.outgoingCategoryId ===
+      this.state.filterValue);
+    if (this.state.searchValue !== '' || this.state.filterValue) {
+      return newArray.filter(o => o.outgoingTitle.toLowerCase()
         .includes(this.state.searchValue.toLowerCase()) || moment(o.outgoingDate)
         .format('DD.MM.YYYY').includes(this.state.searchValue.toLowerCase()));
     }
-    return array;
+    return newArray;
   }
 
   stableSort(array, cmp) {
