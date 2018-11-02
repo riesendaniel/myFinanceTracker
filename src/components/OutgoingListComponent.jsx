@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { IconButton, Paper, Table, TableBody, } from '@material-ui/core';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import moment from 'moment';
+import { IconButton, Paper, Table, TableBody, TablePagination, TextField} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import Loading from './LoadingComponent';
+import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
 import OutgoingTableHead from './OutgoingTableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {
-  actions as budgetActions,
-  getCategories,
-  getIsLoading as getBudgetIsLoading
+actions as budgetActions,
+getCategories,
+getIsLoading as getBudgetIsLoading
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as outgoingActions,
-  getIsLoading as getOutgoingIsLoading,
-  getOutgoings
+actions as outgoingActions,
+getIsLoading as getOutgoingIsLoading,
+getOutgoings
 } from '../redux/modules/OutgoingReducer';
-import OutgoingSummaryComponent from './OutgoingSummaryComponent';
-import TextField from '@material-ui/core/TextField/TextField';
-import moment from 'moment';
 
 class OutgoingListComponent extends Component {
 

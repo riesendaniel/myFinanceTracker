@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
 
 class OutgoingTableHead extends Component {
