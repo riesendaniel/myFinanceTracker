@@ -16,13 +16,13 @@ export const getMonthlyBudgetSum = state => state.budget.monthlyBudgetSum;
 // ------------------------------------
 // Action Types
 // ------------------------------------
-const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
-const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
-const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
-const CALC_MONTHLY_BUDGET_SUM = 'CALC_MONTHLY_BUDGET_SUM';
-const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
-const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
-const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
+export const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
+export const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
+export const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
+export const CALC_MONTHLY_BUDGET_SUM = 'CALC_MONTHLY_BUDGET_SUM';
+export const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
+export const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
+export const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 
 
 // ------------------------------------
@@ -112,6 +112,13 @@ export const actions = {
   doAddBudgetEntry,
   doUpdateBudgetEntry,
   doDeleteBudgetEntry,
+  isLoading,
+  receiveBudget,
+  loadCategories,
+  calcMonthlyBudgetSum,
+  addBudgetEntry,
+  updateBudgetEntry,
+  deleteBudgetEntry,
 };
 
 

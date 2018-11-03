@@ -20,7 +20,7 @@ import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
 
-class BudgetComponent extends Component {
+export class BudgetComponent extends Component {
   componentDidMount = async () => {
     const {
       doLoadMainCategories,
