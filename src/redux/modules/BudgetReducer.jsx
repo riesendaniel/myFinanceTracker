@@ -115,6 +115,7 @@ export const actions = {
   isLoading,
   receiveBudget,
   loadCategories,
+  calcMonthlyBudgetSum,
   addBudgetEntry,
   updateBudgetEntry,
   deleteBudgetEntry,

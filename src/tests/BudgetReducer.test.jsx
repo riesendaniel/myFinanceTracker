@@ -2,6 +2,7 @@ import reducer,
 {
   BUDGET_IS_LOADING, RECEIVE_BUDGET,
   LOAD_CATEGORIES,
+  CALC_MONTHLY_BUDGET_SUM,
   ADD_BUDGET_ENTRY, UPDATE_BUDGET_ENTRY, DELETE_BUDGET_ENTRY,
   actions,
 } from '../redux/modules/BudgetReducer';
@@ -14,6 +15,7 @@ const initialState = {
       id: 1,
       mainCategoryId: 2,
       category: 'Unterhalt',
+      color: '#FF0000',
       period: 'monthly',
       monthly: 100,
       yearly: 1200,
@@ -22,6 +24,7 @@ const initialState = {
       id: 2,
       mainCategoryId: 2,
       category: 'Essen & Getränke',
+      color: '#FF9900',
       period: 'monthly',
       monthly: 250,
       yearly: 3000,
@@ -30,6 +33,7 @@ const initialState = {
       id: 3,
       mainCategoryId: 9,
       category: 'öffentlicher Verkehr',
+      color: '#FF0099',
       period: 'yearly',
       monthly: 200,
       yearly: 2400,
@@ -38,11 +42,13 @@ const initialState = {
       id: 4,
       mainCategoryId: 5,
       category: 'Tanken',
+      color: '#FF9999',
       period: 'monthly',
       monthly: 100,
       yearly: 1200,
     },
   ],
+  monthlyBudgetSum: null,
 };
 
 const budget = [
@@ -50,6 +56,7 @@ const budget = [
     id: 1,
     mainCategoryId: 2,
     category: 'Unterhalt',
+    color: '#FF0000',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
@@ -58,6 +65,7 @@ const budget = [
     id: 2,
     mainCategoryId: 2,
     category: 'Essen & Getränke',
+    color: '#FF9900',
     period: 'monthly',
     monthly: 250,
     yearly: 3000,
@@ -66,6 +74,7 @@ const budget = [
     id: 3,
     mainCategoryId: 9,
     category: 'öffentlicher Verkehr',
+    color: '#FF0099',
     period: 'yearly',
     monthly: 200,
     yearly: 2400,
@@ -74,6 +83,7 @@ const budget = [
     id: 4,
     mainCategoryId: 5,
     category: 'Tanken',
+    color: '#FF9999',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
@@ -85,6 +95,7 @@ const updatedBudget = [
     id: 1,
     mainCategoryId: 2,
     category: 'Unterhalt',
+    color: '#FF0000',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
@@ -93,6 +104,7 @@ const updatedBudget = [
     id: 2,
     mainCategoryId: 2,
     category: 'Essen & Getränke',
+    color: '#FF9900',
     period: 'monthly',
     monthly: 500,
     yearly: 6000,
@@ -101,6 +113,7 @@ const updatedBudget = [
     id: 3,
     mainCategoryId: 9,
     category: 'öffentlicher Verkehr',
+    color: '#FF0099',
     period: 'yearly',
     monthly: 200,
     yearly: 2400,
@@ -109,6 +122,7 @@ const updatedBudget = [
     id: 4,
     mainCategoryId: 5,
     category: 'Tanken',
+    color: '#FF9999',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
@@ -120,6 +134,7 @@ const reducedBudget = [
     id: 1,
     mainCategoryId: 2,
     category: 'Unterhalt',
+    color: '#FF0000',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
@@ -128,6 +143,7 @@ const reducedBudget = [
     id: 2,
     mainCategoryId: 2,
     category: 'Essen & Getränke',
+    color: '#FF9900',
     period: 'monthly',
     monthly: 250,
     yearly: 3000,
@@ -136,6 +152,7 @@ const reducedBudget = [
     id: 3,
     mainCategoryId: 9,
     category: 'öffentlicher Verkehr',
+    color: '#FF0099',
     period: 'yearly',
     monthly: 200,
     yearly: 2400,
@@ -144,9 +161,12 @@ const reducedBudget = [
 
 const newStatus = true;
 
+const monthlyBudgetSum = 650;
+
 const newEntry = {
   mainCategoryId: 2,
   category: 'Elektronik',
+  color: '#00FF00',
   period: 'monthly',
   monthly: 150,
   yearly: 1800,
@@ -156,6 +176,7 @@ const updateEntry = {
   id: 2,
   mainCategoryId: 2,
   category: 'Essen & Getränke',
+  color: '#FF9900',
   period: 'monthly',
   monthly: 500,
   yearly: 6000,
@@ -175,6 +196,11 @@ const receiveBudgetAction = {
 
 const loadCategoriesAction = {
   type: LOAD_CATEGORIES,
+};
+
+const calcMonthlyBudgetSumAction = {
+  type: CALC_MONTHLY_BUDGET_SUM,
+  budget,
 };
 
 const addBudgetEntryAction = {
@@ -206,6 +232,10 @@ describe('BudgetReducer', () => {
       expect(actions.loadCategories()).toEqual(loadCategoriesAction);
     });
 
+    it('should create an action to calculate the monthly budget sum', () => {
+      expect(actions.calcMonthlyBudgetSum(budget)).toEqual(calcMonthlyBudgetSumAction);
+    });
+
     it('should create an action to add a budget entry', () => {
       expect(actions.addBudgetEntry(newEntry)).toEqual(addBudgetEntryAction);
     });
@@ -234,12 +264,17 @@ describe('BudgetReducer', () => {
       expect(reducer(initialState, receiveBudgetAction)).toEqual(state);
     });
 
+    it('should calculate the monthly budget sum', () => {
+      const state = { ...initialState, monthlyBudgetSum };
+      expect(reducer(initialState, calcMonthlyBudgetSumAction)).toEqual(state);
+    });
+
     it('should extract categories from budget', () => {
       const categories = [
-        { id: 1, description: 'Unterhalt' },
-        { id: 2, description: 'Essen & Getränke' },
-        { id: 3, description: 'öffentlicher Verkehr' },
-        { id: 4, description: 'Tanken' },
+        { id: 1, description: 'Unterhalt', color: '#FF0000' },
+        { id: 2, description: 'Essen & Getränke', color: '#FF9900' },
+        { id: 3, description: 'öffentlicher Verkehr', color: '#FF0099' },
+        { id: 4, description: 'Tanken', color: '#FF9999' },
       ];
       const state = { ...initialState, categories };
       expect(reducer(initialState, loadCategoriesAction)).toEqual(state);

@@ -17,6 +17,7 @@ describe('BudgetComponent', () => {
       isLoading: false,
       categories: [],
       budget: [],
+      monthlyBudgetSum: null,
     };
     const props = {
       doLoadBudget: jest.fn(),
