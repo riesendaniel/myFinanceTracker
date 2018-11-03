@@ -34,7 +34,8 @@ getOutgoings
 class OutgoingListComponent extends Component {
 
   static propTypes = {
-    isLoading: PropTypes.bool.isRequired,
+    isLoadingOutgoings: PropTypes.bool.isRequired,
+    isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.array.isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
@@ -57,12 +58,12 @@ class OutgoingListComponent extends Component {
   }
 
   render() {
-    const { outgoings, isLoading, categories } = this.props;
+    const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
     return (
       <Paper>
         <h2>Ausgaben</h2>
 
-        {isLoading ? <Loading/> : (
+        {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (
           <div>
             <Route render={({ history }) => (
               <IconButton type='button' onClick={() => {
@@ -191,7 +192,8 @@ class OutgoingListComponent extends Component {
 
 
 const mapStateToProps = state => ({
-  isLoading: getOutgoingIsLoading(state) || getBudgetIsLoading(state),
+  isLoadingOutgoings: getOutgoingIsLoading(state),
+  isLoadingBudget: getBudgetIsLoading(state),
   outgoings: getOutgoings(state),
   categories: getCategories(state),
 });
@@ -210,9 +212,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(OutgoingListComponent);
-
-
-
-
-
-

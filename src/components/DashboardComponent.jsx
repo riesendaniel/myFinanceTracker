@@ -84,7 +84,9 @@ class DashboardComponent extends Component {
 
   render = () => {
     const {
-      isLoading,
+      isLoadingBudget,
+      isLoadingIncome,
+      isLoadingOutgoing,
       budget,
       currency,
       monthlyBudgetSum,
@@ -101,7 +103,7 @@ class DashboardComponent extends Component {
     return (
       <Paper>
         <Typography variant="headline" component="h2">Übersicht</Typography>
-        { isLoading ? <Loading /> : (
+        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
           <div>
             <DashboardInfoComponent
               icon={<MoneyIcon />}
@@ -260,7 +262,9 @@ class DashboardComponent extends Component {
 }
 
 DashboardComponent.propTypes = {
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingBudget: PropTypes.bool.isRequired,
+  isLoadingIncome: PropTypes.bool.isRequired,
+  isLoadingOutgoing: PropTypes.bool.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
@@ -279,7 +283,9 @@ DashboardComponent.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isLoading: getBudgetIsLoading(state) || getIncomeIsLoading(state) || getOutgoingIsLoading(state),
+  isLoadingBudget: getBudgetIsLoading(state),
+  isLoadingIncome: getIncomeIsLoading(state),
+  isLoadingOutgoing: getOutgoingIsLoading(state),
   budget: getBudget(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),

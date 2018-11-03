@@ -40,7 +40,8 @@ export class BudgetComponent extends Component {
 
   render = () => {
     const {
-      isLoading,
+      isLoadingBudget,
+      isLoadingMainCategory,
       budget,
       mainCategories,
     } = this.props;
@@ -48,7 +49,7 @@ export class BudgetComponent extends Component {
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budget</Typography>
-        { isLoading ? <Loading /> : (
+        { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
           <div>
             { mainCategories.map((mainCategory) => {
               const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
@@ -73,13 +74,15 @@ export class BudgetComponent extends Component {
 BudgetComponent.propTypes = {
   doLoadMainCategories: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingBudget: PropTypes.bool.isRequired,
+  isLoadingMainCategory: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
   mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getBudgetIsLoading(state) || getMainCategoryIsLoading(state),
+  isLoadingBudget: getBudgetIsLoading(state),
+  isLoadingMainCategory: getMainCategoryIsLoading(state),
   mainCategories: getMainCategories(state),
   budget: getBudget(state),
 });
