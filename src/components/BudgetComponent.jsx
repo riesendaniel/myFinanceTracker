@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   BottomNavigation, BottomNavigationAction,
+  Grid,
   Paper,
   Typography,
 } from '@material-ui/core';
@@ -52,22 +53,32 @@ export class BudgetComponent extends Component {
     } = this.props;
 
     if (!auth.currentUser) {
-      return <Redirect to="/signin/"/>;
+      return <Redirect to="/signin/" />;
     }
 
     return (
       <Paper>
-        <RedirectComponent/>
+        <RedirectComponent />
         <Typography variant="headline" component="h2">Budget</Typography>
         { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
           <div>
-            { mainCategories.map((mainCategory) => {
-              const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
-              return list.length !== 0 && (
-                <BudgetList key={mainCategory.id} title={mainCategory.description} list={list} />
-              );
-            }) }
-            <BudgetSummary budget={budget} />
+            <Grid container spacing={16}>
+              { mainCategories.map((mainCategory) => {
+                const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
+                return list.length !== 0 && (
+                  <Grid item xs={12}>
+                    <BudgetList
+                      key={mainCategory.id}
+                      title={mainCategory.description}
+                      list={list}
+                    />
+                  </Grid>
+                );
+              }) }
+              <Grid item xs={12}>
+                <BudgetSummary budget={budget} />
+              </Grid>
+            </Grid>
             <BottomNavigation
               showLabels
               onChange={this.handleChange}

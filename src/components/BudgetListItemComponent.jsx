@@ -4,11 +4,16 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   IconButton,
-  TableCell, TableRow,
   Typography,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthDown,
+} from '@material-ui/core/withWidth';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import {
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import history from '../helper/history';
 import {
   getCurrency,
@@ -35,37 +40,42 @@ class BudgetListItemComponent extends Component {
 
   render = () => {
     const {
+      breakpoint,
       currency,
       item,
+      width,
     } = this.props;
     return (
-      <TableRow key={item.id}>
-        <TableCell component="th">{item.category}</TableCell>
-        <TableCell numeric>
+      <ResponsiveTableRow key={item.id} breakpoint={breakpoint}>
+        <ResponsiveTableCell component="th" columnHead="Kategorie">
+          <Typography>{item.category}</Typography>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell numeric columnHead="monatlich">
           <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.monthly)} ${currency}`}
           </Typography>
-        </TableCell>
-        <TableCell numeric>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell numeric columnHead="jährlich">
           <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
-        </TableCell>
-        <TableCell>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell alignRight>
           <IconButton onClick={this.handleEdit}>
-            <EditIcon />
+            <EditIcon fontSize={isWidthDown('sm', width) ? 'small' : 'default'} />
           </IconButton>
           <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon />
+            <DeleteOutlineIcon fontSize={isWidthDown('sm', width) ? 'small' : 'default'} />
           </IconButton>
-        </TableCell>
-      </TableRow>
+        </ResponsiveTableCell>
+      </ResponsiveTableRow>
     );
   }
 }
 
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
+  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
   currency: PropTypes.string.isRequired,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -74,6 +84,7 @@ BudgetListItemComponent.propTypes = {
     monthly: PropTypes.number.isRequired,
     yearly: PropTypes.number.isRequired,
   }).isRequired,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -82,7 +93,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withWidth()(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetListItemComponent);
+)(BudgetListItemComponent));
