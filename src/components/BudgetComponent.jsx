@@ -8,8 +8,10 @@ import {
   Grid,
   Paper,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import globalStyle from '../style';
 import {
   actions as budgetActions,
   getIsLoading as getBudgetIsLoading, getBudget,
@@ -46,6 +48,7 @@ export class BudgetComponent extends Component {
 
   render = () => {
     const {
+      classes,
       isLoadingBudget,
       isLoadingMainCategory,
       budget,
@@ -95,6 +98,7 @@ export class BudgetComponent extends Component {
 BudgetComponent.propTypes = {
   doLoadMainCategories: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingMainCategory: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -115,7 +119,7 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withStyles(globalStyle)(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetComponent);
+)(BudgetComponent));

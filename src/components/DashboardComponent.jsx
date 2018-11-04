@@ -9,6 +9,7 @@ import {
   Paper,
   Table, TableHead, TableBody, TableRow, TableCell,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -25,6 +26,7 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import globalStyle from '../style';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -89,6 +91,7 @@ class DashboardComponent extends Component {
 
   render = () => {
     const {
+      classes,
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
@@ -275,6 +278,7 @@ class DashboardComponent extends Component {
 }
 
 DashboardComponent.propTypes = {
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
@@ -316,7 +320,7 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withStyles(globalStyle)(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardComponent);
+)(DashboardComponent));
