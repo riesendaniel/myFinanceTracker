@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
-  Table, TableBody, TableRow, TableCell, TableFooter,
-} from '@material-ui/core';
+  ResponsiveTable,
+  ResponsiveTableBody, ResponsiveTableFooter,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -13,6 +15,7 @@ import {
   getDeductions, getTotalDeductions,
 } from '../redux/modules/IncomeReducer';
 import IncomDeductionsItem from './IncomeDeductionsItemComponent';
+import { Typography } from '@material-ui/core';
 
 const IncomeDeductionsComponent = (props) => {
   const emptyDeduction = {
@@ -26,21 +29,25 @@ const IncomeDeductionsComponent = (props) => {
     totalDeductions,
   } = props;
   return (
-    <Table>
-      <TableBody>
+    <ResponsiveTable breakpoint="xs">
+      <ResponsiveTableBody>
         {deductions.map(deduction => (
           <IncomDeductionsItem key={deduction.id} deduction={deduction} />
         ))}
         <IncomDeductionsItem deduction={emptyDeduction} editable />
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell>Total Abzüge</TableCell>
-          <TableCell numeric>{`${Math.round(totalDeductions)} ${currency}`}</TableCell>
-          <TableCell />
-        </TableRow>
-      </TableFooter>
-    </Table>
+      </ResponsiveTableBody>
+      <ResponsiveTableFooter>
+        <ResponsiveTableRow>
+          <ResponsiveTableCell>
+            <Typography>Total Abzüge</Typography>
+          </ResponsiveTableCell>
+          <ResponsiveTableCell numeric>
+            <Typography>{`${Math.round(totalDeductions)} ${currency}`}</Typography>
+          </ResponsiveTableCell>
+          <ResponsiveTableCell />
+        </ResponsiveTableRow>
+      </ResponsiveTableFooter>
+    </ResponsiveTable>
   );
 };
 

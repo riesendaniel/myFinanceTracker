@@ -3,9 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
+  Grid,
   Paper,
   Typography,
+  withStyles,
 } from '@material-ui/core';
+import globalStyle from '../style';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -31,6 +34,7 @@ class IncomeComponent extends Component {
 
   render = () => {
     const {
+      classes,
       isLoadingIncome,
       currency,
       netPay,
@@ -41,16 +45,20 @@ class IncomeComponent extends Component {
     }
 
     return (
-      <Paper>
+      <Paper className={classes.paper}>
         <Typography variant="headline" component="h2">Einkommen</Typography>
         { isLoadingIncome ? <Loading /> : (
-          <div>
-            <IncomeGrossPay />
-            <IncomeDeductions />
-            <div>
-              {`Nettoeinkommen ${Math.round(netPay)} ${currency}`}
-            </div>
-          </div>
+          <Grid container spacing={16}>
+            <Grid item xs={12} md={6}>
+              <IncomeGrossPay />
+            </Grid>
+            <Grid item xs={12}>
+              <IncomeDeductions />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>{`Nettoeinkommen ${Math.round(netPay)} ${currency}`}</Typography>
+            </Grid>
+          </Grid>
         ) }
       </Paper>
     );
@@ -59,6 +67,7 @@ class IncomeComponent extends Component {
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   currency: PropTypes.string.isRequired,
 };
@@ -72,7 +81,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withStyles(globalStyle)(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeComponent);
+)(IncomeComponent));

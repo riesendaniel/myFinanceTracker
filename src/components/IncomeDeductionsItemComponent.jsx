@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   FormControl,
   IconButton,
-  TableRow, TableCell,
   Input, InputLabel, InputAdornment,
   Select,
   MenuItem,
@@ -14,6 +13,9 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import {
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -79,11 +81,12 @@ class IncomeDeductionsItemComponent extends Component {
       editable,
     } = this.state;
     const {
+      breakpoint,
       currency,
     } = this.props;
     return (
-      <TableRow key={deduction.id}>
-        <TableCell>
+      <ResponsiveTableRow key={deduction.id} breakpoint={breakpoint}>
+        <ResponsiveTableCell columnHead="Beschreibung">
           <FormControl>
             {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
@@ -96,8 +99,8 @@ class IncomeDeductionsItemComponent extends Component {
               readOnly={!editable}
             />
           </FormControl>
-        </TableCell>
-        <TableCell numeric>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell numeric columnHead="Betrag">
           <FormControl>
             { editable && (
               <Select
@@ -121,9 +124,9 @@ class IncomeDeductionsItemComponent extends Component {
               readOnly={!editable}
             />
           </FormControl>
-        </TableCell>
+        </ResponsiveTableCell>
         { editable ? (
-          <TableCell>
+          <ResponsiveTableCell alignRight>
             <IconButton onClick={this.saveDeduction}>
               <SaveIcon />
             </IconButton>
@@ -134,18 +137,18 @@ class IncomeDeductionsItemComponent extends Component {
             >
               <CancelIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         ) : (
-          <TableCell>
+          <ResponsiveTableCell alignRight>
             <IconButton onClick={() => this.setState({ editable: true })}>
               <EditIcon />
             </IconButton>
             <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
               <DeleteOutlineIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         )}
-      </TableRow>
+      </ResponsiveTableRow>
     );
   }
 }
@@ -154,6 +157,7 @@ IncomeDeductionsItemComponent.propTypes = {
   doAddDeduction: PropTypes.func.isRequired,
   doUpdateDeduction: PropTypes.func.isRequired,
   doDeleteDeduction: PropTypes.func.isRequired,
+  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
   currency: PropTypes.string.isRequired,
   deduction: PropTypes.shape({
     id: PropTypes.string.isRequired,
