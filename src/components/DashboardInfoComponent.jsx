@@ -40,6 +40,7 @@ const DashboardInfoComponent = (props) => {
       <Card
         className={classes.card}
         onClick={clickFn}
+        style={{ cursor: clickFn ? 'pointer' : 'auto' }}
       >
         <CardMedia className={classes.media}>
           {icon}
