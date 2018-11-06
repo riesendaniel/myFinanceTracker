@@ -3,7 +3,7 @@ import {
   Grid,
   Hidden,
   Table,
-  TableHead, TableBody, TableFooter,
+  TableHead, TableBody, TableFooter, TablePagination,
   TableRow, TableCell,
   Typography,
   withStyles,
@@ -30,10 +30,14 @@ export const ResponsiveTable = (props) => {
 };
 
 export const ResponsiveTableHead = (props) => {
+  const { show } = props;
   const styles = theme => ({
     [theme.breakpoints.down(props.breakpoint)]: {
       root: {
-        display: 'none',
+        display: show ? 'flex' : 'none',
+        flexDirection: show ? 'column' : undefined,
+        width: show ? '100%' : undefined,
+        borderBottom: '1px solid rgba(0, 0, 0, 0.87)',
       },
     },
   });
@@ -66,10 +70,37 @@ export const ResponsiveTableFooter = (props) => {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
+        borderTop: '1px solid rgba(0, 0, 0, 0.87)',
+        borderBottom: '3px double rgba(0, 0, 0, 0.87)',
       },
     },
   });
   const Component = withStyles(styles)(TableFooter);
+  const { children, breakpoint } = props;
+  const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
+  return <Component {...props}>{childrenWithProps}</Component>;
+};
+
+export const ResponsiveTablePagination = (props) => {
+  const styles = theme => ({
+    [theme.breakpoints.down(props.breakpoint)]: {
+      toolbar: {
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        height: 'auto',
+      },
+      caption: {
+        width: '60%',
+      },
+      input: {
+        width: '30%',
+      },
+      actions: {
+        width: '30%',
+      },
+    },
+  });
+  const Component = withStyles(styles)(TablePagination);
   const { children, breakpoint } = props;
   const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
   return <Component {...props}>{childrenWithProps}</Component>;
@@ -83,6 +114,10 @@ export const ResponsiveTableRow = (props) => {
         flexDirection: 'column',
         height: '100%',
         width: '100%',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+        '&:last-child': {
+          borderBottom: 'none',
+        },
       },
     },
   });
@@ -106,6 +141,7 @@ export const ResponsiveTableCell = (props) => {
         justifyContent: alignRight ? 'flex-end' : 'space-between',
         alignContent: 'center',
         paddingRight: '24px',
+        borderBottom: 'none',
       },
       numeric: {
         flexDirection: 'row',
