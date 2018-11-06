@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import { TableSortLabel } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
+import {
+  ResponsiveTableHead,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 
 class OutgoingTableHead extends Component {
 
@@ -10,14 +14,14 @@ class OutgoingTableHead extends Component {
   };
 
   render() {
-    const { order, orderBy } = this.props;
+    const { breakpoint, order, orderBy } = this.props;
 
     return (
-      <TableHead>
-        <TableRow>
+      <ResponsiveTableHead breakpoint={breakpoint} show>
+        <ResponsiveTableRow>
           {rows.map(row => {
             return (
-              <TableCell
+              <ResponsiveTableCell
                 key={row.id}
                 numeric={row.numeric}
                 padding={row.disablePadding ? 'none' : 'default'}
@@ -39,12 +43,12 @@ class OutgoingTableHead extends Component {
                 </Tooltip>
                 }
 
-              </TableCell>
+              </ResponsiveTableCell>
 
             );
           }, this)}
-        </TableRow>
-      </TableHead>
+        </ResponsiveTableRow>
+      </ResponsiveTableHead>
     );
   }
 }
@@ -88,6 +92,8 @@ const rows = [
 
 OutgoingTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
+  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   order: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
 };

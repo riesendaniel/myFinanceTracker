@@ -4,8 +4,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Card, CardContent,
-  Table, TableCell, TableFooter, TableRow,
+  Typography,
 } from '@material-ui/core';
+import {
+  ResponsiveTable,
+  ResponsiveTableFooter,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import { actions, getCurrency } from '../redux/modules/AppReducer';
 
 const OutgoingSummaryComponent = (props) => {
@@ -13,16 +18,18 @@ const OutgoingSummaryComponent = (props) => {
   return (
     <Card>
       <CardContent>
-        <Table>
-          <TableFooter>
-            <TableRow>
-              <TableCell>Total</TableCell>
-              <TableCell numeric>
-                {`${Math.round(outgoings.reduce((total, item) => total + item.outgoingAmount, 0))} ${currency}`}
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+        <ResponsiveTable breakpoint="xs">
+          <ResponsiveTableFooter>
+            <ResponsiveTableRow>
+              <ResponsiveTableCell>
+                <Typography>Total</Typography>
+              </ResponsiveTableCell>
+              <ResponsiveTableCell numeric>
+                <Typography>{`${Math.round(outgoings.reduce((total, item) => total + item.outgoingAmount, 0))} ${currency}`}</Typography>
+              </ResponsiveTableCell>
+            </ResponsiveTableRow>
+          </ResponsiveTableFooter>
+        </ResponsiveTable>
       </CardContent>
     </Card>
   );

@@ -5,18 +5,25 @@ import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
+  Card, CardContent,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
   Paper,
+  TextField,
   Select,
-  Table,
-  TableBody,
-  TablePagination,
-  TextField
+  MenuItem, InputLabel,
+  withStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearButton from '@material-ui/icons/Clear';
+import {
+  ResponsiveTable,
+  ResponsiveTableBody,
+  ResponsiveTablePagination,
+} from './ResponsiveTable';
+import globalStyle from '../style';
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
@@ -37,6 +44,7 @@ import { auth } from '../config/firebase';
 class OutgoingListComponent extends Component {
 
   static propTypes = {
+    classes: PropTypes.shape(PropTypes.object).isRequired,
     isLoadingOutgoings: PropTypes.bool.isRequired,
     isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.array.isRequired,
@@ -63,75 +71,104 @@ class OutgoingListComponent extends Component {
   }
 
   render() {
-    const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
-
+    const { classes, outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
     return (
-      <Paper>
+      <Paper className={classes.paper}>
         <RedirectComponent/>
         <h2>Ausgaben</h2>
 
         {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (
-          <div>
-            <Route render={({ history }) => (
-              <IconButton type='button' onClick={() => {
-                const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
-                history.push({
-                  pathname: '/outgoing/edit',
-                  state: { mostFrequentCategory },
-                });
-              }}> <AddIcon/></IconButton>
-            )}/>
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={12} md={1}>
+              <Card>
+                <CardContent>
+                  <Route render={({ history }) => (
+                    <IconButton type='button' onClick={() => {
+                      const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
+                      history.push({
+                        pathname: '/outgoing/edit',
+                        state: { mostFrequentCategory },
+                      });
+                    }}> <AddIcon/></IconButton>
+                  )}/>
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} sm={12} md={5}>
+              <Card>
+                <CardContent>
+                  <TextField
+                    placeholder="Nach einem Inhalt suchen.."
+                    onChange={this.handleSearch}
+                    value={this.state.searchValue}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12} sm={12} md={6}>
+              <Card>
+                <CardContent>
+                  <InputLabel htmlFor="category-select">Nach Kategorie Filtern:</InputLabel>
+                  <Select value={this.state.filterValue || ''} onChange={(event) => {
+                    this.setState({ filterValue: event.target.value } );
+                  }} inputProps={{
+                    id: 'category-select',
+                  }}>
+                    { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
+                  </Select>
 
-            <TextField placeholder="Nach einem Inhalt suchen.." onChange={this.handleSearch}
-                       value={this.state.searchValue}/>
+                  <ClearButton onClick={() => this.setState({ filterValue: null, searchValue: ''  })}/>
+                </CardContent>
+              </Card>
+              
+            </Grid>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <ResponsiveTable breakpoint="xs">
+                    <OutgoingTableHead
+                      order={this.state.order}
+                      orderBy={this.state.orderBy}
+                      onRequestSort={this.handleRequestSort}
+                    />
 
-            <InputLabel htmlFor="category-select">Nach Kategorie Filtern:</InputLabel>
-            <Select value={this.state.filterValue || ''} onChange={(event) => {
-              this.setState({ filterValue: event.target.value } );
-            }} inputProps={{
-              id: 'ategory-select',
-            }}>
-              { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
-            </Select>
+                    <ResponsiveTableBody>
 
-            <ClearButton onClick={() => this.setState({ filterValue: null, searchValue: ''  })}/>
+                      {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
+                        .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                        .map(row => {
+                          const category = categories.filter(item => item.id === row.outgoingCategoryId);
+                          if (category.length > 0) {
+                            row.outgoingCategory = category[0].description;
+                          }
+                          return (
+                            <OutgoingItemComponent key={row.id} outgoing={row}/>
+                          );
+                        })}
+                    </ResponsiveTableBody>
+                  </ResponsiveTable>
 
-            <Table>
-              <OutgoingTableHead
-                order={this.state.order}
-                orderBy={this.state.orderBy}
-                onRequestSort={this.handleRequestSort}
-              />
-
-              <TableBody>
-
-                {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
-                  .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                  .map(row => {
-                    const category = categories.filter(item => item.id === row.outgoingCategoryId);
-                    if (category.length > 0) {
-                      row.outgoingCategory = category[0].description;
-                    }
-                    return (
-                      <OutgoingItemComponent key={row.id} outgoing={row}/>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-
-            <TablePagination
-              component="div"
-              count={this.filterTable(outgoings).length}
-              rowsPerPage={this.state.rowsPerPage}
-              page={this.state.page}
-              labelRowsPerPage="Einträge pro Seite"
-              labelDisplayedRows={({ from, to, count }) => `zeige ${from} bis ${to} von total ${count} Einträgen`}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-
-            <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
-          </div>
+                  <ResponsiveTablePagination
+                    breakpoint="xs"
+                    component="div"
+                    count={this.filterTable(outgoings).length}
+                    rowsPerPage={this.state.rowsPerPage}
+                    page={this.state.page}
+                    labelRowsPerPage="Einträge pro Seite"
+                    labelDisplayedRows={({ from, to, count }) => `zeige ${from} bis ${to} von total ${count} Einträgen`}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
+            
+            <Grid item xs={12}>
+              <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
+            </Grid>
+          </Grid>
         )}
       </Paper>
     );
@@ -238,7 +275,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 
-export default connect(
+export default withStyles(globalStyle)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(OutgoingListComponent);
+)(OutgoingListComponent));
