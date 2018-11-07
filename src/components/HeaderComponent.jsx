@@ -48,7 +48,7 @@ class HeaderComponent extends Component {
                 <PowerSettingsNew />
               </IconButton>
             )}
-            <Hidden xlUp>
+            <Hidden lgUp>
               <IconButton onClick={this.handleClick} aria-label="Menu">
                 <MenuIcon />
               </IconButton>
