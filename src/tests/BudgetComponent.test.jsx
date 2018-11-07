@@ -23,7 +23,9 @@ describe('BudgetComponent', () => {
       doLoadBudget: jest.fn(),
       doLoadMainCategories: jest.fn(),
       history: { push: jest.fn() },
-      isLoading: false,
+      classes: {},
+      isLoadingBudget: false,
+      isLoadingMainCategory: false,
       mainCategories: [
         {
           id: 2,

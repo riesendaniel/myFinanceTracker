@@ -97,6 +97,7 @@ export class BudgetComponent extends Component {
 
 BudgetComponent.propTypes = {
   doLoadMainCategories: PropTypes.func.isRequired,
+  doLoadBudget: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
