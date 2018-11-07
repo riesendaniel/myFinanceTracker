@@ -151,7 +151,6 @@ export const ResponsiveTableCell = (props) => {
   const Component = withStyles(styles)(TableCell);
   return (
     <Component {...props}>
-      {children}
       <Hidden
         smUp={breakpoint === 'xs'}
         mdUp={breakpoint === 'sm'}
@@ -160,6 +159,7 @@ export const ResponsiveTableCell = (props) => {
       >
         <Typography color="textSecondary">{columnHead}</Typography>
       </Hidden>
+      {children}
     </Component>
   );
 };

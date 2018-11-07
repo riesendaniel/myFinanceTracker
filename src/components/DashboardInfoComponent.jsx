@@ -12,9 +12,10 @@ const spacing = '16px';
 const styles = theme => ({
   card: {
     display: 'flex',
+    backgroundColor: '#FFFFFF',
   },
   media: {
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
     padding: `${spacing} 24px`,
     display: 'flex',
     alignItems: 'center',
@@ -36,7 +37,7 @@ const DashboardInfoComponent = (props) => {
     clickFn,
   } = props;
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3} xl={2}>
+    <Grid item xs={12} sm={6} md={4} lg={3} xl={3}>
       <Card
         className={classes.card}
         onClick={clickFn}

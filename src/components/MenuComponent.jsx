@@ -22,6 +22,7 @@ const MenuComponent = (props) => {
     },
     drawer: {
       width,
+      backgroundColor: theme.palette.background,
     },
     toolbarPlaceholder: theme.mixins.toolbar,
   });
