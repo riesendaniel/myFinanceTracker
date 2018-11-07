@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  Drawer, List, ListItem, ListItemIcon, ListItemText,
+  Divider,
+  Drawer,
+  List, ListItem, ListItemIcon, ListItemText,
 } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
@@ -14,6 +16,10 @@ const MenuComponent = (props) => {
   const { width } = props;
 
   const styles = theme => ({
+    divider: {
+      marginLeft: '18px',
+      marginRight: '18px',
+    },
     drawer: {
       width,
     },
@@ -58,6 +64,7 @@ const MenuComponent = (props) => {
               <ListItemText primary="Ausgaben" />
             </ListItem>
           </List>
+          <Divider className={classes.divider} />
         </Drawer>
       </div>
     );
