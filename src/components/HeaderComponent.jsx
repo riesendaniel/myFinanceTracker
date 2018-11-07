@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar,
+  Hidden,
   IconButton,
   Typography,
 } from '@material-ui/core';
@@ -40,7 +41,6 @@ class HeaderComponent extends Component {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Typography variant="title">myFinanceTracker</Typography>
-
             {isLoggedIn && (
               <IconButton
                 onClick={() => auth.signOut()}
@@ -48,10 +48,11 @@ class HeaderComponent extends Component {
                 <PowerSettingsNew />
               </IconButton>
             )}
-
-            <IconButton onClick={this.handleClick} aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
+            <Hidden xlUp>
+              <IconButton onClick={this.handleClick} aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
           </Toolbar>
         </AppBar>
       </div>

@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import {
   actions,
   getMenuState,
@@ -47,7 +50,6 @@ class AppComponent extends Component {
     loading: true
   };
 
-
   componentDidMount() {
     this.unregisterAuthObserver = auth.onAuthStateChanged(user => {
       if (user) {
@@ -69,15 +71,19 @@ class AppComponent extends Component {
     this.unregisterAuthObserver();
   }
 
-
-  render() {
-    const { classes, menuState } = this.props;
-
+  render = () = {
+    const {
+      toggleMenu,
+      classes,
+      menuState,
+      width,
+    } = this.props;
     const isLoggedIn = !!auth.currentUser;
-
+    if (isWidthUp('lg', width) && menuState !== 'open') {
+      toggleMenu();
+    }
     return (
-      <div className="App">
-
+      <div>
         <Router history={history}>
           {this.state.loading ? (
             <div className={classes.circularProgressWrapper}>
@@ -86,37 +92,37 @@ class AppComponent extends Component {
           ) : (
             <div>
               <header>
-                <Header isLoggedIn={isLoggedIn}/>
-                {menuState === 'open' && <Menu width={menuWidth}/>}
-                <Notifier/>
+                <Header isLoggedIn={isLoggedIn} />
+                { menuState === 'open' && <Menu width={menuWidth} /> }
+                <Notifier />
               </header>
-              <div className={classes.toolbarPlaceholder}/>
-
+              <div className={classes.toolbarPlaceholder} />
               <main className={menuState === 'open' ? classes.main : undefined}>
                 <Switch>
-                  <Route path="/budget/edit" component={BudgetItemForm}/>
-                  <Route path="/budget" component={Budget}/>
-                  <Route path="/income" component={Income}/>
-                  <Route path="/outgoings" component={OutgoingListComponent}/>
-                  <Route path="/outgoing/edit" component={NewOutgoingComponent}/>
-                  <Route path="/signin/" component={SignIn}/>
-                  <Route path="/maincategories" component={MainCategoryListComponent}/>
-                  <Route path="/" component={DashboardComponent} exact/>
-                  <Route path="*" component={NotFound}/>
+                  <Route path="/budget/edit" component={BudgetItemForm} />
+                  <Route path="/budget" component={Budget} />
+                  <Route path="/income" component={Income} />
+                  <Route path="/outgoings" component={OutgoingListComponent} />
+                  <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+                  <Route path="/maincategories" component={MainCategoryListComponent} />
+                  <Route path="/signin/" component={SignIn} />
+                  <Route path="/" component={Dashboard} exact />
+                  <Route path="*" component={NotFound} />
                 </Switch>
               </main>
             </div>
-
           )}
         </Router>
       </div>
     );
-  };
-}
+  );
+};
 
 AppComponent.propTypes = {
+  toggleMenu: PropTypes.func.isRequired,
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   menuState: PropTypes.string.isRequired,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 const AppWithStyles = withStyles(styles)(AppComponent);
@@ -127,7 +133,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withWidth()(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AppWithStyles);
+)(AppWithStyles));

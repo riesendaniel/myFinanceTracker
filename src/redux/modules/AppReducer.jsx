@@ -55,7 +55,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   currency: 'CHF',
-  menuState: 'open',
+  menuState: 'closed',
 };
 
 export default function reducer(state = initialState, action) {
