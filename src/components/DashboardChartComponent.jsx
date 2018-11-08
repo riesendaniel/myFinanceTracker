@@ -7,9 +7,6 @@ import {
 } from '@material-ui/core';
 
 const styles = theme => ({
-  card: {
-    backgroundColor: '#FFFFFF',
-  },
   header: {
     backgroundColor: theme.palette.primary.main,
   },
@@ -26,7 +23,7 @@ const DashboardChartComponent = (props) => {
   } = props;
   return (
     <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-      <Card className={classes.card}>
+      <Card>
         <CardHeader
           className={classes.header}
           title={title}

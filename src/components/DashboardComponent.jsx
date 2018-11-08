@@ -6,10 +6,8 @@ import moment from 'moment';
 import 'moment/locale/de';
 import {
   Grid,
-  Paper,
   Table, TableHead, TableBody, TableRow, TableCell,
   Typography,
-  withStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -26,7 +24,6 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
-import globalStyle from '../style';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -91,7 +88,6 @@ class DashboardComponent extends Component {
 
   render = () => {
     const {
-      classes,
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
@@ -111,12 +107,12 @@ class DashboardComponent extends Component {
     const name = auth.currentUser ?  auth.currentUser.displayName : '';
 
     return (
-      <Paper>
+      <div>
         <RedirectComponent/>
         <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
-          <div>
-            <Grid container spacing={16}>
+          <Grid container spacing={16}>
+            <Grid container spacing={16} item>
               <DashboardInfoComponent
                 icon={<MoneyIcon />}
                 title={`Ausgaben im ${currentMonth}`}
@@ -146,7 +142,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            <Grid container spacing={16}>
+            <Grid container spacing={16} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
                 content={(
@@ -270,15 +266,14 @@ class DashboardComponent extends Component {
                 )}
               />
             </Grid>
-          </div>
+          </Grid>
         ) }
-      </Paper>
+      </div>
     );
   }
 }
 
 DashboardComponent.propTypes = {
-  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
@@ -320,7 +315,7 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default withStyles(globalStyle)(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardComponent));
+)(DashboardComponent);

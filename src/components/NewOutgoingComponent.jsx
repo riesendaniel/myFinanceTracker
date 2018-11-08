@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import {
+  Card, CardContent, CardActionArea, CardActions,
   FormControl,
   IconButton,
   Input,
@@ -58,72 +59,78 @@ class NewOutgoingComponent extends Component {
     render() {
         const { currency, categories } = this.props;
         return (
-            <FormControl onSubmit={this.addOutgoing}>
-                <TextField
-                    id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
-                    autoComplete="on"
-                    value={this.state.outgoing.outgoingTitle}
-                    onChange={(event) => {
-                        this.setState({outgoing: {...this.state.outgoing, outgoingTitle: event.target.value}})
-                    }}
-                />
-                <FormControl>
-                    <InputLabel htmlFor="amount">Betrag</InputLabel>
-                    <Input
-                        id="amount"
-                        type="number"
-                        value={this.state.outgoing.outgoingAmount}
-                        onChange={(event) => {
-                            this.setState({
-                                outgoing: {
-                                    ...this.state.outgoing,
-                                    outgoingAmount: Number(event.target.value)
+            <Card>
+                <CardContent>
+                    <FormControl onSubmit={this.addOutgoing}>
+                        <TextField
+                            id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
+                            autoComplete="on"
+                            value={this.state.outgoing.outgoingTitle}
+                            onChange={(event) => {
+                                this.setState({outgoing: {...this.state.outgoing, outgoingTitle: event.target.value}})
+                            }}
+                        />
+                        <FormControl>
+                            <InputLabel htmlFor="amount">Betrag</InputLabel>
+                            <Input
+                                id="amount"
+                                type="number"
+                                value={this.state.outgoing.outgoingAmount}
+                                onChange={(event) => {
+                                    this.setState({
+                                        outgoing: {
+                                            ...this.state.outgoing,
+                                            outgoingAmount: Number(event.target.value)
+                                        }
+                                    })
+                                }}
+                                startAdornment={
+                                    <InputAdornment position="start">{currency}</InputAdornment>
                                 }
-                            })
-                        }}
-                        startAdornment={
-                            <InputAdornment position="start">{currency}</InputAdornment>
-                        }
-                    />
-                </FormControl>
-                <FormControl>
-                    <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
-                    <Select
-                        value={this.state.outgoing.outgoingCategoryId || ''}
-                        onChange={(event) => {
-                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
-                        }}
-                        inputProps={{
-                            name: 'group',
-                            id: 'group-select',
-                        }}
-                    >
-                        { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.description}</MenuItem>) }
-                    </Select>
-                </FormControl>
-                <TextField
-                    id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
-                    autoComplete="on"
-                    type="date"
-                    value={this.state.outgoing.outgoingDate}
-                    onChange={(event) => {
-                        this.setState({outgoing: {...this.state.outgoing, outgoingDate: event.target.value}})
-                    }}
-                />
-
-        <IconButton
-          aria-label="add outgoing"
-          onClick={this.addOutgoing}
-        >
-          <SaveIcon/>
-        </IconButton>
-        <IconButton onClick={this.handleCancel}>
-          <CancelIcon/>
-        </IconButton>
-      </FormControl>
-
-    );
-  }
+                            />
+                        </FormControl>
+                        <FormControl>
+                            <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
+                            <Select
+                                value={this.state.outgoing.outgoingCategoryId || ''}
+                                onChange={(event) => {
+                                    this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
+                                }}
+                                inputProps={{
+                                    name: 'group',
+                                    id: 'group-select',
+                                }}
+                            >
+                                { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.description}</MenuItem>) }
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
+                            autoComplete="on"
+                            type="date"
+                            value={this.state.outgoing.outgoingDate}
+                            onChange={(event) => {
+                                this.setState({outgoing: {...this.state.outgoing, outgoingDate: event.target.value}})
+                            }}
+                        />
+                    </FormControl>
+                </CardContent>
+                <CardActionArea>
+                    <CardActions>
+                        <IconButton
+                            aria-label="add outgoing"
+                            onClick={this.addOutgoing}
+                        >
+                            <SaveIcon/>
+                        </IconButton>
+                        <IconButton onClick={this.handleCancel}>
+                            <CancelIcon/>
+                        </IconButton>
+                    </CardActions>
+                </CardActionArea>
+            </Card>
+        );
+    }
 
   handleCancel = () => {
     history.push({

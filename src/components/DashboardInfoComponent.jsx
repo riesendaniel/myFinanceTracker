@@ -12,7 +12,6 @@ const spacing = '16px';
 const styles = theme => ({
   card: {
     display: 'flex',
-    backgroundColor: '#FFFFFF',
   },
   media: {
     backgroundColor: theme.palette.primary.main,

@@ -8,13 +8,10 @@ import {
   Card, CardContent,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Paper,
   TextField,
   Select,
   MenuItem, InputLabel,
-  withStyles,
+  Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearButton from '@material-ui/icons/Clear';
@@ -23,7 +20,6 @@ import {
   ResponsiveTableBody,
   ResponsiveTablePagination,
 } from './ResponsiveTable';
-import globalStyle from '../style';
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
@@ -44,7 +40,6 @@ import { auth } from '../config/firebase';
 class OutgoingListComponent extends Component {
 
   static propTypes = {
-    classes: PropTypes.shape(PropTypes.object).isRequired,
     isLoadingOutgoings: PropTypes.bool.isRequired,
     isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.array.isRequired,
@@ -71,11 +66,11 @@ class OutgoingListComponent extends Component {
   }
 
   render() {
-    const { classes, outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
+    const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
     return (
-      <Paper className={classes.paper}>
+      <div>
         <RedirectComponent/>
-        <h2>Ausgaben</h2>
+        <Typography variant="headline" component="h2">Ausgaben</Typography>
 
         {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (
           <Grid container spacing={16}>
@@ -170,7 +165,7 @@ class OutgoingListComponent extends Component {
             </Grid>
           </Grid>
         )}
-      </Paper>
+      </div>
     );
   }
 
@@ -275,7 +270,7 @@ const mapDispatchToProps = dispatch => {
 };
 
 
-export default withStyles(globalStyle)(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(OutgoingListComponent));
+)(OutgoingListComponent);

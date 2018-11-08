@@ -12,6 +12,19 @@ const theme = {
       contrastText: '#FFFFFF',
     },
   },
+  overrides: {
+    MuiCard: {
+      root: {
+        backgroundColor: '#FFFFFF',
+      },
+    },
+    MuiTypography: {
+      headline: {
+        marginBottom: '16px',
+        fontWeight: 500,
+      },
+    },
+  },
 };
 
 export default createMuiTheme(theme);

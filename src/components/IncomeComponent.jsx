@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
+  Card, CardContent,
   Grid,
-  Paper,
   Typography,
-  withStyles,
 } from '@material-ui/core';
-import globalStyle from '../style';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -34,7 +32,6 @@ class IncomeComponent extends Component {
 
   render = () => {
     const {
-      classes,
       isLoadingIncome,
       currency,
       netPay,
@@ -45,29 +42,34 @@ class IncomeComponent extends Component {
     }
 
     return (
-      <Paper className={classes.paper}>
+      <div>
         <Typography variant="headline" component="h2">Einkommen</Typography>
         { isLoadingIncome ? <Loading /> : (
           <Grid container spacing={16}>
-            <Grid item xs={12} md={6}>
-              <IncomeGrossPay />
-            </Grid>
-            <Grid item xs={12}>
-              <IncomeDeductions />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>{`Nettoeinkommen ${Math.round(netPay)} ${currency}`}</Typography>
+            <Grid item container>
+              <Card>
+                <CardContent>
+                  <Grid item xs={12} md={6}>
+                    <IncomeGrossPay />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <IncomeDeductions />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography>{`Nettoeinkommen ${Math.round(netPay)} ${currency}`}</Typography>
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
         ) }
-      </Paper>
+      </div>
     );
   }
 }
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
-  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   currency: PropTypes.string.isRequired,
 };
@@ -81,7 +83,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default withStyles(globalStyle)(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeComponent));
+)(IncomeComponent);

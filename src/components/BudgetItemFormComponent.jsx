@@ -6,11 +6,11 @@ import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
   Button,
+  Card, CardContent, CardActionArea, CardActions,
   FormControl, FormControlLabel,
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
-  Paper,
   Select,
   Switch,
   TextField,
@@ -99,103 +99,117 @@ class BudgetItemFormComponent extends Component {
     }
 
     return (
-      <Paper>
+      <div>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
-        <form onSubmit={this.handleSubmit}>
-          { isLoadingCategories ? <Loading /> : (
-            <div>
-              <FormControl>
-                <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
-                <Select
-                  value={budgetEntry.mainCategoryId || ''}
-                  onChange={(event) => {
-                    this.setState({
-                      budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
-                    });
-                  }}
-                  inputProps={{
-                    name: 'mainCategory',
-                    id: 'main-category-select',
-                  }}
-                >
-                  { mainCategories.map(mainCategory => (
-                    <MenuItem key={mainCategory.id} value={mainCategory.id}>
-                      {mainCategory.description}
-                    </MenuItem>
-                  )) }
-                </Select>
-              </FormControl>
-              <IconButton
-                aria-label="Gruppe hinzufügen"
-                onClick={() => this.setState({ open: true })}
-              >
-                <EditIcon />
-              </IconButton>
-            </div>
-          )}
-          <FormControl>
-            <TextField
-              id="category"
-              label="Bezeichnung"
-              value={budgetEntry.category}
-              onChange={(event) => {
-                this.setState({ budgetEntry: { ...budgetEntry, category: event.target.value } });
-              }}
-            />
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="color">Farbe</InputLabel>
-            <Input
-              id="color"
-              name="color"
-              type="color"
-              value={budgetEntry.color}
-              onChange={(event) => {
-                this.setState({ budgetEntry: { ...budgetEntry, color: event.target.value } });
-              }}
-            />
-          </FormControl>
-          <FormControl>
-            <FormControlLabel
-              label="jährlich"
-              labelPlacement="start"
-              control={(
-                <FormControlLabel
-                  control={(
-                    <Switch
-                      id="monthly"
-                      value={budgetEntry.period}
-                      checked={budgetEntry.period === 'monthly'}
+        <Card>
+          <form onSubmit={this.handleSubmit}>
+            <CardContent>
+              { isLoadingCategories ? <Loading /> : (
+                <div>
+                  <FormControl>
+                    <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
+                    <Select
+                      value={budgetEntry.mainCategoryId || ''}
                       onChange={(event) => {
                         this.setState({
-                          budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                          budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
                         });
                       }}
+                      inputProps={{
+                        name: 'mainCategory',
+                        id: 'main-category-select',
+                      }}
+                    >
+                      { mainCategories.map(mainCategory => (
+                        <MenuItem key={mainCategory.id} value={mainCategory.id}>
+                          {mainCategory.description}
+                        </MenuItem>
+                      )) }
+                    </Select>
+                  </FormControl>
+                  <IconButton
+                    aria-label="Gruppe hinzufügen"
+                    onClick={() => this.setState({ open: true })}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </div>
+              )}
+              <FormControl>
+                <TextField
+                  id="category"
+                  label="Bezeichnung"
+                  value={budgetEntry.category}
+                  onChange={(event) => {
+                    this.setState({
+                      budgetEntry: {
+                        ...budgetEntry,
+                        category: event.target.value,
+                      },
+                    });
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="color">Farbe</InputLabel>
+                <Input
+                  id="color"
+                  name="color"
+                  type="color"
+                  value={budgetEntry.color}
+                  onChange={(event) => {
+                    this.setState({ budgetEntry: { ...budgetEntry, color: event.target.value } });
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControlLabel
+                  label="jährlich"
+                  labelPlacement="start"
+                  control={(
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          id="monthly"
+                          value={budgetEntry.period}
+                          checked={budgetEntry.period === 'monthly'}
+                          onChange={(event) => {
+                            this.setState({
+                              budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                            });
+                          }}
+                          color="primary"
+                        />
+                      )}
+                      label="monatlich"
                     />
                   )}
-                  label="monatlich"
                 />
-              )}
-            />
-          </FormControl>
-          <FormControl>
-            <InputLabel htmlFor="amount">Betrag</InputLabel>
-            <Input
-              id="amount"
-              type="number"
-              value={budgetEntry.amount}
-              onChange={(event) => {
-                this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
-              }}
-              startAdornment={
-                <InputAdornment position="start">{currency}</InputAdornment>
-              }
-            />
-          </FormControl>
-          <Button variant="contained" type="submit">Hinzufügen</Button>
-        </form>
-      </Paper>
+              </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="amount">Betrag</InputLabel>
+                <Input
+                  id="amount"
+                  type="number"
+                  value={budgetEntry.amount}
+                  onChange={(event) => {
+                    this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
+                  }}
+                  startAdornment={
+                    <InputAdornment position="start">{currency}</InputAdornment>
+                  }
+                />
+              </FormControl>
+            </CardContent>
+            <CardActionArea>
+              <CardActions>
+                <Button variant="contained" type="submit">Hinzufügen</Button>
+              </CardActions>
+            </CardActionArea>
+          </form>
+        </Card>
+      </div>
     );
   }
 }

@@ -6,12 +6,9 @@ import PropTypes from 'prop-types';
 import {
   BottomNavigation, BottomNavigationAction,
   Grid,
-  Paper,
   Typography,
-  withStyles,
 } from '@material-ui/core';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import globalStyle from '../style';
 import {
   actions as budgetActions,
   getIsLoading as getBudgetIsLoading, getBudget,
@@ -48,7 +45,6 @@ export class BudgetComponent extends Component {
 
   render = () => {
     const {
-      classes,
       isLoadingBudget,
       isLoadingMainCategory,
       budget,
@@ -60,7 +56,7 @@ export class BudgetComponent extends Component {
     }
 
     return (
-      <Paper>
+      <div>
         <RedirectComponent />
         <Typography variant="headline" component="h2">Budget</Typography>
         { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
@@ -90,7 +86,7 @@ export class BudgetComponent extends Component {
             </BottomNavigation>
           </div>
         ) }
-      </Paper>
+      </div>
     );
   }
 }
@@ -99,7 +95,6 @@ BudgetComponent.propTypes = {
   doLoadMainCategories: PropTypes.func.isRequired,
   doLoadBudget: PropTypes.func.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  classes: PropTypes.shape(PropTypes.object).isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingMainCategory: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -120,7 +115,7 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default withStyles(globalStyle)(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetComponent));
+)(BudgetComponent);
