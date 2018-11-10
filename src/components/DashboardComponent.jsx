@@ -45,8 +45,11 @@ import {
   getNetPay,
 } from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
+import history from '../helper/history';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
+import RedirectComponent from './RedirectComponent'
+import { auth } from '../config/firebase';
 
 moment.locale('de');
 
@@ -57,13 +60,14 @@ class DashboardComponent extends Component {
       doLoadIncome,
       doLoadOutgoings,
     } = this.props;
-    await doLoadBudget();
-    await doLoadIncome();
-    await doLoadOutgoings();
+    if (auth.currentUser) {
+      await doLoadBudget();
+      await doLoadIncome();
+      await doLoadOutgoings();
+    }
   }
 
   handleAddOutgoing = () => {
-    const { history } = this.props;
     history.push('/outgoing/edit');
   };
 
@@ -100,8 +104,10 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
+
     return (
       <Paper>
+        <RedirectComponent/>
         <Typography variant="headline" component="h2">Übersicht</Typography>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
           <div>
@@ -265,7 +271,6 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   budget: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
   monthlyBudgetSum: PropTypes.number,

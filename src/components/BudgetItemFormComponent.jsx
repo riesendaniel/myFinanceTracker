@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
   Button,
@@ -28,6 +29,7 @@ import {
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import MainCategoryList from './MainCategoryListComponent';
+import { auth } from '../config/firebase';
 
 class BudgetItemFormComponent extends Component {
   state = {
@@ -90,6 +92,11 @@ class BudgetItemFormComponent extends Component {
       mainCategories,
       currency,
     } = this.props;
+
+    if (!auth.currentUser) {
+      return <Redirect to="/signin/"/>;
+    }
+
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>

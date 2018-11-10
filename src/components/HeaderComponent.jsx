@@ -9,9 +9,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import {
   actions,
 } from '../redux/modules/AppReducer';
+import { auth } from '../config/firebase';
 
 const styles = theme => ({
   toolbar: {
@@ -32,12 +34,21 @@ class HeaderComponent extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isLoggedIn } = this.props;
     return (
       <div className="Header">
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Typography variant="title">myFinanceTracker</Typography>
+
+            {isLoggedIn && (
+              <IconButton
+                onClick={() => auth.signOut()}
+              >
+                <PowerSettingsNew />
+              </IconButton>
+            )}
+
             <IconButton onClick={this.handleClick} aria-label="Menu">
               <MenuIcon />
             </IconButton>

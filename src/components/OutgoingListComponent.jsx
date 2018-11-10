@@ -19,6 +19,7 @@ import ClearButton from '@material-ui/icons/Clear';
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
+import RedirectComponent from './RedirectComponent'
 import OutgoingTableHead from './OutgoingTableHead';
 import {
 actions as budgetActions,
@@ -30,6 +31,7 @@ actions as outgoingActions,
 getIsLoading as getOutgoingIsLoading,
 getOutgoings
 } from '../redux/modules/OutgoingReducer';
+import { auth } from '../config/firebase';
 
 class OutgoingListComponent extends Component {
 
@@ -53,14 +55,18 @@ class OutgoingListComponent extends Component {
 
   async componentDidMount() {
     const { doLoadOutgoings, doLoadBudget } = this.props;
-    await doLoadBudget();
-    await doLoadOutgoings();
+    if(auth.currentUser){
+      await doLoadBudget();
+      await doLoadOutgoings();
+    }
   }
 
   render() {
     const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
+
     return (
       <Paper>
+        <RedirectComponent/>
         <h2>Ausgaben</h2>
 
         {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (

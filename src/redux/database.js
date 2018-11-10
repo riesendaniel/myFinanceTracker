@@ -1,4 +1,4 @@
-import {database } from '../config/firebase';
+import { auth, database } from '../config/firebase';
 
 // ------------------------------------
 // Budget
@@ -6,7 +6,7 @@ import {database } from '../config/firebase';
 export function getBudgetValues() {
   return new Promise((resolve, reject) => {
     var budgetList = [];
-    database.collection("budget").get()
+    database.collection("budget").where("userId", "==", auth.currentUser.uid).get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           var key = doc.id;
@@ -29,7 +29,8 @@ export function addNewBudget(budget) {
     category: budget.category,
     period: budget.period,
     monthly: budget.monthly,
-    yearly: budget.yearly
+    yearly: budget.yearly,
+    userId: auth.currentUser.uid,
   });
 }
 
@@ -57,7 +58,7 @@ export const deleteBudget = (id) => {
 export function getIncomeValues() {
   return new Promise((resolve, reject) => {
     let data;
-    database.collection("income").get()
+    database.collection("income").where("userId", "==", auth.currentUser.uid).get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           data = doc.data();
@@ -69,7 +70,7 @@ export function getIncomeValues() {
       });
 
     var deductionList = [];
-    database.collection("deductions").get()
+    database.collection("deductions").where("userId", "==", auth.currentUser.uid).get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           var key = doc.id;
@@ -93,7 +94,7 @@ export function getIncomeValues() {
 export function getOutgoingValues() {
   return new Promise((resolve, reject) => {
     var outgoingList = [];
-    database.collection("outgoing").get()
+    database.collection("outgoing").where("userId", "==", auth.currentUser.uid).get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           var key = doc.id;
@@ -116,6 +117,7 @@ export function addNewOutgoing(outgoing) {
     outgoingCategoryId: outgoing.outgoingCategoryId,
     outgoingTitle: outgoing.outgoingTitle,
     outgoingAmount: outgoing.outgoingAmount,
+    userId: auth.currentUser.uid,
   });
 }
 
@@ -142,7 +144,7 @@ export const deleteOutgoing = (id) => {
 export function getCategoryValues() {
   return new Promise((resolve, reject) => {
     var categories = [];
-    database.collection("categories").get()
+    database.collection("categories").where("userId", "==", auth.currentUser.uid).get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           var key = doc.id;
@@ -163,6 +165,7 @@ export function addNewCategory(category) {
   return database.collection('categories').add({
     description: category.description,
     color: category.color,
+    userId: auth.currentUser.uid,
   });
 }
 
