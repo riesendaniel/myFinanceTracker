@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import {
-    FormControl,
-    IconButton,
-    Input,
-    InputAdornment,
-    InputLabel,
-    MenuItem,
-    Select,
-    TextField
+FormControl,
+IconButton,
+Input,
+InputAdornment,
+InputLabel,
+MenuItem,
+Select,
+TextField
 } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import {actions as outgoingActions} from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 
 class NewOutgoingComponent extends Component {
 

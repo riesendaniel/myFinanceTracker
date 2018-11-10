@@ -11,16 +11,19 @@ export const getBudget = state => state.budget.budget;
 
 export const getCategories = state => state.budget.categories;
 
+export const getMonthlyBudgetSum = state => state.budget.monthlyBudgetSum;
+
 
 // ------------------------------------
 // Action Types
 // ------------------------------------
-const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
-const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
-const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
-const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
-const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
-const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
+export const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
+export const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
+export const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
+export const CALC_MONTHLY_BUDGET_SUM = 'CALC_MONTHLY_BUDGET_SUM';
+export const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
+export const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
+export const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 
 
 // ------------------------------------
@@ -38,6 +41,11 @@ const receiveBudget = budget => ({
 
 const loadCategories = () => ({
     type: LOAD_CATEGORIES,
+});
+
+const calcMonthlyBudgetSum = budget => ({
+  type: CALC_MONTHLY_BUDGET_SUM,
+  budget,
 });
 
 const addBudgetEntry = entry => ({
@@ -59,40 +67,48 @@ const deleteBudgetEntry = id => ({
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
+const updateCalculatedElements = (dispatch, getState) => {
+  const {
+    budget,
+  } = getState().budget;
+  dispatch(calcMonthlyBudgetSum(budget));
+  dispatch(loadCategories());
+};
+
 const doLoadBudget = () => {
-    return (dispatch) => {
-        dispatch(isLoading(true));
-            getBudgetValues().then(budget => {
-                dispatch(receiveBudget(budget));
-                dispatch(loadCategories());
-                dispatch(isLoading(false));
-            }).catch(error => {
-                console.error(error)
-                dispatch(isLoading(false));
-            })
-    };
+  return (dispatch, getState) => {
+    dispatch(isLoading(true));
+    getBudgetValues().then(budget => {
+      dispatch(receiveBudget(budget));
+      updateCalculatedElements(dispatch, getState);
+      dispatch(isLoading(false));
+    }).catch(error => {
+      console.error(error)
+      dispatch(isLoading(false));
+    })
+  };
 }
 
-export function doAddBudgetEntry(entry) {
-    return (dispatch) => {
-        addNewBudget(entry).then(entry => {
-                console.log('ok');
-                dispatch(addBudgetEntry(entry));
-                dispatch(loadCategories());
-                history.push('/budget');
-            }
-        ).catch(error => {
-            console.log('nok');
-            console.error(error);
-        });
-    };
+export function doAddBudgetEntry(dispatch, getState) {
+  return (dispatch) => {
+    addNewBudget(entry).then(entry => {
+        console.log('ok');
+        dispatch(addBudgetEntry(entry));
+        updateCalculatedElements(dispatch, getState);
+        history.push('/budget');
+      }
+    ).catch(error => {
+      console.log('nok');
+      console.error(error);
+    });
+  };
 }
 
 export function doUpdateBudgetEntry(entry) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         updateBudget(entry).then(entry => {
                 dispatch(updateBudgetEntry(entry));
-                dispatch(loadCategories());
+                updateCalculatedElements(dispatch, getState);
                 history.push('/budget');
             }
         ).catch(error => {
@@ -102,10 +118,10 @@ export function doUpdateBudgetEntry(entry) {
 }
 
 export function doDeleteBudgetEntry(id) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         deleteBudget(id).then(() => {
                 dispatch(deleteBudgetEntry(id));
-                dispatch(loadCategories());
+                updateCalculatedElements(dispatch, getState);
             }
         );
     };
@@ -116,10 +132,17 @@ export function doDeleteBudgetEntry(id) {
 // ------------------------------------
 
 export const actions = {
-    doLoadBudget,
-    doAddBudgetEntry,
-    doUpdateBudgetEntry,
-    doDeleteBudgetEntry,
+  doLoadBudget,
+  doAddBudgetEntry,
+  doUpdateBudgetEntry,
+  doDeleteBudgetEntry,
+  isLoading,
+  receiveBudget,
+  loadCategories,
+  calcMonthlyBudgetSum,
+  addBudgetEntry,
+  updateBudgetEntry,
+  deleteBudgetEntry,
 };
 
 
@@ -127,45 +150,53 @@ export const actions = {
 // Action Handlers
 // ------------------------------------
 const ACTION_HANDLERS = {
-    [BUDGET_IS_LOADING]: (state, action) => (
-        {...state, isLoading: action.status}
-    ),
-    [RECEIVE_BUDGET]: (state, action) => {
-        const budget = [...action.budget];
-        return {...state, budget};
-    },
-    [LOAD_CATEGORIES]: (state) => {
-        const categories = [];
-        for (let i = 0; i < state.budget.length; i += 1) {
-            const budgetEntry = state.budget[i];
-            categories.push({
-                id: budgetEntry.id,
-                description: budgetEntry.category,
-            });
-        }
-        return {...state, categories};
-    },
-    [ADD_BUDGET_ENTRY]: (state, action) => {
-        const budget = [...state.budget, action.entry];
-        return {...state, budget};
-    },
-    [UPDATE_BUDGET_ENTRY]: (state, action) => {
-        const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
-        return {...state, budget};
-    },
-    [DELETE_BUDGET_ENTRY]: (state, action) => {
-        const budget = state.budget.filter(entry => entry.id !== action.id);
-        return {...state, budget};
-    },
+  [BUDGET_IS_LOADING]: (state, action) => (
+    { ...state, isLoading: action.status }
+  ),
+  [RECEIVE_BUDGET]: (state, action) => {
+    const budget = [...action.budget];
+    return { ...state, budget };
+  },
+  [LOAD_CATEGORIES]: (state) => {
+    const categories = [];
+    for (let i = 0; i < state.budget.length; i += 1) {
+      const budgetEntry = state.budget[i];
+      categories.push({
+        id: budgetEntry.id,
+        description: budgetEntry.category,
+        color: budgetEntry.color,
+      });
+    }
+    return { ...state, categories };
+  },
+  [CALC_MONTHLY_BUDGET_SUM]: (state, action) => {
+    const monthlyBudgetSum = action.budget.reduce((total, budgetEntry) => (
+      total + budgetEntry.monthly
+    ), 0);
+    return { ...state, monthlyBudgetSum };
+  },
+  [ADD_BUDGET_ENTRY]: (state, action) => {
+    const budget = [...state.budget, action.entry];
+    return { ...state, budget };
+  },
+  [UPDATE_BUDGET_ENTRY]: (state, action) => {
+    const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
+    return { ...state, budget };
+  },
+  [DELETE_BUDGET_ENTRY]: (state, action) => {
+    const budget = state.budget.filter(entry => entry.id !== action.id);
+    return { ...state, budget };
+  },
 };
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 const initialState = {
-    isLoading: false,
-    categories: [],
-    budget: [],
+  isLoading: false,
+  categories: [],
+  budget: [],
+  monthlyBudgetSum: null,
 };
 
 export default function reducer(state = initialState, action) {

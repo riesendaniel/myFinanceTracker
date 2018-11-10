@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import {IconButton, TableCell, TableRow} from '@material-ui/core';
 import moment from "moment/moment";
-import { getCurrency } from '../redux/modules/AppReducer';
-import EditIcon from '@material-ui/icons/Edit';
+import {IconButton, TableCell, TableRow} from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import {actions} from "../redux/modules/OutgoingReducer";
+import EditIcon from '@material-ui/icons/Edit';
 import history from "../helper/history";
+import {actions} from "../redux/modules/OutgoingReducer";
+import { getCurrency } from '../redux/modules/AppReducer';
 
 class OutgoingItemComponent extends Component {
 
