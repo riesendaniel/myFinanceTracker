@@ -27,14 +27,14 @@ class IncomeComponent extends Component {
 
   render = () => {
     const {
-      isLoading,
+      isLoadingIncome,
       currency,
       netPay,
     } = this.props;
     return (
       <Paper>
         <Typography variant="headline" component="h2">Einkommen</Typography>
-        { isLoading ? <Loading /> : (
+        { isLoadingIncome ? <Loading /> : (
           <div>
             <IncomeGrossPay />
             <IncomeDeductions />
@@ -50,13 +50,13 @@ class IncomeComponent extends Component {
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingIncome: PropTypes.bool.isRequired,
   currency: PropTypes.string.isRequired,
   netPay: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoadingIncome: getIsLoading(state),
   currency: getCurrency(state),
   grossPay: getGrossPay(state),
   netPay: getNetPay(state),

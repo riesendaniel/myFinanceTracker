@@ -56,16 +56,29 @@ export const deleteBudget = (id) => {
 // ------------------------------------
 export function getIncomeValues() {
   return new Promise((resolve, reject) => {
-    var income = [];
+    let data;
     database.collection("income").get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
-          var key = doc.id;
-          var curIncome = doc.data();
-          curIncome.id = key;
-          income.push(curIncome);
+          data = doc.data();
         });
-        resolve(income);
+      })
+      .catch(function(error) {
+        console.log("Error getting documents: ", error);
+        reject(error);
+      });
+
+    var deductionList = [];
+    database.collection("deductions").get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          var key = doc.id;
+          var curDecuction = doc.data();
+          curDecuction.id = key;
+          deductionList.push(curDecuction);
+        });
+        data.deductions = deductionList;
+        resolve(data);
       })
       .catch(function(error) {
         console.log("Error getting documents: ", error);
