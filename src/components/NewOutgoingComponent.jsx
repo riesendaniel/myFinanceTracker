@@ -44,7 +44,7 @@ class NewOutgoingComponent extends Component {
                     outgoingAmount: outgoing.outgoingAmount,
                     outgoingCategory: outgoing.outgoingCategory,
                     outgoingDate: outgoing.outgoingDate,
-                    outgoingCategoryId: null,
+                    outgoingCategoryId: outgoing.outgoingCategoryId,
                     outgoingCurrency: 'CHF'
                 },
             });

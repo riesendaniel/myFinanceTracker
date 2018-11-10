@@ -1,5 +1,5 @@
 import history from '../../helper/history';
-import {addNewBudget, deleteBudget, getBudgetValues, updateBudget} from "../database";
+import { addNewBudget, deleteBudget, getBudgetValues, updateBudget } from '../database';
 
 // ------------------------------------
 // Selectors
@@ -89,8 +89,8 @@ const doLoadBudget = () => {
   };
 }
 
-export function doAddBudgetEntry(dispatch, getState) {
-  return (dispatch) => {
+export function doAddBudgetEntry(entry) {
+  return (dispatch, getState) => {
     addNewBudget(entry).then(entry => {
         console.log('ok');
         dispatch(addBudgetEntry(entry));
@@ -104,17 +104,22 @@ export function doAddBudgetEntry(dispatch, getState) {
   };
 }
 
+/*export const doAddBudgetEntry = entry => (dispatch, getState) => {
+  dispatch(addBudgetEntry(entry));
+  updateCalculatedElements(dispatch, getState);
+  history.push('/budget');
+};*/
+
 export function doUpdateBudgetEntry(entry) {
-    return (dispatch, getState) => {
-        updateBudget(entry).then(entry => {
-                dispatch(updateBudgetEntry(entry));
-                updateCalculatedElements(dispatch, getState);
-                history.push('/budget');
-            }
-        ).catch(error => {
-            console.error(error)
-        })
-    };
+  return (dispatch, getState) => {
+    updateBudget(entry).then(() => {
+      dispatch(updateBudgetEntry(entry));
+      updateCalculatedElements(dispatch, getState);
+      history.push('/budget');
+    }).catch(error => {
+      console.error(error);
+    });
+  };
 }
 
 export function doDeleteBudgetEntry(id) {

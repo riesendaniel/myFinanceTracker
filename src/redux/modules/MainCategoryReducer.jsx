@@ -68,7 +68,7 @@ const doLoadMainCategories = () => {
         dispatch(receiveMainCategories(mainCategories));
         dispatch(isLoading(false));
       }).catch(error => {
-        console.error(error)
+        console.error(error);
         dispatch(isLoading(false));
       })
   };

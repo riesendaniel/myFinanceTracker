@@ -86,7 +86,7 @@ class BudgetItemFormComponent extends Component {
       budgetEntry,
     } = this.state;
     const {
-      isLoading,
+      isLoadingCategories,
       mainCategories,
       currency,
     } = this.props;
@@ -95,7 +95,7 @@ class BudgetItemFormComponent extends Component {
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
         <form onSubmit={this.handleSubmit}>
-          { isLoading ? <Loading /> : (
+          { isLoadingCategories ? <Loading /> : (
             <div>
               <FormControl>
                 <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
@@ -194,15 +194,16 @@ class BudgetItemFormComponent extends Component {
 
 BudgetItemFormComponent.propTypes = {
   location: PropTypes.shape({ state: PropTypes.object }).isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingCategories: PropTypes.bool.isRequired,
   doLoadMainCategories: PropTypes.func.isRequired,
+  doUpdateBudgetEntry: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
   mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoadingCategories: getIsLoading(state),
   mainCategories: getMainCategories(state),
   currency: getCurrency(state),
 });

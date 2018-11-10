@@ -22,39 +22,39 @@ export const getIsLoading = state => state.outgoings.isLoading;
 // ------------------------------------
 
 const updateCalculatedElements = (dispatch, getState) => {
-    const {
-        outgoings,
-    } = getState().outgoings;
-    dispatch(setCurrentMonthsOutgoings(outgoings));
-    dispatch(calcLastTwelveMonthsOutgoingSum(outgoings));
-    const {
-        currentMonthsOutgoings,
-    } = getState().outgoings;
-    dispatch(calcCurrentMonthsOutgoingSum(currentMonthsOutgoings));
-    const {
-        categories,
-    } = getState().budget;
-    dispatch(calcCurrentMonthsOutgoingsByCategory(currentMonthsOutgoings, categories));
+  const {
+    outgoings,
+  } = getState().outgoings;
+  dispatch(setCurrentMonthsOutgoings(outgoings));
+  dispatch(calcLastTwelveMonthsOutgoingSum(outgoings));
+  const {
+    currentMonthsOutgoings,
+  } = getState().outgoings;
+  dispatch(calcCurrentMonthsOutgoingSum(currentMonthsOutgoings));
+  const {
+    categories,
+  } = getState().budget;
+  dispatch(calcCurrentMonthsOutgoingsByCategory(currentMonthsOutgoings, categories));
 }
 
-const doLoadOutgoings = () => (dispatch, getState) => {
 export function doLoadOutgoings() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(isLoading(true));
-      getOutgoingValues().then(outgoingList => {
-        dispatch(loadedOutgoings(outgoingList));
-        updateCalculatedElements(dispatch, getState);
-        dispatch(isLoading(false));
-      }).catch(error => {
-        console.error(error);
-        dispatch(isLoading(false));
-      });
+    getOutgoingValues().then(outgoingList => {
+      dispatch(loadedOutgoings(outgoingList));
+      updateCalculatedElements(dispatch, getState);
+      dispatch(isLoading(false));
+    }).catch(error => {
+      console.error(error);
+      dispatch(isLoading(false));
+    });
   };
 }
 
+
 export function doAddOutgoing(entry) {
   return (dispatch, getState) => {
-    addNewOutgoing(entry).then(entry => {
+    addNewOutgoing(entry).then((entry) => {
         dispatch(addOutgoing(entry));
         updateCalculatedElements(dispatch, getState);
         history.push('/outgoings');
@@ -67,7 +67,7 @@ export function doAddOutgoing(entry) {
 
 export function doUpdateOutgoing(entry) {
   return (dispatch) => {
-    updateOutgoing(entry).then(entry => {
+    updateOutgoing(entry).then(() => {
         dispatch(updateOutgoingEntry(entry));
         history.push('/outgoings');
       }
@@ -179,60 +179,60 @@ const ACTION_HANDLERS = {
     { ...state, outgoings: action.payload }
   ),
   [UPDATE_OUTGOING_ENTRY]: (state, action) => {
-    const outgoing = state.outgoings.map(item => (item.id !== action.entry.id ? item : action.entry));
-    return {...state, outgoing};
+    const outgoings = state.outgoings.map(item => (item.id !== action.entry.id ? item : action.entry));
+    return { ...state, outgoings };
   },
   [DELETE_OUTGOING_ENTRY]: (state, action) => {
-    const outgoing = state.outgoings.filter(entry => entry.id !== action.id);
-    return {...state, outgoing};
+    const outgoings = state.outgoings.filter(entry => entry.id !== action.id);
+    return { ...state, outgoings };
   },
-    [SET_CURRENT_MONTHS_OUTGOINGS]: (state, action) => {
-        const startOfMonth = moment().startOf('month');
-        const endOfMonth = moment().endOf('month');
-        const currentMonthsOutgoings = action.outgoings.filter(outgoing => moment(outgoing.outgoingDate).isBetween(startOfMonth, endOfMonth, 'day', '[]'));
-        return { ...state, currentMonthsOutgoings };
-    },
-    [CALC_CURRENT_MONTHS_OUTGOING_SUM]: (state, action) => {
-        const currentMonthsOutgoingSum = action.currentMonthsOutgoings.reduce(
-            (total, outgoing) => total + outgoing.outgoingAmount, 0,
-        );
-        return { ...state, currentMonthsOutgoingSum };
-    },
-    [CALC_CURRENT_MONTHS_OUTGOINGS_BY_CATEGORY]: (state, action) => {
-        const currentMonthsOutgoingsByCategory = [];
-        if (typeof action.categories !== 'undefined') {
-            for (let i = 0; i < action.categories.length; i += 1) {
-                const category = action.categories[i];
-                const outgoings = action.currentMonthsOutgoings.filter(outgoing => outgoing.outgoingCategory === category.description);
-                const amount = outgoings.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
-                if (amount !== 0) {
-                    currentMonthsOutgoingsByCategory.push({
-                        id: category.id,
-                        category: category.description,
-                        color: category.color,
-                        amount,
-                    });
-                }
-            }
+  [SET_CURRENT_MONTHS_OUTGOINGS]: (state, action) => {
+    const startOfMonth = moment().startOf('month');
+    const endOfMonth = moment().endOf('month');
+    const currentMonthsOutgoings = action.outgoings.filter(outgoing => moment(outgoing.outgoingDate).isBetween(startOfMonth, endOfMonth, 'day', '[]'));
+    return { ...state, currentMonthsOutgoings };
+  },
+  [CALC_CURRENT_MONTHS_OUTGOING_SUM]: (state, action) => {
+    const currentMonthsOutgoingSum = action.currentMonthsOutgoings.reduce(
+      (total, outgoing) => total + outgoing.outgoingAmount, 0,
+    );
+    return { ...state, currentMonthsOutgoingSum };
+  },
+  [CALC_CURRENT_MONTHS_OUTGOINGS_BY_CATEGORY]: (state, action) => {
+    const currentMonthsOutgoingsByCategory = [];
+    if (typeof action.categories !== 'undefined') {
+      for (let i = 0; i < action.categories.length; i += 1) {
+        const category = action.categories[i];
+        const outgoings = action.currentMonthsOutgoings.filter(outgoing => outgoing.outgoingCategory === category.description);
+        const amount = outgoings.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
+        if (amount !== 0) {
+          currentMonthsOutgoingsByCategory.push({
+            id: category.id,
+            category: category.description,
+            color: category.color,
+            amount,
+          });
         }
-        return { ...state, currentMonthsOutgoingsByCategory };
-    },
-    [CALC_LAST_TWELVE_MONTHS_OUTGOING_SUM]: (state, action) => {
-        const lastTwelveMonthsOutgoingSum = [];
-        for (let i = 11; i >= 0; i -= 1) {
-            const month = moment().startOf('month').subtract(i, 'months');
-            const startOfMonth = moment(month).startOf('month');
-            const endOfMonth = moment(month).endOf('month');
-            const outgoingsByMonth = action.outgoings.filter(outgoing => moment(outgoing.outgoingDate).isBetween(startOfMonth, endOfMonth, 'day', '[]'));
-            const amount = outgoingsByMonth.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
-            lastTwelveMonthsOutgoingSum.push({
-                id: i,
-                month: moment(month).format('MMM \'YY'),
-                amount,
-            });
-        }
-        return { ...state, lastTwelveMonthsOutgoingSum };
-    },
+      }
+    }
+    return { ...state, currentMonthsOutgoingsByCategory };
+  },
+  [CALC_LAST_TWELVE_MONTHS_OUTGOING_SUM]: (state, action) => {
+    const lastTwelveMonthsOutgoingSum = [];
+    for (let i = 11; i >= 0; i -= 1) {
+      const month = moment().startOf('month').subtract(i, 'months');
+      const startOfMonth = moment(month).startOf('month');
+      const endOfMonth = moment(month).endOf('month');
+      const outgoingsByMonth = action.outgoings.filter(outgoing => moment(outgoing.outgoingDate).isBetween(startOfMonth, endOfMonth, 'day', '[]'));
+      const amount = outgoingsByMonth.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
+      lastTwelveMonthsOutgoingSum.push({
+        id: i,
+        month: moment(month).format('MMM \'YY'),
+        amount,
+      });
+    }
+    return { ...state, lastTwelveMonthsOutgoingSum };
+  },
 };
 
 // ------------------------------------
@@ -240,7 +240,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
     isLoading: false,
-    outgoings: []
+    outgoings: [],
     currentMonthsOutgoings: [],
     currentMonthsOutgoingSum: null,
     currentMonthsOutgoingsByCategory: [],
