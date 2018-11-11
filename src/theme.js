@@ -1,14 +1,17 @@
 import { createMuiTheme } from '@material-ui/core';
 
+const primaryColor = '#F9AA33';
+const secondaryColor = '#344955';
+
 const theme = {
   palette: {
     background: '#E5E5E5',
     primary: {
-      main: '#F9AA33',
+      main: primaryColor,
       contrastText: '#000000',
     },
     secondary: {
-      main: '#344955',
+      main: secondaryColor,
       contrastText: '#FFFFFF',
     },
   },
@@ -22,6 +25,13 @@ const theme = {
       headline: {
         marginBottom: '16px',
         fontWeight: 500,
+      },
+    },
+    MuiListItem: {
+      root: {
+        '&$selected': {
+          backgroundColor: primaryColor,
+        },
       },
     },
   },
