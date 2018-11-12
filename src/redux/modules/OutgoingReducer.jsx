@@ -195,7 +195,7 @@ const initialState = {
             "outgoingCategoryId": 2,
             "outgoingTitle": "Mitagessen",
             "outgoingAmount": 9.50,
-        }
+        },
     ],
     currentMonthsOutgoings: [],
     currentMonthsOutgoingSum: null,
