@@ -114,10 +114,6 @@ export const ResponsiveTableRow = (props) => {
         flexDirection: 'column',
         height: '100%',
         width: '100%',
-        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-        '&:last-child': {
-          borderBottom: 'none',
-        },
       },
     },
   });

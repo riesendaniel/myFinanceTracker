@@ -34,6 +34,18 @@ const theme = {
         },
       },
     },
+    MuiTableRow: {
+      root: {
+        borderBottom: 'none',
+        '&:nth-of-type(2n+1)': {
+          '&:not($head)': {
+            '&:not($footer)': {
+              backgroundColor: 'rgba(229, 229, 229, 0.5)',
+            },
+          },
+        },
+      },
+    },
   },
 };
 
