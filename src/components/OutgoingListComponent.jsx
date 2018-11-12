@@ -6,13 +6,14 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
   IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TablePagination,
-  TextField,
-  Select,
-  MenuItem, InputLabel
+  TextField
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearButton from '@material-ui/icons/Clear';
@@ -22,14 +23,14 @@ import OutgoingItemComponent from './OutgoingItemComponent';
 import RedirectComponent from './RedirectComponent'
 import OutgoingTableHead from './OutgoingTableHead';
 import {
-actions as budgetActions,
-getCategories,
-getIsLoading as getBudgetIsLoading
+  actions as budgetActions,
+  getCategories,
+  getIsLoading as getBudgetIsLoading
 } from '../redux/modules/BudgetReducer';
 import {
-actions as outgoingActions,
-getIsLoading as getOutgoingIsLoading,
-getOutgoings
+  actions as outgoingActions,
+  getIsLoading as getOutgoingIsLoading,
+  getOutgoings
 } from '../redux/modules/OutgoingReducer';
 import { auth } from '../config/firebase';
 
@@ -73,7 +74,11 @@ class OutgoingListComponent extends Component {
           <div>
             <Route render={({ history }) => (
               <IconButton type='button' onClick={() => {
-                history.push('/outgoing/edit');
+                const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
+                history.push({
+                  pathname: '/outgoing/edit',
+                  state: { mostFrequentCategory },
+                });
               }}> <AddIcon/></IconButton>
             )}/>
 
@@ -130,6 +135,25 @@ class OutgoingListComponent extends Component {
         )}
       </Paper>
     );
+  }
+
+  getMostFrequentCategory(arr) {
+    let currHighest = 0;
+    let anzahlElement = 0;
+    let currItem;
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = i; j < arr.length; j++) {
+        if (arr[i].outgoingCategoryId === arr[j].outgoingCategoryId) {
+          anzahlElement++;
+        }
+        if (currHighest < anzahlElement) {
+          currHighest = anzahlElement;
+          currItem = arr[i].outgoingCategoryId;
+        }
+      }
+      anzahlElement = 0;
+    }
+    return currItem;
   }
 
   handleSearch = event => {

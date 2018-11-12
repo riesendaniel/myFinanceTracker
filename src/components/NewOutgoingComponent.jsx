@@ -1,37 +1,41 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import {
-FormControl,
-IconButton,
-Input,
-InputAdornment,
-InputLabel,
-MenuItem,
-Select,
-TextField
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField
 } from '@material-ui/core';
-import {actions as outgoingActions} from '../redux/modules/OutgoingReducer';
+import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
-import {actions as budgetActions, getCategories} from "../redux/modules/BudgetReducer";
+import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
+import CancelIcon from '@material-ui/icons/Cancel';
+import moment from 'moment';
+import history from '../helper/history';
 
 class NewOutgoingComponent extends Component {
 
-    static propTypes = {
-        currency: PropTypes.string.isRequired,
-        categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-    };
+  static propTypes = {
+    currency: PropTypes.string.isRequired,
+    categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  };
 
-    state = {
-        outgoing: {
-            outgoingTitle: '',
-            outgoingAmount: 0,
-            outgoingCategoryId: null,
-            outgoingDate: '',
-        },
-    };
+  state = {
+    outgoing: {
+      outgoingTitle: '',
+      outgoingAmount: 0,
+      outgoingCategoryId: null,
+      outgoingDate: moment(new Date())
+        .format('YYYY-MM-DD'),
+    },
+  };
 
     componentDidMount = () => {
         const {location} = this.props;
@@ -107,54 +111,63 @@ class NewOutgoingComponent extends Component {
                     }}
                 />
 
-                <IconButton
-                    aria-label="add outgoing"
-                    onClick={this.addOutgoing}
-                >
-                    <SaveIcon/>
-                </IconButton>
-            </FormControl>
+        <IconButton
+          aria-label="add outgoing"
+          onClick={this.addOutgoing}
+        >
+          <SaveIcon/>
+        </IconButton>
+        <IconButton onClick={this.handleCancel}>
+          <CancelIcon/>
+        </IconButton>
+      </FormControl>
 
-        );
-    }
+    );
+  }
 
-    addOutgoing = () => {
-        try {
-            if (this.state.outgoing.id) {
-                this.props.doUpdateOutgoing(this.state.outgoing);
-            } else {
-                this.props.doAddOutgoing(this.state.outgoing);
-            }
-            this.setState({
-                outgoing: {
-                    outgoingTitle: '',
-                    outgoingAmount: 0,
-                    outgoingCategoryId: null,
-                    outgoingDate: '',
-                    outgoingCurrency: ''
-                }
-            });
-        } catch (e) {
-            console.log(e);
+  handleCancel = () => {
+    history.push({
+      pathname: '/outgoings/',
+    });
+  };
+
+  addOutgoing = () => {
+    try {
+      if (this.state.outgoing.id) {
+        this.props.doUpdateOutgoing(this.state.outgoing);
+      } else {
+        this.props.doAddOutgoing(this.state.outgoing);
+      }
+      this.setState({
+        outgoing: {
+          outgoingTitle: '',
+          outgoingAmount: 0,
+          outgoingCategoryId: null,
+          outgoingDate: '',
+          outgoingCurrency: ''
         }
+      });
+    } catch (e) {
+      console.log(e);
     }
+  };
 }
 
 const mapStateToProps = state => ({
-    currency: getCurrency(state),
-    categories: getCategories(state),
+  currency: getCurrency(state),
+  categories: getCategories(state),
 });
 
 const actions = {
-    ...outgoingActions,
-    ...budgetActions,
+  ...outgoingActions,
+  ...budgetActions,
 };
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators(actions, dispatch);
+  return bindActionCreators(actions, dispatch);
 };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps,
 )(NewOutgoingComponent);
