@@ -46,7 +46,7 @@ class IncomeComponent extends Component {
         <Typography variant="headline" component="h2">Einkommen</Typography>
         { isLoadingIncome ? <Loading /> : (
           <Grid container spacing={16}>
-            <Grid item container>
+            <Grid item xs={12}>
               <Card>
                 <CardContent>
                   <Grid item xs={12} md={6}>
