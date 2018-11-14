@@ -46,6 +46,15 @@ const theme = {
         },
       },
     },
+    MuiInput: {
+      inputType: {
+        textAlign: 'right',
+      },
+      /* breakpoint einfügen */
+      input: {
+        textAlign: 'right',
+      },
+    },
   },
 };
 

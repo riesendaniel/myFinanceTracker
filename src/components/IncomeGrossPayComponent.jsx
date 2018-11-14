@@ -4,9 +4,14 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   FormControl,
+  Grid,
   IconButton,
   Input, InputAdornment,
+  Typography,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthDown,
+} from '@material-ui/core/withWidth';
 import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
@@ -59,37 +64,42 @@ class IncomeGrossPayComponent extends Component {
     } = this.state;
     const {
       currency,
+      width,
     } = this.props;
     return (
-      <div>
-        <span>Bruttoeinkommen</span>
-        <FormControl>
-          <Input
-            type="number"
-            value={grossPay}
-            onChange={event => this.setState({ grossPay: event.target.value })}
-            endAdornment={
-              <InputAdornment position="end">{currency}</InputAdornment>
-            }
-            disableUnderline={!editGrossPay}
-            readOnly={!editGrossPay}
-          />
-        </FormControl>
-        { editGrossPay ? (
-          <div>
-            <IconButton onClick={this.saveGrossPay}>
-              <SaveIcon />
+      <Grid container alignItems="flex-end">
+        <Grid item xs={12} container justify="space-between" alignItems="center">
+          <Typography color={isWidthDown('xs', width) ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+          <FormControl>
+            <Input
+              type="number"
+              value={grossPay}
+              onChange={event => this.setState({ grossPay: event.target.value })}
+              endAdornment={
+                <InputAdornment position="end">{currency}</InputAdornment>
+              }
+              disableUnderline={!editGrossPay}
+              readOnly={!editGrossPay}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} container justify="flex-end">
+          { editGrossPay ? (
+            <div>
+              <IconButton onClick={this.saveGrossPay}>
+                <SaveIcon />
+              </IconButton>
+              <IconButton onClick={this.handleCancel}>
+                <CancelIcon />
+              </IconButton>
+            </div>
+          ) : (
+            <IconButton onClick={() => this.setState({ editGrossPay: true })}>
+              <EditIcon />
             </IconButton>
-            <IconButton onClick={this.handleCancel}>
-              <CancelIcon />
-            </IconButton>
-          </div>
-        ) : (
-          <IconButton onClick={() => this.setState({ editGrossPay: true })}>
-            <EditIcon />
-          </IconButton>
-        )}
-      </div>
+          )}
+        </Grid>
+      </Grid>
     );
   }
 }
@@ -98,6 +108,7 @@ IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
   currency: PropTypes.func.isRequired,
   grossPay: PropTypes.number.isRequired,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -107,7 +118,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default connect(
+export default withWidth()(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeGrossPayComponent);
+)(IncomeGrossPayComponent));

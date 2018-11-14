@@ -8,7 +8,11 @@ import {
   Input, InputLabel, InputAdornment,
   Select,
   MenuItem,
+  withStyles,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -22,6 +26,15 @@ import {
 import {
   actions,
 } from '../redux/modules/IncomeReducer';
+
+const styles = () => ({
+  value: {
+    maxWidth: '150px',
+  },
+  actions: {
+    width: '100px',
+  },
+});
 
 class IncomeDeductionsItemComponent extends Component {
   state = {
@@ -82,13 +95,17 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.state;
     const {
       breakpoint,
+      classes,
       currency,
+      width,
     } = this.props;
     return (
       <ResponsiveTableRow key={deduction.id} breakpoint={breakpoint}>
-        <ResponsiveTableCell columnHead="Beschreibung">
+        <ResponsiveTableCell
+          columnHead="Beschreibung"
+        >
           <FormControl>
-            {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
+            {(isWidthUp(breakpoint, width, false) && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
               id="description"
               name="description"
@@ -100,7 +117,11 @@ class IncomeDeductionsItemComponent extends Component {
             />
           </FormControl>
         </ResponsiveTableCell>
-        <ResponsiveTableCell numeric columnHead="Betrag">
+        <ResponsiveTableCell
+          className={isWidthUp(breakpoint, width, false) ? classes.value : undefined}
+          numeric
+          columnHead="Betrag"
+        >
           <FormControl>
             { editable && (
               <Select
@@ -126,7 +147,10 @@ class IncomeDeductionsItemComponent extends Component {
           </FormControl>
         </ResponsiveTableCell>
         { editable ? (
-          <ResponsiveTableCell alignRight>
+          <ResponsiveTableCell
+            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={this.saveDeduction}>
               <SaveIcon />
             </IconButton>
@@ -139,7 +163,10 @@ class IncomeDeductionsItemComponent extends Component {
             </IconButton>
           </ResponsiveTableCell>
         ) : (
-          <ResponsiveTableCell alignRight>
+          <ResponsiveTableCell
+            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={() => this.setState({ editable: true })}>
               <EditIcon />
             </IconButton>
@@ -158,6 +185,7 @@ IncomeDeductionsItemComponent.propTypes = {
   doUpdateDeduction: PropTypes.func.isRequired,
   doDeleteDeduction: PropTypes.func.isRequired,
   breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   currency: PropTypes.string.isRequired,
   deduction: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -166,6 +194,7 @@ IncomeDeductionsItemComponent.propTypes = {
     value: PropTypes.number.isRequired,
   }).isRequired,
   editable: PropTypes.bool,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 IncomeDeductionsItemComponent.defaultProps = {
@@ -178,7 +207,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(IncomeDeductionsItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeDeductionsItemComponent);
+)(componentWithStyles);

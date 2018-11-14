@@ -6,7 +6,11 @@ import {
   Card, CardContent,
   Grid,
   Typography,
+  withStyles,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthDown,
+} from '@material-ui/core/withWidth';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -20,6 +24,20 @@ import IncomeDeductions from './IncomeDeductionsComponent';
 import { Redirect } from 'react-router-dom';
 import { auth } from '../config/firebase';
 
+const spacing = '48px';
+
+const styles = () => ({
+  grossPay: {
+    marginBottom: spacing,
+  },
+  deductions: {
+    order: -1,
+  },
+  netPay: {
+    marginTop: spacing,
+  },
+});
+
 class IncomeComponent extends Component {
   componentDidMount = async () => {
     const {
@@ -32,9 +50,11 @@ class IncomeComponent extends Component {
 
   render = () => {
     const {
+      classes,
       isLoadingIncome,
       currency,
       netPay,
+      width,
     } = this.props;
 
     if (!auth.currentUser) {
@@ -49,14 +69,17 @@ class IncomeComponent extends Component {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Grid item xs={12} md={6}>
-                    <IncomeGrossPay />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <IncomeDeductions />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography>{`Nettoeinkommen ${Math.round(netPay)} ${currency}`}</Typography>
+                  <Grid container direction="row-reverse" justify="flex-end">
+                    <Grid item xs={12} md={6} className={classes.grossPay}>
+                      <IncomeGrossPay />
+                    </Grid>
+                    <Grid item xs={12} md={6} className={classes.deductions}>
+                      <IncomeDeductions />
+                    </Grid>
+                    <Grid item xs={12} md={6} container justify="space-between" alignItems="center" className={classes.netPay}>
+                      <Typography color={isWidthDown('xs', width) ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
+                      <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
+                    </Grid>
                   </Grid>
                 </CardContent>
               </Card>
@@ -70,8 +93,11 @@ class IncomeComponent extends Component {
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   currency: PropTypes.string.isRequired,
+  netPay: PropTypes.number.isRequired,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -83,7 +109,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(IncomeComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeComponent);
+)(componentWithStyles);
