@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
   Button,
@@ -28,6 +29,7 @@ import {
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import MainCategoryList from './MainCategoryListComponent';
+import { auth } from '../config/firebase';
 
 class BudgetItemFormComponent extends Component {
   state = {
@@ -63,9 +65,10 @@ class BudgetItemFormComponent extends Component {
     doLoadMainCategories();
   }
 
-  handleSubmit = async () => {
+  handleSubmit = async (e) => {
     const { doAddBudgetEntry, doUpdateBudgetEntry } = this.props;
     const { budgetEntry } = this.state;
+    e.preventDefault();
     if (budgetEntry.period === 'monthly') {
       budgetEntry.monthly = Number(budgetEntry.amount);
       budgetEntry.yearly = budgetEntry.monthly * 12;
@@ -86,21 +89,26 @@ class BudgetItemFormComponent extends Component {
       budgetEntry,
     } = this.state;
     const {
-      isLoading,
+      isLoadingCategories,
       mainCategories,
       currency,
     } = this.props;
+
+    if (!auth.currentUser) {
+      return <Redirect to="/signin/"/>;
+    }
+
     return (
       <Paper>
         <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
         <form onSubmit={this.handleSubmit}>
-          { isLoading ? <Loading /> : (
+          { isLoadingCategories ? <Loading /> : (
             <div>
               <FormControl>
                 <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
                 <Select
-                  value={budgetEntry.mainCategoryId}
+                  value={budgetEntry.mainCategoryId || ''}
                   onChange={(event) => {
                     this.setState({
                       budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
@@ -194,15 +202,16 @@ class BudgetItemFormComponent extends Component {
 
 BudgetItemFormComponent.propTypes = {
   location: PropTypes.shape({ state: PropTypes.object }).isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingCategories: PropTypes.bool.isRequired,
   doLoadMainCategories: PropTypes.func.isRequired,
+  doUpdateBudgetEntry: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
   mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoadingCategories: getIsLoading(state),
   mainCategories: getMainCategories(state),
   currency: getCurrency(state),
 });

@@ -16,25 +16,34 @@ import {
 import Loading from './LoadingComponent';
 import IncomeGrossPay from './IncomeGrossPayComponent';
 import IncomeDeductions from './IncomeDeductionsComponent';
+import { Redirect } from 'react-router-dom';
+import { auth } from '../config/firebase';
 
 class IncomeComponent extends Component {
   componentDidMount = async () => {
     const {
       doLoadIncome,
     } = this.props;
-    await doLoadIncome();
+    if (auth.currentUser) {
+      await doLoadIncome();
+    }
   }
 
   render = () => {
     const {
-      isLoading,
+      isLoadingIncome,
       currency,
       netPay,
     } = this.props;
+
+    if (!auth.currentUser) {
+      return <Redirect to="/signin/"/>;
+    }
+
     return (
       <Paper>
         <Typography variant="headline" component="h2">Einkommen</Typography>
-        { isLoading ? <Loading /> : (
+        { isLoadingIncome ? <Loading /> : (
           <div>
             <IncomeGrossPay />
             <IncomeDeductions />
@@ -50,13 +59,12 @@ class IncomeComponent extends Component {
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoadingIncome: PropTypes.bool.isRequired,
   currency: PropTypes.string.isRequired,
-  netPay: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isLoading: getIsLoading(state),
+  isLoadingIncome: getIsLoading(state),
   currency: getCurrency(state),
   grossPay: getGrossPay(state),
   netPay: getNetPay(state),

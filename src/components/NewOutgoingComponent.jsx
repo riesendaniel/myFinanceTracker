@@ -31,109 +31,85 @@ class NewOutgoingComponent extends Component {
     outgoing: {
       outgoingTitle: '',
       outgoingAmount: 0,
-      outgoingCategoryId: '',
+      outgoingCategoryId: null,
       outgoingDate: moment(new Date())
         .format('YYYY-MM-DD'),
     },
   };
 
-  componentDidMount = () => {
-    const { location } = this.props;
-    if (location.state && location.state.outgoing) {
-      const { outgoing } = location.state;
-      this.setState({
-        outgoing: {
-          id: outgoing.id,
-          outgoingTitle: outgoing.outgoingTitle,
-          outgoingAmount: outgoing.outgoingAmount,
-          outgoingCategory: outgoing.outgoingCategory,
-          outgoingDate: outgoing.outgoingDate,
-          outgoingCategoryId: '',
-          outgoingCurrency: 'CHF'
-        },
-      });
-    }
-    if (location.state && location.state.mostFrequentCategory) {
-      this.setState({
-        outgoing: {
-          outgoingCategoryId: location.state.mostFrequentCategory,
+    componentDidMount = () => {
+        const {location} = this.props;
+        if (location.state && location.state.outgoing) {
+            const {outgoing} = location.state;
+            this.setState({
+                outgoing: {
+                    id: outgoing.id,
+                    outgoingTitle: outgoing.outgoingTitle,
+                    outgoingAmount: outgoing.outgoingAmount,
+                    outgoingCategory: outgoing.outgoingCategory,
+                    outgoingDate: outgoing.outgoingDate,
+                    outgoingCategoryId: outgoing.outgoingCategoryId,
+                    outgoingCurrency: 'CHF'
+                },
+            });
         }
-      });
     }
-  };
 
-  render() {
-    const { currency, categories } = this.props;
-
-    return (
-      <FormControl onSubmit={this.addOutgoing}>
-        <TextField
-          id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
-          autoComplete="on"
-          value={this.state.outgoing.outgoingTitle}
-          onChange={(event) => {
-            this.setState({
-              outgoing: {
-                ...this.state.outgoing,
-                outgoingTitle: event.target.value
-              }
-            });
-          }}
-        />
-        <FormControl>
-          <InputLabel htmlFor="amount">Betrag</InputLabel>
-          <Input
-            id="amount"
-            type="number"
-            value={this.state.outgoing.outgoingAmount}
-            onChange={(event) => {
-              this.setState({
-                outgoing: {
-                  ...this.state.outgoing,
-                  outgoingAmount: Number(event.target.value)
-                }
-              });
-            }}
-            startAdornment={
-              <InputAdornment position="start">{currency}</InputAdornment>
-            }
-          />
-        </FormControl>
-        <FormControl>
-          <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
-          <Select
-            value={this.state.outgoing.outgoingCategoryId}
-            onChange={(event) => {
-              this.setState({
-                outgoing: {
-                  ...this.state.outgoing,
-                  outgoingCategoryId: event.target.value
-                }
-              });
-            }}
-            inputProps={{
-              name: 'group',
-              id: 'group-select',
-            }}
-          >
-            {categories.map(category => <MenuItem key={category.id}
-                                                  value={category.id}>{category.description}</MenuItem>)}
-          </Select>
-        </FormControl>
-        <TextField
-          id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
-          autoComplete="on"
-          type="date"
-          value={this.state.outgoing.outgoingDate}
-          onChange={(event) => {
-            this.setState({
-              outgoing: {
-                ...this.state.outgoing,
-                outgoingDate: event.target.value
-              }
-            });
-          }}
-        />
+    render() {
+        const { currency, categories } = this.props;
+        return (
+            <FormControl onSubmit={this.addOutgoing}>
+                <TextField
+                    id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
+                    autoComplete="on"
+                    value={this.state.outgoing.outgoingTitle}
+                    onChange={(event) => {
+                        this.setState({outgoing: {...this.state.outgoing, outgoingTitle: event.target.value}})
+                    }}
+                />
+                <FormControl>
+                    <InputLabel htmlFor="amount">Betrag</InputLabel>
+                    <Input
+                        id="amount"
+                        type="number"
+                        value={this.state.outgoing.outgoingAmount}
+                        onChange={(event) => {
+                            this.setState({
+                                outgoing: {
+                                    ...this.state.outgoing,
+                                    outgoingAmount: Number(event.target.value)
+                                }
+                            })
+                        }}
+                        startAdornment={
+                            <InputAdornment position="start">{currency}</InputAdornment>
+                        }
+                    />
+                </FormControl>
+                <FormControl>
+                    <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
+                    <Select
+                        value={this.state.outgoing.outgoingCategoryId || ''}
+                        onChange={(event) => {
+                            this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
+                        }}
+                        inputProps={{
+                            name: 'group',
+                            id: 'group-select',
+                        }}
+                    >
+                        { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.description}</MenuItem>) }
+                    </Select>
+                </FormControl>
+                <TextField
+                    id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
+                    autoComplete="on"
+                    type="date"
+                    value={this.state.outgoing.outgoingDate}
+                    onChange={(event) => {
+                        this.setState({outgoing: {...this.state.outgoing, outgoingDate: event.target.value}})
+                    }}
+                />
 
         <IconButton
           aria-label="add outgoing"

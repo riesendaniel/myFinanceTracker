@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -13,6 +14,7 @@ import {
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import MainCategoryListItem from './MainCategoryListItemComponent';
+import { auth } from '../config/firebase';
 
 class MainCategoryListComponent extends Component {
   state = {
@@ -47,6 +49,11 @@ class MainCategoryListComponent extends Component {
       isLoading,
       mainCategories,
     } = this.props;
+
+    if (!auth.currentUser) {
+      return <Redirect to="/signin/"/>;
+    }
+
     return (
       <Dialog
         open={open}

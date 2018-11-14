@@ -18,7 +18,7 @@ class OutgoingItemComponent extends Component {
             id: PropTypes.string.isRequired,
             outgoingTitle: PropTypes.string.isRequired,
             outgoingDate: PropTypes.string.isRequired,
-            outgoingCategoryId: PropTypes.number.isRequired,
+            outgoingCategory: PropTypes.string.isRequired,
             outgoingAmount: PropTypes.number.isRequired,
         }).isRequired,
     };
@@ -45,7 +45,7 @@ class OutgoingItemComponent extends Component {
             <TableRow key={outgoing.id}>
                 <TableCell>{outgoing.outgoingTitle}</TableCell>
                 <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
-                <TableCell>{outgoing.outgoingCategoryId}</TableCell>
+                <TableCell>{outgoing.outgoingCategory}</TableCell>
                 <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
                 <TableCell>
                     <IconButton onClick={this.handleEdit}>

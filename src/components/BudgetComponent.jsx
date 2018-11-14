@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   BottomNavigation, BottomNavigationAction,
@@ -19,6 +20,8 @@ import {
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
+import RedirectComponent from './RedirectComponent'
+import { auth } from '../config/firebase';
 
 export class BudgetComponent extends Component {
   componentDidMount = async () => {
@@ -26,8 +29,10 @@ export class BudgetComponent extends Component {
       doLoadMainCategories,
       doLoadBudget,
     } = this.props;
-    await doLoadMainCategories();
-    await doLoadBudget();
+    if (auth.currentUser) {
+      await doLoadMainCategories();
+      await doLoadBudget();
+    }
   }
 
   handleChange = (event, value) => {
@@ -46,8 +51,13 @@ export class BudgetComponent extends Component {
       mainCategories,
     } = this.props;
 
+    if (!auth.currentUser) {
+      return <Redirect to="/signin/"/>;
+    }
+
     return (
       <Paper>
+        <RedirectComponent/>
         <Typography variant="headline" component="h2">Budget</Typography>
         { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
           <div>

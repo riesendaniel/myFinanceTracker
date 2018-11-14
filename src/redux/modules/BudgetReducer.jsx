@@ -1,4 +1,5 @@
 import history from '../../helper/history';
+import { addNewBudget, deleteBudget, getBudgetValues, updateBudget } from '../database';
 
 // ------------------------------------
 // Selectors
@@ -29,17 +30,17 @@ export const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 // Action Creators
 // ------------------------------------
 const isLoading = status => ({
-  type: BUDGET_IS_LOADING,
-  status,
+    type: BUDGET_IS_LOADING,
+    status,
 });
 
 const receiveBudget = budget => ({
-  type: RECEIVE_BUDGET,
-  budget,
+    type: RECEIVE_BUDGET,
+    budget,
 });
 
 const loadCategories = () => ({
-  type: LOAD_CATEGORIES,
+    type: LOAD_CATEGORIES,
 });
 
 const calcMonthlyBudgetSum = budget => ({
@@ -48,25 +49,24 @@ const calcMonthlyBudgetSum = budget => ({
 });
 
 const addBudgetEntry = entry => ({
-  type: ADD_BUDGET_ENTRY,
-  entry,
+    type: ADD_BUDGET_ENTRY,
+    entry,
 });
 
 const updateBudgetEntry = entry => ({
-  type: UPDATE_BUDGET_ENTRY,
-  entry,
+    type: UPDATE_BUDGET_ENTRY,
+    entry,
 });
 
 const deleteBudgetEntry = id => ({
-  type: DELETE_BUDGET_ENTRY,
-  id,
+    type: DELETE_BUDGET_ENTRY,
+    id,
 });
 
 
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
-
 const updateCalculatedElements = (dispatch, getState) => {
   const {
     budget,
@@ -75,33 +75,54 @@ const updateCalculatedElements = (dispatch, getState) => {
   dispatch(loadCategories());
 };
 
-const doLoadBudget = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const { budget } = getState().budget;
-    dispatch(receiveBudget(budget));
-    updateCalculatedElements(dispatch, getState);
-    dispatch(isLoading(false));
-  }, 1000);
-};
+const doLoadBudget = () => {
+  return (dispatch, getState) => {
+    dispatch(isLoading(true));
+    getBudgetValues().then(budget => {
+      dispatch(receiveBudget(budget));
+      updateCalculatedElements(dispatch, getState);
+      dispatch(isLoading(false));
+    }).catch(error => {
+      console.error(error)
+      dispatch(isLoading(false));
+    })
+  };
+}
 
-export const doAddBudgetEntry = entry => (dispatch, getState) => {
-  dispatch(addBudgetEntry(entry));
-  updateCalculatedElements(dispatch, getState);
-  history.push('/budget');
-};
+export function doAddBudgetEntry(entry) {
+  return (dispatch, getState) => {
+    addNewBudget(entry).then(entry => {
+        dispatch(addBudgetEntry(entry));
+        updateCalculatedElements(dispatch, getState);
+        history.push('/budget');
+      }
+    ).catch(error => {
+      console.error(error);
+    });
+  };
+}
 
-export const doUpdateBudgetEntry = entry => (dispatch, getState) => {
-  dispatch(updateBudgetEntry(entry));
-  updateCalculatedElements(dispatch, getState);
-  history.push('/budget');
-};
+export function doUpdateBudgetEntry(entry) {
+  return (dispatch, getState) => {
+    updateBudget(entry).then(()=>{
+      dispatch(updateBudgetEntry(entry));
+      updateCalculatedElements(dispatch, getState);
+      history.push('/budget');
+    }).catch(error => {
+      console.error(error);
+    });
+  };
+}
 
-export const doDeleteBudgetEntry = id => (dispatch, getState) => {
-  dispatch(deleteBudgetEntry(id));
-  updateCalculatedElements(dispatch, getState);
-};
-
+export function doDeleteBudgetEntry(id) {
+    return (dispatch, getState) => {
+        deleteBudget(id).then(() => {
+                dispatch(deleteBudgetEntry(id));
+                updateCalculatedElements(dispatch, getState);
+            }
+        );
+    };
+}
 
 // ------------------------------------
 // Actions
@@ -171,48 +192,11 @@ const ACTION_HANDLERS = {
 const initialState = {
   isLoading: false,
   categories: [],
-  budget: [
-    {
-      id: 1,
-      mainCategoryId: 2,
-      category: 'Unterhalt',
-      color: '#FF0000',
-      period: 'monthly',
-      monthly: 100,
-      yearly: 1200,
-    },
-    {
-      id: 2,
-      mainCategoryId: 2,
-      category: 'Essen & Getränke',
-      color: '#FF9900',
-      period: 'monthly',
-      monthly: 250,
-      yearly: 3000,
-    },
-    {
-      id: 3,
-      mainCategoryId: 9,
-      category: 'öffentlicher Verkehr',
-      color: '#FF0099',
-      period: 'yearly',
-      monthly: 200,
-      yearly: 2400,
-    },
-    {
-      id: 4,
-      mainCategoryId: 5,
-      category: 'Tanken',
-      color: '#FF9999',
-      period: 'monthly',
-      monthly: 100,
-      yearly: 1200,
-    },
-  ],
+  budget: [],
   monthlyBudgetSum: null,
 };
 
 export default function reducer(state = initialState, action) {
-  const handler = ACTION_HANDLERS[action.type];
-  return handler ? handler(state, action) : state;
+    const handler = ACTION_HANDLERS[action.type];
+    return handler ? handler(state, action) : state;
 }

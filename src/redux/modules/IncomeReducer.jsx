@@ -1,6 +1,8 @@
 // ------------------------------------
 // Selectors
 // ------------------------------------
+import { getIncomeValues } from '../database';
+
 export const getIsLoading = state => state.income.isLoading;
 
 export const getGrossPay = state => state.income.grossPay;
@@ -82,18 +84,21 @@ const updateCalculatedElements = (dispatch, getState) => {
   dispatch(calcNetPay({ grossPay, totalDeductions }));
 };
 
-const doLoadIncome = () => (dispatch, getState) => {
-  dispatch(isLoading(true));
-  setTimeout(() => {
-    const {
-      grossPay,
-      deductions,
-    } = getState().income;
-    dispatch(receiveIncome({ grossPay, deductions }));
-    updateCalculatedElements(dispatch, getState);
-    dispatch(isLoading(false));
-  }, 1000);
-};
+export function doLoadIncome() {
+  return (dispatch, getState) => {
+    dispatch(isLoading(true));
+    getIncomeValues().then(income => {
+        const grossPay = income.grossPay;
+        const deductions = income.deductions;
+        dispatch(receiveIncome({ grossPay, deductions }));
+        updateCalculatedElements(dispatch, getState);
+        dispatch(isLoading(false));
+      }).catch(error => {
+        console.error(error);
+        dispatch(isLoading(false));
+      });
+  };
+}
 
 const doUpdateGrossPay = grossPay => (dispatch, getState) => {
   dispatch(updateGrossPay(grossPay));
@@ -161,7 +166,7 @@ const ACTION_HANDLERS = {
   [CALC_NET_PAY]: (state, action) => {
     const { grossPay, totalDeductions } = action.income;
     const netPay = calculateNetPay(grossPay, totalDeductions);
-    return { ...state, netPay };
+    return { ...state, netPay, isLoading: false };
   },
   [UPDATE_GROSS_PAY]: (state, action) => {
     const { grossPay } = action;
@@ -189,27 +194,8 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  grossPay: 4000,
-  deductions: [
-    {
-      id: 1,
-      description: 'AHV',
-      type: 'percentaged',
-      value: 20,
-    },
-    {
-      id: 2,
-      description: 'ALV',
-      type: 'percentaged',
-      value: 5,
-    },
-    {
-      id: 3,
-      description: 'Nichtberufsunfall',
-      type: 'fixed',
-      value: 5,
-    },
-  ],
+  grossPay: null,
+  deductions: [],
   totalDeductions: 0,
   netPay: null,
 };
