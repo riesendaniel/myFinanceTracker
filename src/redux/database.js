@@ -28,6 +28,7 @@ export function addNewBudget(budget) {
     mainCategoryId: budget.mainCategoryId,
     category: budget.category,
     period: budget.period,
+    color: budget.color,
     monthly: budget.monthly,
     yearly: budget.yearly,
     userId: auth.currentUser.uid,
@@ -41,8 +42,9 @@ export const updateBudget = (budget) => {
       mainCategoryId: budget.mainCategoryId,
       category: budget.category,
       period: budget.period,
+      color: budget.color,
       monthly: budget.monthly,
-      yearly: budget.yearly
+      yearly: budget.yearly,
     });
 };
 
@@ -164,7 +166,6 @@ export function getCategoryValues() {
 export function addNewCategory(category) {
   return database.collection('categories').add({
     description: category.description,
-    color: category.color,
     userId: auth.currentUser.uid,
   });
 }
@@ -174,7 +175,6 @@ export const updateCategory = (category) => {
     .doc(category.id)
     .update({
       description: category.description,
-      color: category.color,
     });
 };
 

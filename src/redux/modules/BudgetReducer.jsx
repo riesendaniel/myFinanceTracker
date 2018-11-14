@@ -92,27 +92,19 @@ const doLoadBudget = () => {
 export function doAddBudgetEntry(entry) {
   return (dispatch, getState) => {
     addNewBudget(entry).then(entry => {
-        console.log('ok');
         dispatch(addBudgetEntry(entry));
         updateCalculatedElements(dispatch, getState);
         history.push('/budget');
       }
     ).catch(error => {
-      console.log('nok');
       console.error(error);
     });
   };
 }
 
-/*export const doAddBudgetEntry = entry => (dispatch, getState) => {
-  dispatch(addBudgetEntry(entry));
-  updateCalculatedElements(dispatch, getState);
-  history.push('/budget');
-};*/
-
 export function doUpdateBudgetEntry(entry) {
   return (dispatch, getState) => {
-    updateBudget(entry).then(() => {
+    updateBudget(entry).then(()=>{
       dispatch(updateBudgetEntry(entry));
       updateCalculatedElements(dispatch, getState);
       history.push('/budget');

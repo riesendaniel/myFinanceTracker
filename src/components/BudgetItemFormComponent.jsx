@@ -65,9 +65,10 @@ class BudgetItemFormComponent extends Component {
     doLoadMainCategories();
   }
 
-  handleSubmit = async () => {
+  handleSubmit = async (e) => {
     const { doAddBudgetEntry, doUpdateBudgetEntry } = this.props;
     const { budgetEntry } = this.state;
+    e.preventDefault();
     if (budgetEntry.period === 'monthly') {
       budgetEntry.monthly = Number(budgetEntry.amount);
       budgetEntry.yearly = budgetEntry.monthly * 12;
