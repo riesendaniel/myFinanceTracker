@@ -135,7 +135,7 @@ export const ResponsiveTableCell = (props) => {
       root: {
         display: 'flex',
         justifyContent: alignRight ? 'flex-end' : 'space-between',
-        alignContent: 'center',
+        alignItems: 'center',
         paddingRight: '24px',
         borderBottom: 'none',
       },
