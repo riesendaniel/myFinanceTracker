@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import withWidth, {
   isWidthUp,
@@ -11,10 +12,10 @@ import {
   actions,
   getMenuState,
 } from '../redux/modules/AppReducer';
-import { CircularProgress } from "@material-ui/core";
 import history from '../helper/history';
 import Budget from './BudgetComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
+import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
 import MainCategoryListComponent from './MainCategoryListComponent';
@@ -25,7 +26,6 @@ import OutgoingListComponent from './OutgoingListComponent';
 import Notifier from './Notifier';
 import SignIn from './SignIn';
 import { auth } from '../config/firebase';
-import DashboardComponent from './DashboardComponent';
 
 const menuWidth = '300px';
 
@@ -37,9 +37,9 @@ const styles = theme => ({
     },
   },
   circularProgressWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    paddingTop: `${theme.spacing.unit * 8}px`
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: `${theme.spacing.unit * 8}px`,
   },
 });
 
@@ -47,20 +47,20 @@ class AppComponent extends Component {
 
   state = {
     isSignedIn: false,
-    loading: true
+    loading: true,
   };
 
   componentDidMount() {
-    this.unregisterAuthObserver = auth.onAuthStateChanged(user => {
+    this.unregisterAuthObserver = auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({
           isSignedIn: true,
-          loading: false
+          loading: false,
         });
       } else {
         this.setState({
           isSignedIn: false,
-          loading: false
+          loading: false,
         });
       }
     });
@@ -71,7 +71,10 @@ class AppComponent extends Component {
     this.unregisterAuthObserver();
   }
 
-  render = () = {
+  render = () => {
+    const {
+      loading,
+    } = this.state;
     const {
       toggleMenu,
       classes,
@@ -85,7 +88,7 @@ class AppComponent extends Component {
     return (
       <div>
         <Router history={history}>
-          {this.state.loading ? (
+          {loading ? (
             <div className={classes.circularProgressWrapper}>
               <CircularProgress />
             </div>
@@ -115,8 +118,8 @@ class AppComponent extends Component {
         </Router>
       </div>
     );
-  );
-};
+  }
+}
 
 AppComponent.propTypes = {
   toggleMenu: PropTypes.func.isRequired,
