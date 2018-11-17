@@ -104,11 +104,12 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
+    const name = auth.currentUser.displayName;
 
     return (
       <Paper>
         <RedirectComponent/>
-        <Typography variant="headline" component="h2">Übersicht</Typography>
+        <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
           <div>
             <DashboardInfoComponent

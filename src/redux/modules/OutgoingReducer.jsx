@@ -6,6 +6,7 @@ import {
   deleteOutgoing,
   updateOutgoing
 } from '../database';
+import { addMessage } from '../../components/Notifier';
 
 // ------------------------------------
 // Selectors
@@ -45,6 +46,7 @@ export function doLoadOutgoings() {
       updateCalculatedElements(dispatch, getState);
       dispatch(isLoading(false));
     }).catch(error => {
+      addMessage({ message: 'Ausgaben konnten nicht geladen werden' });
       console.error(error);
       dispatch(isLoading(false));
     });
@@ -60,6 +62,7 @@ export function doAddOutgoing(entry) {
         history.push('/outgoings');
       }
     ).catch(error => {
+      addMessage({ message: 'Ausgabe konnte nicht gespeichert werden' });
       console.error(error);
     });
   };
@@ -72,6 +75,7 @@ export function doUpdateOutgoing(entry) {
         history.push('/outgoings');
       }
     ).catch(error => {
+      addMessage({ message: 'Ausgaben konnten nicht geändert werden' });
       console.error(error);
     });
   };
@@ -84,6 +88,7 @@ export function doDeleteOutgoing(id) {
         history.push('/outgoings');
       }
     ).catch(error => {
+      addMessage({ message: 'Ausgabe konnte nicht gelöscht werden' });
       console.error(error);
     });
   };

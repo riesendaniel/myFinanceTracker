@@ -1,5 +1,6 @@
 import history from '../../helper/history';
 import { addNewBudget, deleteBudget, getBudgetValues, updateBudget } from '../database';
+import { addMessage } from '../../components/Notifier';
 
 // ------------------------------------
 // Selectors
@@ -83,7 +84,8 @@ const doLoadBudget = () => {
       updateCalculatedElements(dispatch, getState);
       dispatch(isLoading(false));
     }).catch(error => {
-      console.error(error)
+      addMessage({ message: 'Budget konnte nicht geladen werden' });
+      console.error(error);
       dispatch(isLoading(false));
     })
   };
@@ -97,6 +99,7 @@ export function doAddBudgetEntry(entry) {
         history.push('/budget');
       }
     ).catch(error => {
+      addMessage({ message: 'Budget konnte nicht gespeichert werden' });
       console.error(error);
     });
   };
@@ -109,6 +112,7 @@ export function doUpdateBudgetEntry(entry) {
       updateCalculatedElements(dispatch, getState);
       history.push('/budget');
     }).catch(error => {
+      addMessage({ message: 'Budget konnte nicht geändert werden' });
       console.error(error);
     });
   };
@@ -120,7 +124,10 @@ export function doDeleteBudgetEntry(id) {
                 dispatch(deleteBudgetEntry(id));
                 updateCalculatedElements(dispatch, getState);
             }
-        );
+        ).catch(error => {
+          addMessage({ message: 'Budget konnte nicht gelöscht werden' });
+          console.error(error);
+        });
     };
 }
 

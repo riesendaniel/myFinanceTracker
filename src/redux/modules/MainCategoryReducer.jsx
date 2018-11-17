@@ -4,6 +4,7 @@ import {
   deleteCategory,
   addNewCategory,
 } from '../database';
+import { addMessage } from '../../components/Notifier';
 
 // ------------------------------------
 // Selectors
@@ -68,6 +69,7 @@ const doLoadMainCategories = () => {
         dispatch(receiveMainCategories(mainCategories));
         dispatch(isLoading(false));
       }).catch(error => {
+        addMessage({ message: 'Kategorien konnten nicht geladen werden' });
         console.error(error);
         dispatch(isLoading(false));
       })
@@ -80,6 +82,7 @@ export function doAddMainCategory(entry) {
         dispatch(addMainCategory(entry));
       }
     ).catch(error => {
+      addMessage({ message: 'Kategorie konnte nicht gespeichert werden' });
       console.error(error);
     });
   };
@@ -91,7 +94,8 @@ export function doUpdateMainCategory(entry) {
         dispatch(updateMainCategory(entry));
       }
     ).catch(error => {
-      console.error(error)
+      addMessage({ message: 'Kategorie konnte nicht geändert werden' });
+      console.error(error);
     })
   };
 }
@@ -101,7 +105,10 @@ export function doDeleteMainCategory(id) {
     deleteCategory(id).then(() => {
         dispatch(deleteMainCategory(id));
       }
-    );
+    ).catch(error => {
+      addMessage({ message: 'Kategorie konnte nicht gelöscht werden' });
+      console.error(error);
+    });
   };
 }
 
