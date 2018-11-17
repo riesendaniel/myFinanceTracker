@@ -116,7 +116,7 @@ export function doUpdateGrossPay(grossPay) {
       updateCalculatedElements(dispatch, getState);
       }
     ).catch(error => {
-      addMessage({ message: 'Abzug konnten nicht geändert werden' });
+      addMessage({ message: 'Einkommen konnten nicht geändert werden' });
       console.error(error);
     });
   };
