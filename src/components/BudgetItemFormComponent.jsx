@@ -7,7 +7,8 @@ import randomColor from 'randomcolor';
 import {
   Button,
   Card, CardContent, CardActionArea, CardActions,
-  FormControl, FormControlLabel,
+  FormControl,
+  Grid,
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
@@ -95,120 +96,144 @@ class BudgetItemFormComponent extends Component {
     } = this.props;
 
     if (!auth.currentUser) {
-      return <Redirect to="/signin/"/>;
+      return <Redirect to="/signin/" />;
     }
 
     return (
       <div>
-        <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
-        <Card>
-          <form onSubmit={this.handleSubmit}>
-            <CardContent>
-              { isLoadingCategories ? <Loading /> : (
-                <div>
-                  <FormControl>
-                    <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
-                    <Select
-                      value={budgetEntry.mainCategoryId || ''}
-                      onChange={(event) => {
-                        this.setState({
-                          budgetEntry: { ...budgetEntry, mainCategoryId: event.target.value },
-                        });
-                      }}
-                      inputProps={{
-                        name: 'mainCategory',
-                        id: 'main-category-select',
-                      }}
-                    >
-                      { mainCategories.map(mainCategory => (
-                        <MenuItem key={mainCategory.id} value={mainCategory.id}>
-                          {mainCategory.description}
-                        </MenuItem>
-                      )) }
-                    </Select>
-                  </FormControl>
-                  <IconButton
-                    aria-label="Gruppe hinzufügen"
-                    onClick={() => this.setState({ open: true })}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </div>
-              )}
-              <FormControl>
-                <TextField
-                  id="category"
-                  label="Bezeichnung"
-                  value={budgetEntry.category}
-                  onChange={(event) => {
-                    this.setState({
-                      budgetEntry: {
-                        ...budgetEntry,
-                        category: event.target.value,
-                      },
-                    });
-                  }}
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="color">Farbe</InputLabel>
-                <Input
-                  id="color"
-                  name="color"
-                  type="color"
-                  value={budgetEntry.color}
-                  onChange={(event) => {
-                    this.setState({ budgetEntry: { ...budgetEntry, color: event.target.value } });
-                  }}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControlLabel
-                  label="jährlich"
-                  labelPlacement="start"
-                  control={(
-                    <FormControlLabel
-                      control={(
-                        <Switch
-                          id="monthly"
-                          value={budgetEntry.period}
-                          checked={budgetEntry.period === 'monthly'}
+        <Grid container spacing={16} justify="center">
+          <Grid item xs={12} md={10}>
+            <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <Card>
+              <form onSubmit={this.handleSubmit}>
+                <CardContent>
+                  <Grid container justify="space-between">
+                    { isLoadingCategories ? <Loading /> : (
+                      <Grid item xs={12} container justify="space-between">
+                        <Grid item xs={8}>
+                          <FormControl fullWidth>
+                            <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
+                            <Select
+                              value={budgetEntry.mainCategoryId || ''}
+                              onChange={(event) => {
+                                this.setState({
+                                  budgetEntry: {
+                                    ...budgetEntry,
+                                    mainCategoryId: event.target.value,
+                                  },
+                                });
+                              }}
+                              inputProps={{
+                                name: 'mainCategory',
+                                id: 'main-category-select',
+                              }}
+                            >
+                              { mainCategories.map(mainCategory => (
+                                <MenuItem key={mainCategory.id} value={mainCategory.id}>
+                                  {mainCategory.description}
+                                </MenuItem>
+                              )) }
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <IconButton
+                            aria-label="Gruppe hinzufügen"
+                            onClick={() => this.setState({ open: true })}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    )}
+                    <Grid item xs={12}>
+                      <FormControl fullWidth>
+                        <TextField
+                          id="category"
+                          label="Bezeichnung"
+                          value={budgetEntry.category}
                           onChange={(event) => {
                             this.setState({
-                              budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                              budgetEntry: {
+                                ...budgetEntry,
+                                category: event.target.value,
+                              },
                             });
                           }}
-                          color="primary"
                         />
-                      )}
-                      label="monatlich"
-                    />
-                  )}
-                />
-              </FormControl>
-              <FormControl>
-                <InputLabel htmlFor="amount">Betrag</InputLabel>
-                <Input
-                  id="amount"
-                  type="number"
-                  value={budgetEntry.amount}
-                  onChange={(event) => {
-                    this.setState({ budgetEntry: { ...budgetEntry, amount: event.target.value } });
-                  }}
-                  startAdornment={
-                    <InputAdornment position="start">{currency}</InputAdornment>
-                  }
-                />
-              </FormControl>
-            </CardContent>
-            <CardActionArea>
-              <CardActions>
-                <Button variant="contained" type="submit">Hinzufügen</Button>
-              </CardActions>
-            </CardActionArea>
-          </form>
-        </Card>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} container alignItems="center" justify="space-between">
+                      <Grid>
+                        <Typography color={budgetEntry.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>jährlich</Typography>
+                      </Grid>
+                      <Grid>
+                        <FormControl>
+                          <Switch
+                            id="monthly"
+                            value={budgetEntry.period}
+                            checked={budgetEntry.period === 'monthly'}
+                            onChange={(event) => {
+                              this.setState({
+                                budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                              });
+                            }}
+                            color="primary"
+                          />
+                        </FormControl>
+                      </Grid>
+                      <Grid>
+                        <Typography color={budgetEntry.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>monatlich</Typography>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <FormControl fullWidth>
+                        <InputLabel htmlFor="amount">Betrag</InputLabel>
+                        <Input
+                          id="amount"
+                          type="number"
+                          value={budgetEntry.amount}
+                          onChange={(event) => {
+                            this.setState({
+                              budgetEntry: { ...budgetEntry, amount: event.target.value },
+                            });
+                          }}
+                          startAdornment={
+                            <InputAdornment position="start">{currency}</InputAdornment>
+                          }
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <FormControl fullWidth>
+                        <InputLabel htmlFor="color">Farbe</InputLabel>
+                        <Input
+                          id="color"
+                          name="color"
+                          type="color"
+                          value={budgetEntry.color}
+                          onChange={(event) => {
+                            this.setState({
+                              budgetEntry: { ...budgetEntry, color: event.target.value },
+                            });
+                          }}
+                        />
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+                <CardActionArea>
+                  <CardActions>
+                    <Button variant="contained" type="submit">Hinzufügen</Button>
+                  </CardActions>
+                </CardActionArea>
+              </form>
+            </Card>
+          </Grid>
+        </Grid>
       </div>
     );
   }
