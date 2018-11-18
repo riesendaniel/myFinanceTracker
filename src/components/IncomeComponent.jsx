@@ -9,7 +9,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthDown,
+  isWidthUp, isWidthDown,
 } from '@material-ui/core/withWidth';
 import {
   getCurrency,
@@ -58,7 +58,7 @@ class IncomeComponent extends Component {
     } = this.props;
 
     if (!auth.currentUser) {
-      return <Redirect to="/signin/"/>;
+      return <Redirect to="/signin/" />;
     }
 
     return (
@@ -70,14 +70,14 @@ class IncomeComponent extends Component {
               <Card>
                 <CardContent>
                   <Grid container direction="row-reverse" justify="flex-end">
-                    <Grid item xs={12} md={6} className={classes.grossPay}>
+                    <Grid item xs={12} md={4} className={classes.grossPay}>
                       <IncomeGrossPay />
                     </Grid>
-                    <Grid item xs={12} md={6} className={classes.deductions}>
+                    <Grid item xs={12} md={8} className={isWidthUp('sm', width, false) ? classes.deductions : undefined}>
                       <IncomeDeductions />
                     </Grid>
-                    <Grid item xs={12} md={6} container justify="space-between" alignItems="center" className={classes.netPay}>
-                      <Typography color={isWidthDown('xs', width) ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
+                    <Grid item xs={12} md={4} container justify="space-between" alignItems="center" className={classes.netPay}>
+                      <Typography color={isWidthDown('sm', width) ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
                       <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
                     </Grid>
                   </Grid>

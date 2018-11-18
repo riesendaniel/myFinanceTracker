@@ -29,7 +29,7 @@ const IncomeDeductionsComponent = (props) => {
     totalDeductions,
   } = props;
   return (
-    <ResponsiveTable breakpoint="xs">
+    <ResponsiveTable breakpoint="sm">
       <ResponsiveTableBody>
         {deductions.map(deduction => (
           <IncomDeductionsItem key={deduction.id} deduction={deduction} />

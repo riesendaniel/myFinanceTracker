@@ -31,6 +31,16 @@ const styles = () => ({
   value: {
     maxWidth: '150px',
   },
+  editAmount: {
+    display: 'inline-block',
+    width: '145px',
+  },
+  typeInput: {
+    maxWidth: '70px',
+  },
+  valueInput: {
+    maxWidth: '75px',
+  },
   actions: {
     width: '100px',
   },
@@ -122,9 +132,22 @@ class IncomeDeductionsItemComponent extends Component {
           numeric
           columnHead="Betrag"
         >
-          <FormControl>
+          <FormControl className={classes.editAmount}>
+            <Input
+              className={classes.valueInput}
+              name="value"
+              type="number"
+              value={deduction.value}
+              onChange={event => this.handleInputChange(event)}
+              endAdornment={editable ? undefined : (
+                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
+              )}
+              disableUnderline={!editable}
+              readOnly={!editable}
+            />
             { editable && (
               <Select
+                className={classes.typeInput}
                 name="type"
                 value={deduction.type}
                 onChange={event => this.handleInputChange(event)}
@@ -133,17 +156,6 @@ class IncomeDeductionsItemComponent extends Component {
                 <MenuItem value="fixed">{currency}</MenuItem>
               </Select>
             )}
-            <Input
-              name="value"
-              type="number"
-              value={deduction.value}
-              onChange={event => this.handleInputChange(event)}
-              endAdornment={
-                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
-              }
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
           </FormControl>
         </ResponsiveTableCell>
         { editable ? (

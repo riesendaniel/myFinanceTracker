@@ -68,8 +68,8 @@ class IncomeGrossPayComponent extends Component {
     } = this.props;
     return (
       <Grid container alignItems="flex-end">
-        <Grid item xs={12} container justify="space-between" alignItems="center">
-          <Typography color={isWidthDown('xs', width) ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+        <Grid item xs={12} container justify="space-between" alignItems="center" wrap="nowrap">
+          <Typography color={isWidthDown('sm', width) ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
           <FormControl>
             <Input
               type="number"
