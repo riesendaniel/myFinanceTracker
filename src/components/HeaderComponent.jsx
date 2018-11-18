@@ -42,17 +42,19 @@ class HeaderComponent extends Component {
           <Toolbar className={classes.toolbar}>
             <Typography variant="title">myFinanceTracker</Typography>
             {isLoggedIn && (
-              <IconButton
-                onClick={() => auth.signOut()}
-              >
-                <PowerSettingsNew />
-              </IconButton>
+              <div>
+                <IconButton
+                  onClick={() => auth.signOut()}
+                >
+                  <PowerSettingsNew />
+                </IconButton>
+                <Hidden lgUp>
+                  <IconButton onClick={this.handleClick} aria-label="Menu">
+                    <MenuIcon />
+                  </IconButton>
+                </Hidden>
+              </div>
             )}
-            <Hidden lgUp>
-              <IconButton onClick={this.handleClick} aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-            </Hidden>
           </Toolbar>
         </AppBar>
       </div>

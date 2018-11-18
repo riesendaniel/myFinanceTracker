@@ -96,11 +96,11 @@ class AppComponent extends Component {
             <div>
               <header>
                 <Header isLoggedIn={isLoggedIn} />
-                { menuState === 'open' && <Menu width={menuWidth} /> }
+                { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
                 <Notifier />
               </header>
               <div className={classes.toolbarPlaceholder} />
-              <main className={menuState === 'open' ? classes.main : undefined}>
+              <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
                 <Switch>
                   <Route path="/budget/edit" component={BudgetItemForm} />
                   <Route path="/budget" component={Budget} />
