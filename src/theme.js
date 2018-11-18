@@ -21,9 +21,18 @@ const theme = {
         backgroundColor: '#FFFFFF',
       },
     },
+    MuiDialog: {
+      paper: {
+        backgroundColor: '#FFFFFF',
+      },
+    },
+    MuiMenu: {
+      paper: {
+        backgroundColor: '#FFFFFF',
+      },
+    },
     MuiTypography: {
       headline: {
-        marginBottom: '16px',
         fontWeight: 500,
       },
     },
