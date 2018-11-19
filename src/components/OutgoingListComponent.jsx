@@ -5,16 +5,16 @@ import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
+  Button, IconButton,
   Card, CardContent,
   Grid,
-  IconButton,
   TextField,
   Select,
   MenuItem, InputLabel,
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import ClearButton from '@material-ui/icons/Clear';
+import ClearIcon from '@material-ui/icons/Clear';
 import {
   ResponsiveTable,
   ResponsiveTableBody,
@@ -74,50 +74,39 @@ class OutgoingListComponent extends Component {
 
         {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (
           <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} md={1}>
+            <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Route render={({ history }) => (
-                    <IconButton type='button' onClick={() => {
-                      const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
-                      history.push({
-                        pathname: '/outgoing/edit',
-                        state: { mostFrequentCategory },
-                      });
-                    }}> <AddIcon/></IconButton>
-                  )}/>
+                  <Grid container spacing={16}>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        placeholder="Nach einem Inhalt suchen.."
+                        onChange={this.handleSearch}
+                        value={this.state.searchValue}
+                      />
+                    </Grid>
+                    <Grid item xs={10} sm={5}>
+                      <InputLabel htmlFor="category-select">Kategorie filtern:</InputLabel>
+                      <Select value={this.state.filterValue || ''} onChange={(event) => {
+                        this.setState({ filterValue: event.target.value } );
+                      }} inputProps={{
+                        id: 'category-select',
+                      }}>
+                        { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
+                      </Select>
+                    </Grid>
+                    <Grid item xs={2} sm={1}>
+                      <IconButton
+                        type="button"
+                        onClick={() => this.setState({ filterValue: null, searchValue: ''  })}
+                      >
+                        <ClearIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
                 </CardContent>
               </Card>
-            </Grid>
-            
-            <Grid item xs={12} sm={12} md={5}>
-              <Card>
-                <CardContent>
-                  <TextField
-                    placeholder="Nach einem Inhalt suchen.."
-                    onChange={this.handleSearch}
-                    value={this.state.searchValue}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-            
-            <Grid item xs={12} sm={12} md={6}>
-              <Card>
-                <CardContent>
-                  <InputLabel htmlFor="category-select">Nach Kategorie Filtern:</InputLabel>
-                  <Select value={this.state.filterValue || ''} onChange={(event) => {
-                    this.setState({ filterValue: event.target.value } );
-                  }} inputProps={{
-                    id: 'category-select',
-                  }}>
-                    { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
-                  </Select>
-
-                  <ClearButton onClick={() => this.setState({ filterValue: null, searchValue: ''  })}/>
-                </CardContent>
-              </Card>
-              
             </Grid>
             <Grid item xs={12}>
               <Card>
@@ -128,9 +117,7 @@ class OutgoingListComponent extends Component {
                       orderBy={this.state.orderBy}
                       onRequestSort={this.handleRequestSort}
                     />
-
                     <ResponsiveTableBody>
-
                       {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
                         .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
                         .map(row => {
@@ -143,8 +130,8 @@ class OutgoingListComponent extends Component {
                           );
                         })}
                     </ResponsiveTableBody>
+                    <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
                   </ResponsiveTable>
-
                   <ResponsiveTablePagination
                     breakpoint="xs"
                     component="div"
@@ -159,10 +146,15 @@ class OutgoingListComponent extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            
-            <Grid item xs={12}>
-              <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
-            </Grid>
+            <Route render={({ history }) => (
+              <Button variant="fab" color="primary" type='button' onClick={() => {
+                const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
+                history.push({
+                  pathname: '/outgoing/edit',
+                  state: { mostFrequentCategory },
+                });
+              }}> <AddIcon/></Button>
+            )}/>
           </Grid>
         )}
       </div>
