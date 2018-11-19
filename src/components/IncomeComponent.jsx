@@ -62,10 +62,12 @@ class IncomeComponent extends Component {
     }
 
     return (
-      <div>
-        <Typography variant="headline" component="h2">Einkommen</Typography>
+      <Grid container spacing={16} justify="center">
+        <Grid item xs={12} md={10}>
+          <Typography variant="headline" component="h2">Einkommen</Typography>
+        </Grid>
         { isLoadingIncome ? <Loading /> : (
-          <Grid container spacing={16}>
+          <Grid item xs={12} md={10} container>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
@@ -86,7 +88,7 @@ class IncomeComponent extends Component {
             </Grid>
           </Grid>
         ) }
-      </div>
+      </Grid>
     );
   }
 }

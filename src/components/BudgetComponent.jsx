@@ -55,36 +55,42 @@ export class BudgetComponent extends Component {
     return (
       <div>
         <RedirectComponent />
-        <Typography variant="headline" component="h2">Budget</Typography>
-        { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
-          <div>
-            <Grid container spacing={16}>
-              { mainCategories.map((mainCategory) => {
-                const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
-                return list.length !== 0 && (
+        <Grid container spacing={16} justify="center">
+          <Grid item xs={12} md={10}>
+            <Typography variant="headline" component="h2">Budget</Typography>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
+              <div>
+                <Grid container spacing={16}>
+                  { mainCategories.map((mainCategory) => {
+                    const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
+                    return list.length !== 0 && (
+                      <Grid item xs={12}>
+                        <BudgetList
+                          key={mainCategory.id}
+                          title={mainCategory.description}
+                          list={list}
+                        />
+                      </Grid>
+                    );
+                  }) }
                   <Grid item xs={12}>
-                    <BudgetList
-                      key={mainCategory.id}
-                      title={mainCategory.description}
-                      list={list}
-                    />
+                    <BudgetSummary budget={budget} />
                   </Grid>
-                );
-              }) }
-              <Grid item xs={12}>
-                <BudgetSummary budget={budget} />
-              </Grid>
-            </Grid>
-            <Button
-              type="button"
-              variant="fab"
-              color="primary"
-              onClick={this.handleAdd}
-            >
-              <AddIcon />
-            </Button>
-          </div>
-        ) }
+                </Grid>
+                <Button
+                  type="button"
+                  variant="fab"
+                  color="primary"
+                  onClick={this.handleAdd}
+                >
+                  <AddIcon />
+                </Button>
+              </div>
+            ) }
+          </Grid>
+        </Grid>
       </div>
     );
   }

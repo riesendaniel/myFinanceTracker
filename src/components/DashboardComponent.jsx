@@ -107,11 +107,13 @@ class DashboardComponent extends Component {
     const name = auth.currentUser ?  auth.currentUser.displayName : '';
 
     return (
-      <div>
-        <RedirectComponent/>
-        <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
+      <Grid container spacing={16} justify="center">
+        <RedirectComponent />
+        <Grid item xs={12} md={10}>
+          <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
+        </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
-          <Grid container spacing={16}>
+          <Grid item xs={12} md={10} container spacing={16}>
             <Grid container spacing={16} item>
               <DashboardInfoComponent
                 icon={<MoneyIcon />}
@@ -268,7 +270,7 @@ class DashboardComponent extends Component {
             </Grid>
           </Grid>
         ) }
-      </div>
+      </Grid>
     );
   }
 }

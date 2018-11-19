@@ -68,12 +68,13 @@ class OutgoingListComponent extends Component {
   render() {
     const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
     return (
-      <div>
+      <Grid container spacing={16} justify="center">
         <RedirectComponent/>
-        <Typography variant="headline" component="h2">Ausgaben</Typography>
-
+        <Grid item xs={12} md={10}>
+          <Typography variant="headline" component="h2">Ausgaben</Typography>
+        </Grid>
         {isLoadingOutgoings || isLoadingBudget ? <Loading/> : (
-          <Grid container spacing={16}>
+          <Grid item xs={12} md={10} container>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
@@ -157,7 +158,7 @@ class OutgoingListComponent extends Component {
             )}/>
           </Grid>
         )}
-      </div>
+      </Grid>
     );
   }
 
