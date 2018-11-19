@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar,
@@ -17,6 +18,9 @@ import {
 import { auth } from '../config/firebase';
 
 const styles = theme => ({
+  link: {
+    textDecoration: 'none',
+  },
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -40,7 +44,9 @@ class HeaderComponent extends Component {
       <div className="Header">
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant="title">myFinanceTracker</Typography>
+            <Link to="/" className={classes.link}>
+              <Typography variant="title">myFinanceTracker</Typography>
+            </Link>
             {isLoggedIn && (
               <div>
                 <IconButton
