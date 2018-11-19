@@ -4,11 +4,11 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  BottomNavigation, BottomNavigationAction,
+  Button,
   Grid,
   Typography,
 } from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddIcon from '@material-ui/icons/Add';
 import {
   actions as budgetActions,
   getIsLoading as getBudgetIsLoading, getBudget,
@@ -35,12 +35,9 @@ export class BudgetComponent extends Component {
     }
   }
 
-  handleChange = (event, value) => {
-    const paths = {
-      addBudgetEntry: '/budget/edit',
-    };
+  handleAdd = () => {
     const { history } = this.props;
-    history.push(paths[value]);
+    history.push('/budget/edit');
   }
 
   render = () => {
@@ -78,12 +75,14 @@ export class BudgetComponent extends Component {
                 <BudgetSummary budget={budget} />
               </Grid>
             </Grid>
-            <BottomNavigation
-              showLabels
-              onChange={this.handleChange}
+            <Button
+              type="button"
+              variant="fab"
+              color="primary"
+              onClick={this.handleAdd}
             >
-              <BottomNavigationAction value="addBudgetEntry" label="Eintrag hinzufügen" icon={<AddCircleIcon />} />
-            </BottomNavigation>
+              <AddIcon />
+            </Button>
           </div>
         ) }
       </div>

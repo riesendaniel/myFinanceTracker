@@ -16,6 +16,13 @@ const theme = {
     },
   },
   overrides: {
+    MuiButton: {
+      fab: {
+        position: 'absolute',
+        bottom: '32px',
+        right: '32px',
+      },
+    },
     MuiCard: {
       root: {
         backgroundColor: '#FFFFFF',
