@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import {
   Card, CardContent, CardActionArea, CardActions,
+  Grid,
   FormControl,
   IconButton,
   Input,
@@ -12,18 +13,21 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
+  Typography,
 } from '@material-ui/core';
-import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
-import { getCurrency } from '../redux/modules/AppReducer';
-import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import history from '../helper/history';
+import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
+import { getCurrency } from '../redux/modules/AppReducer';
+import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
 
 class NewOutgoingComponent extends Component {
-
   static propTypes = {
+    doAddOutgoing: PropTypes.func.isRequired,
+    doUpdateOutgoing: PropTypes.func.isRequired,
+    location: PropTypes.shape(PropTypes.object).isRequired,
     currency: PropTypes.string.isRequired,
     categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   };
@@ -38,99 +42,23 @@ class NewOutgoingComponent extends Component {
     },
   };
 
-    componentDidMount = () => {
-        const {location} = this.props;
-        if (location.state && location.state.outgoing) {
-            const {outgoing} = location.state;
-            this.setState({
-                outgoing: {
-                    id: outgoing.id,
-                    outgoingTitle: outgoing.outgoingTitle,
-                    outgoingAmount: outgoing.outgoingAmount,
-                    outgoingCategory: outgoing.outgoingCategory,
-                    outgoingDate: outgoing.outgoingDate,
-                    outgoingCategoryId: outgoing.outgoingCategoryId,
-                    outgoingCurrency: 'CHF'
-                },
-            });
-        }
+  componentDidMount = () => {
+    const { location } = this.props;
+    if (location.state && location.state.outgoing) {
+      const { outgoing } = location.state;
+      this.setState({
+        outgoing: {
+          id: outgoing.id,
+          outgoingTitle: outgoing.outgoingTitle,
+          outgoingAmount: outgoing.outgoingAmount,
+          outgoingCategory: outgoing.outgoingCategory,
+          outgoingDate: outgoing.outgoingDate,
+          outgoingCategoryId: outgoing.outgoingCategoryId,
+          outgoingCurrency: 'CHF',
+        },
+      });
     }
-
-    render() {
-        const { currency, categories } = this.props;
-        return (
-            <Card>
-                <CardContent>
-                    <FormControl onSubmit={this.addOutgoing}>
-                        <TextField
-                            id="outgoing-title" name="outgoingTitle" type="text" placeholder="Titel eingeben"
-                            autoComplete="on"
-                            value={this.state.outgoing.outgoingTitle}
-                            onChange={(event) => {
-                                this.setState({outgoing: {...this.state.outgoing, outgoingTitle: event.target.value}})
-                            }}
-                        />
-                        <FormControl>
-                            <InputLabel htmlFor="amount">Betrag</InputLabel>
-                            <Input
-                                id="amount"
-                                type="number"
-                                value={this.state.outgoing.outgoingAmount}
-                                onChange={(event) => {
-                                    this.setState({
-                                        outgoing: {
-                                            ...this.state.outgoing,
-                                            outgoingAmount: Number(event.target.value)
-                                        }
-                                    })
-                                }}
-                                startAdornment={
-                                    <InputAdornment position="start">{currency}</InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
-                            <Select
-                                value={this.state.outgoing.outgoingCategoryId || ''}
-                                onChange={(event) => {
-                                    this.setState({outgoing: { ...this.state.outgoing, outgoingCategoryId: event.target.value}})
-                                }}
-                                inputProps={{
-                                    name: 'group',
-                                    id: 'group-select',
-                                }}
-                            >
-                                { categories.map(category => <MenuItem key={category.id} value={category.id}>{category.description}</MenuItem>) }
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            id="outgoing-date" name="outgoingDate" placeholder="Datum auswählen"
-                            autoComplete="on"
-                            type="date"
-                            value={this.state.outgoing.outgoingDate}
-                            onChange={(event) => {
-                                this.setState({outgoing: {...this.state.outgoing, outgoingDate: event.target.value}})
-                            }}
-                        />
-                    </FormControl>
-                </CardContent>
-                <CardActionArea>
-                    <CardActions>
-                        <IconButton
-                            aria-label="add outgoing"
-                            onClick={this.addOutgoing}
-                        >
-                            <SaveIcon/>
-                        </IconButton>
-                        <IconButton onClick={this.handleCancel}>
-                            <CancelIcon/>
-                        </IconButton>
-                    </CardActions>
-                </CardActionArea>
-            </Card>
-        );
-    }
+  };
 
   handleCancel = () => {
     history.push({
@@ -138,12 +66,18 @@ class NewOutgoingComponent extends Component {
     });
   };
 
-  addOutgoing = () => {
+  addOutgoing = (event) => {
+    event.preventDefault();
     try {
-      if (this.state.outgoing.id) {
-        this.props.doUpdateOutgoing(this.state.outgoing);
+      const {
+        doUpdateOutgoing,
+        doAddOutgoing,
+      } = this.props;
+      const { outgoing } = this.state;
+      if (outgoing.id) {
+        doUpdateOutgoing(outgoing);
       } else {
-        this.props.doAddOutgoing(this.state.outgoing);
+        doAddOutgoing(outgoing);
       }
       this.setState({
         outgoing: {
@@ -151,13 +85,128 @@ class NewOutgoingComponent extends Component {
           outgoingAmount: 0,
           outgoingCategoryId: null,
           outgoingDate: '',
-          outgoingCurrency: ''
-        }
+          outgoingCurrency: '',
+        },
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
+
+  render() {
+    const { currency, categories } = this.props;
+    const { outgoing } = this.state;
+    return (
+      <Grid container spacing={16} justify="center">
+        <Grid item xs={12} md={10}>
+          <Typography variant="headline" component="h2">Ausgabe erfassen</Typography>
+        </Grid>
+        <Grid item xs={12} md={10}>
+          <Card>
+            <form onSubmit={this.addOutgoing}>
+              <CardContent>
+                <Grid item xs={12} container spacing={16} justify="space-between">
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      id="outgoing-title"
+                      name="outgoingTitle"
+                      type="text"
+                      placeholder="Titel eingeben"
+                      autoComplete="on"
+                      value={outgoing.outgoingTitle}
+                      onChange={(event) => {
+                        this.setState({
+                          outgoing: { ...outgoing, outgoingTitle: event.target.value },
+                        });
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel htmlFor="amount">Betrag</InputLabel>
+                      <Input
+                        id="amount"
+                        type="number"
+                        value={outgoing.outgoingAmount}
+                        onChange={(event) => {
+                          this.setState({
+                            outgoing: {
+                              ...outgoing,
+                              outgoingAmount: Number(event.target.value),
+                            },
+                          });
+                        }}
+                        startAdornment={
+                          <InputAdornment position="start">{currency}</InputAdornment>
+                        }
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
+                      <Select
+                        value={outgoing.outgoingCategoryId || ''}
+                        onChange={(event) => {
+                          this.setState({
+                            outgoing: { ...outgoing, outgoingCategoryId: event.target.value },
+                          });
+                        }}
+                        inputProps={{
+                          name: 'group',
+                          id: 'group-select',
+                        }}
+                      >
+                        { categories.map(category => (
+                          <MenuItem
+                            key={category.id}
+                            value={category.id}
+                          >
+                            {category.description}
+                          </MenuItem>
+                        )) }
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      id="outgoing-date"
+                      name="outgoingDate"
+                      placeholder="Datum auswählen"
+                      autoComplete="on"
+                      type="date"
+                      value={outgoing.outgoingDate}
+                      onChange={(event) => {
+                        this.setState({
+                          outgoing: { ...outgoing, outgoingDate: event.target.value },
+                        });
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </CardContent>
+              <CardActionArea>
+                <CardActions>
+                  <IconButton
+                    type="submit"
+                    variant="contained"
+                    aria-label="add outgoing"
+                  >
+                    <SaveIcon />
+                  </IconButton>
+                  <IconButton onClick={this.handleCancel}>
+                    <CancelIcon />
+                  </IconButton>
+                </CardActions>
+              </CardActionArea>
+            </form>
+          </Card>
+        </Grid>
+      </Grid>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
@@ -170,9 +219,7 @@ const actions = {
   ...budgetActions,
 };
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(actions, dispatch);
-};
+const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
 export default connect(
   mapStateToProps,
