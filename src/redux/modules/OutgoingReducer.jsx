@@ -75,7 +75,7 @@ export function doUpdateOutgoing(entry) {
         history.push('/outgoings');
       }
     ).catch(error => {
-      addMessage({ message: 'Ausgaben konnten nicht geändert werden' });
+      addMessage({ message: 'Ausgabe konnten nicht geändert werden' });
       console.error(error);
     });
   };
