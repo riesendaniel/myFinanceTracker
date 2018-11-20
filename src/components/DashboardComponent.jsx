@@ -104,7 +104,7 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
-    const name = auth.currentUser.displayName;
+    const name = auth.currentUser ?  auth.currentUser.displayName : '';
 
     return (
       <Paper>
