@@ -6,7 +6,6 @@ import moment from 'moment';
 import 'moment/locale/de';
 import {
   Grid,
-  Table, TableHead, TableBody, TableRow, TableCell,
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -24,6 +23,11 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import {
+  ResponsiveTable,
+  ResponsiveTableHead, ResponsiveTableBody,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -218,26 +222,26 @@ class DashboardComponent extends Component {
               <DashboardChartComponent
                 title="letzte fünf Ausgaben"
                 content={(
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Datum</TableCell>
-                        <TableCell>Beschreibung</TableCell>
-                        <TableCell>Betrag</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
+                  <ResponsiveTable breakpoint="xs">
+                    <ResponsiveTableHead>
+                      <ResponsiveTableRow>
+                        <ResponsiveTableCell>Datum</ResponsiveTableCell>
+                        <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
+                        <ResponsiveTableCell>Betrag</ResponsiveTableCell>
+                      </ResponsiveTableRow>
+                    </ResponsiveTableHead>
+                    <ResponsiveTableBody>
                       {outgoings.filter((value, index) => index < 5)
                         .map(outgoing => (
-                          <TableRow key={outgoing.id}>
-                            <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
-                            <TableCell>{outgoing.outgoingTitle}</TableCell>
-                            <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
-                          </TableRow>
+                          <ResponsiveTableRow key={outgoing.id}>
+                            <ResponsiveTableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</ResponsiveTableCell>
+                            <ResponsiveTableCell>{outgoing.outgoingTitle}</ResponsiveTableCell>
+                            <ResponsiveTableCell>{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
+                          </ResponsiveTableRow>
                         ))
                       }
-                    </TableBody>
-                  </Table>
+                    </ResponsiveTableBody>
+                  </ResponsiveTable>
                 )}
               />
               <DashboardChartComponent
