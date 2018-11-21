@@ -51,7 +51,7 @@ class OutgoingListComponent extends Component {
   state = {
     rowsPerPage: 5,
     page: 0,
-    order: 'asc',
+    order: 'desc',
     searchValue: '',
     filterData: [],
     orderBy: 'outgoingDate',

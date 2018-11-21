@@ -38,7 +38,7 @@ class NewOutgoingComponent extends Component {
   state = {
     outgoing: {
       outgoingTitle: '',
-      outgoingAmount: 0,
+      outgoingAmount: null,
       outgoingCategoryId: null,
       outgoingDate: moment(new Date())
         .format('YYYY-MM-DD'),
@@ -59,6 +59,11 @@ class NewOutgoingComponent extends Component {
           outgoingCategoryId: outgoing.outgoingCategoryId,
           outgoingCurrency: 'CHF',
         },
+      });
+    }
+    if (location.state && location.state.mostFrequentCategory) {
+      this.setState({
+        outgoing: { ...this.state.outgoing, outgoingCategoryId: location.state.mostFrequentCategory },
       });
     }
   };
@@ -82,15 +87,6 @@ class NewOutgoingComponent extends Component {
       } else {
         doAddOutgoing(outgoing);
       }
-      this.setState({
-        outgoing: {
-          outgoingTitle: '',
-          outgoingAmount: 0,
-          outgoingCategoryId: null,
-          outgoingDate: '',
-          outgoingCurrency: '',
-        },
-      });
     } catch (e) {
       console.error(e);
     }
@@ -137,7 +133,7 @@ class NewOutgoingComponent extends Component {
                       <Input
                         id="amount"
                         type="number"
-                        value={outgoing.outgoingAmount}
+                        value={outgoing.outgoingAmount || ''}
                         onChange={(event) => {
                           this.setState({
                             outgoing: {

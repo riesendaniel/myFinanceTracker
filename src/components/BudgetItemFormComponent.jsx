@@ -44,7 +44,7 @@ class BudgetItemFormComponent extends Component {
       category: '',
       color: randomColor(),
       period: 'monthly',
-      amount: 0,
+      amount: null,
     },
   };
 
@@ -204,10 +204,10 @@ class BudgetItemFormComponent extends Component {
                         <Input
                           id="amount"
                           type="number"
-                          value={budgetEntry.amount}
+                          value={budgetEntry.amount || ''}
                           onChange={(event) => {
                             this.setState({
-                              budgetEntry: { ...budgetEntry, amount: event.target.value },
+                              budgetEntry: { ...budgetEntry, amount: Number(event.target.value) },
                             });
                           }}
                           startAdornment={
