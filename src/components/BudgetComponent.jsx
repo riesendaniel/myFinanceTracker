@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   Button,
   Grid,
   Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions as budgetActions,
   getIsLoading as getBudgetIsLoading, getBudget,
@@ -100,11 +101,11 @@ export class BudgetComponent extends Component {
 BudgetComponent.propTypes = {
   doLoadMainCategories: PropTypes.func.isRequired,
   doLoadBudget: PropTypes.func.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  history: CustomPropTypes.history.isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingMainCategory: PropTypes.bool.isRequired,
-  budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
+  mainCategories: PropTypes.arrayOf(CustomPropTypes.mainCategory).isRequired,
 };
 
 const mapStateToProps = state => ({

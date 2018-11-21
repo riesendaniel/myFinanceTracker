@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { TableSortLabel } from '@material-ui/core';
 import Tooltip from '@material-ui/core/Tooltip';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableHead,
   ResponsiveTableRow, ResponsiveTableCell,
@@ -92,8 +93,7 @@ const rows = [
 
 OutgoingTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  classes: PropTypes.shape(PropTypes.object).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
   order: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
 };

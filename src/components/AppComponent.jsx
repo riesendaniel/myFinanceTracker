@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withWidth, {
   isWidthUp,
 } from '@material-ui/core/withWidth';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions,
   getMenuState,
@@ -114,9 +115,9 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
   toggleMenu: PropTypes.func.isRequired,
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  menuState: PropTypes.string.isRequired,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  menuState: CustomPropTypes.menuState.isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 const AppWithStyles = withStyles(styles)(AppComponent);

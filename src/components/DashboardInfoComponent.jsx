@@ -1,11 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Card, CardContent, CardMedia,
   Grid,
   Typography,
   withStyles,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 
 const spacing = '16px';
 
@@ -55,7 +56,7 @@ const DashboardInfoComponent = (props) => {
 };
 
 DashboardInfoComponent.propTypes = {
-  classes: PropTypes.shape(PropTypes.object).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   icon: PropTypes.element.isRequired,
   title: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,

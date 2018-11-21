@@ -1,10 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Card, CardHeader, CardContent,
   Grid,
   withStyles,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 
 const styles = theme => ({
   header: {
@@ -37,7 +38,7 @@ const DashboardChartComponent = (props) => {
 };
 
 DashboardChartComponent.propTypes = {
-  classes: PropTypes.shape(PropTypes.object).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.element.isRequired,
 };

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import moment from "moment/moment";
 import { IconButton } from '@material-ui/core';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
@@ -17,14 +18,8 @@ class OutgoingItemComponent extends Component {
 
     static propTypes = {
         doDeleteOutgoing: PropTypes.func.isRequired,
-        breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-        outgoing: PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            outgoingTitle: PropTypes.string.isRequired,
-            outgoingDate: PropTypes.string.isRequired,
-            outgoingCategory: PropTypes.string.isRequired,
-            outgoingAmount: PropTypes.number.isRequired,
-        }).isRequired,
+        breakpoint: CustomPropTypes.breakpoint.isRequired,
+        outgoing: CustomPropTypes.outgoing.isRequired,
     };
 
     handleEdit = () => {

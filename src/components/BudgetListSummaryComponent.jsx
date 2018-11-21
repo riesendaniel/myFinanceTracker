@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   Typography,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
@@ -38,12 +39,9 @@ const BudgetListSummaryComponent = (props) => {
 };
 
 BudgetListSummaryComponent.propTypes = {
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  currency: PropTypes.string.isRequired,
-  list: PropTypes.arrayOf(PropTypes.shape({
-    monthly: PropTypes.number,
-    yearly: PropTypes.number,
-  })).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  list: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
 };
 
 const mapStateToProps = state => ({

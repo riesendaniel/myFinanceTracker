@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import {
   Card, CardContent, CardActionArea, CardActions,
@@ -19,6 +18,8 @@ import {
 } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
@@ -29,9 +30,9 @@ class NewOutgoingComponent extends Component {
   static propTypes = {
     doAddOutgoing: PropTypes.func.isRequired,
     doUpdateOutgoing: PropTypes.func.isRequired,
-    location: PropTypes.shape(PropTypes.object).isRequired,
-    currency: PropTypes.string.isRequired,
-    categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+    location: CustomPropTypes.location.isRequired,
+    currency: CustomPropTypes.currency.isRequired,
+    categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
   };
 
   state = {
@@ -103,13 +104,13 @@ class NewOutgoingComponent extends Component {
         <Hidden smDown>
           <Grid item sm={2} md={3} xl={4} />
         </Hidden>
-        <Grid xs={12} sm={8} md={6} xl={4}>
+        <Grid item xs={12} sm={8} md={6} xl={4}>
           <Typography variant="headline" component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
           <Grid item sm={2} md={3} xl={4} />
         </Hidden>
-        <Grid xs={12} sm={8} md={6} xl={4}>
+        <Grid item xs={12} sm={8} md={6} xl={4}>
           <Card>
             <form onSubmit={this.addOutgoing}>
               <CardContent>

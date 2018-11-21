@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
@@ -19,6 +18,8 @@ import {
   Typography,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -248,13 +249,13 @@ class BudgetItemFormComponent extends Component {
 }
 
 BudgetItemFormComponent.propTypes = {
-  location: PropTypes.shape({ state: PropTypes.object }).isRequired,
+  location: CustomPropTypes.location.isRequired,
   isLoadingCategories: PropTypes.bool.isRequired,
   doLoadMainCategories: PropTypes.func.isRequired,
   doUpdateBudgetEntry: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
-  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currency: PropTypes.string.isRequired,
+  mainCategories: PropTypes.arrayOf(CustomPropTypes.mainCategory).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
 };
 
 const mapStateToProps = state => ({

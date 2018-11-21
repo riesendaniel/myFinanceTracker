@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   IconButton,
@@ -17,6 +16,8 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
@@ -82,7 +83,7 @@ class IncomeDeductionsItemComponent extends Component {
     const {
       deduction,
     } = this.state;
-    if (deduction.id) {
+    if (deduction.id !== 'new') {
       await doUpdateDeduction(deduction);
       this.setState({ editable: this.initialEditable });
     } else {
@@ -197,17 +198,12 @@ IncomeDeductionsItemComponent.propTypes = {
   doAddDeduction: PropTypes.func.isRequired,
   doUpdateDeduction: PropTypes.func.isRequired,
   doDeleteDeduction: PropTypes.func.isRequired,
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  currency: PropTypes.string.isRequired,
-  deduction: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-  }).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  deduction: CustomPropTypes.deduction.isRequired,
   editable: PropTypes.bool,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 IncomeDeductionsItemComponent.defaultProps = {
