@@ -9,6 +9,7 @@ import {
   Card, CardContent, CardActionArea, CardActions,
   FormControl,
   Grid,
+  Hidden,
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
@@ -102,11 +103,17 @@ class BudgetItemFormComponent extends Component {
     return (
       <div>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
-        <Grid container spacing={16} justify="center">
-          <Grid item xs={12} md={10}>
+        <Grid container spacing={16} justify="center" wrap="wrap">
+          <Hidden smDown>
+            <Grid item sm={2} md={3} xl={4} />
+          </Hidden>
+          <Grid item xs={12} sm={8} md={6} xl={4}>
             <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Hidden smDown>
+            <Grid item sm={2} md={3} xl={4} />
+          </Hidden>
+          <Grid item xs={12} sm={8} md={6} xl={4}>
             <Card>
               <form onSubmit={this.handleSubmit}>
                 <CardContent>

@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 import {
   IconButton,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthDown,
+  isWidthUp, isWidthDown,
 } from '@material-ui/core/withWidth';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -21,6 +22,12 @@ import {
 import {
   actions,
 } from '../redux/modules/BudgetReducer';
+
+const styles = () => ({
+  actions: {
+    width: '100px',
+  },
+});
 
 class BudgetListItemComponent extends Component {
   handleEdit = () => {
@@ -41,6 +48,7 @@ class BudgetListItemComponent extends Component {
   render = () => {
     const {
       breakpoint,
+      classes,
       currency,
       item,
       width,
@@ -60,7 +68,10 @@ class BudgetListItemComponent extends Component {
             {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
         </ResponsiveTableCell>
-        <ResponsiveTableCell alignRight>
+        <ResponsiveTableCell
+          className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+          alignRight
+        >
           <IconButton onClick={this.handleEdit}>
             <EditIcon fontSize={isWidthDown('sm', width) ? 'small' : 'default'} />
           </IconButton>
@@ -76,6 +87,7 @@ class BudgetListItemComponent extends Component {
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
   breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  classes: PropTypes.shape(PropTypes.object).isRequired,
   currency: PropTypes.string.isRequired,
   item: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -93,7 +105,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
-export default withWidth()(connect(
+const componentWithWidth = withWidth()(BudgetListItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetListItemComponent));
+)(componentWithStyles);
