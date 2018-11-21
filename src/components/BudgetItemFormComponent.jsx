@@ -103,7 +103,7 @@ class BudgetItemFormComponent extends Component {
     return (
       <div>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
-        <Grid container spacing={16} justify="center" wrap="wrap">
+        <Grid container spacing={16} justify="center">
           <Hidden smDown>
             <Grid item sm={2} md={3} xl={4} />
           </Hidden>
