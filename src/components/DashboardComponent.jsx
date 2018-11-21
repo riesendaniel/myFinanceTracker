@@ -122,24 +122,24 @@ class DashboardComponent extends Component {
               <DashboardInfoComponent
                 icon={<MoneyIcon />}
                 title={`Ausgaben im ${currentMonth}`}
-                value={`${currentMonthsOutgoingSum} ${currency}`}
+                value={`${Math.round(currentMonthsOutgoingSum)} ${currency}`}
               />
               <DashboardInfoComponent
                 icon={<AttachMoneyIcon />}
-                title={`Einkommen (Netto) im ${currentMonth}`}
-                value={`${netPay} ${currency}`}
+                title={`Nettoeinkommen im ${currentMonth}`}
+                value={`${Math.round(netPay)} ${currency}`}
               />
               <DashboardInfoComponent
                 icon={<CompareIcon />}
                 title={`Ersparnisse im ${currentMonth}`}
-                value={`${netPay - currentMonthsOutgoingSum} ${currency}`}
+                value={`${Math.round(netPay - currentMonthsOutgoingSum)} ${currency}`}
               />
               <DashboardInfoComponent
                 icon={<CompareIcon />}
                 title="Budgetierte Ersparnisse"
                 /* TODO: Dies geht von der Annahme aus,
                    dass im Budget nur Ausgaben erfasst werden. */
-                value={`${netPay - monthlyBudgetSum} ${currency}`}
+                value={`${Math.round(netPay - monthlyBudgetSum)} ${currency}`}
               />
               <DashboardInfoComponent
                 icon={<AddIcon />}
