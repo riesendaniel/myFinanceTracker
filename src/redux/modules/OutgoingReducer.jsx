@@ -208,7 +208,7 @@ const ACTION_HANDLERS = {
     if (typeof action.categories !== 'undefined') {
       for (let i = 0; i < action.categories.length; i += 1) {
         const category = action.categories[i];
-        const outgoings = action.currentMonthsOutgoings.filter(outgoing => outgoing.outgoingCategory === category.description);
+        const outgoings = action.currentMonthsOutgoings.filter(outgoing => outgoing.outgoingCategoryId === category.id);
         const amount = outgoings.reduce((total, outgoing) => total + outgoing.outgoingAmount, 0);
         if (amount !== 0) {
           currentMonthsOutgoingsByCategory.push({

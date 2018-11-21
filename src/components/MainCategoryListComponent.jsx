@@ -6,8 +6,11 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Dialog, DialogActions, DialogContent,
-  Table, TableBody,
 } from '@material-ui/core';
+import {
+  ResponsiveTable,
+  ResponsiveTableBody,
+} from './ResponsiveTable';
 import {
   actions,
   getIsLoading, getMainCategories,
@@ -40,6 +43,7 @@ class MainCategoryListComponent extends Component {
 
   render = () => {
     const emptyMainCategory = {
+      id: 'new',
       description: '',
     };
     const {
@@ -51,7 +55,7 @@ class MainCategoryListComponent extends Component {
     } = this.props;
 
     if (!auth.currentUser) {
-      return <Redirect to="/signin/"/>;
+      return <Redirect to="/signin/" />;
     }
 
     return (
@@ -61,14 +65,14 @@ class MainCategoryListComponent extends Component {
       >
         <DialogContent>
           { isLoading ? <Loading /> : (
-            <Table>
-              <TableBody>
+            <ResponsiveTable breakpoint="xs">
+              <ResponsiveTableBody>
                 {mainCategories.map(mainCategory => (
                   <MainCategoryListItem key={mainCategory.id} mainCategory={mainCategory} />
                 ))}
                 <MainCategoryListItem mainCategory={emptyMainCategory} editable />
-              </TableBody>
-            </Table>
+              </ResponsiveTableBody>
+            </ResponsiveTable>
           ) }
         </DialogContent>
         <DialogActions>

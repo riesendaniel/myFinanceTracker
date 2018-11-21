@@ -2,8 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Card, CardContent, CardHeader,
-  Table, TableBody, TableCell, TableHead, TableFooter, TableRow,
+  Typography,
 } from '@material-ui/core';
+import {
+  ResponsiveTable,
+  ResponsiveTableHead, ResponsiveTableBody, ResponsiveTableFooter,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import BudgetListItem from './BudgetListItemComponent';
 import BudgetListSummary from './BudgetListSummaryComponent';
 
@@ -18,24 +23,30 @@ const BudgetListComponent = (props) => {
       ) }
       <CardContent>
         { list.length > 0 ? (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Kategorie</TableCell>
-                <TableCell numeric>monatlich</TableCell>
-                <TableCell numeric>jährlich</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
+          <ResponsiveTable breakpoint="xs">
+            <ResponsiveTableHead>
+              <ResponsiveTableRow>
+                <ResponsiveTableCell>
+                  <Typography>Kategorie</Typography>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell numeric>
+                  <Typography>monatlich</Typography>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell numeric>
+                  <Typography>jährlich</Typography>
+                </ResponsiveTableCell>
+                <ResponsiveTableCell />
+              </ResponsiveTableRow>
+            </ResponsiveTableHead>
+            <ResponsiveTableBody>
               { list.map(item => (
                 <BudgetListItem key={item.id} item={item} />
               )) }
-            </TableBody>
-            <TableFooter>
+            </ResponsiveTableBody>
+            <ResponsiveTableFooter>
               <BudgetListSummary list={list} />
-            </TableFooter>
-          </Table>
+            </ResponsiveTableFooter>
+          </ResponsiveTable>
         ) : (
           <div>noch keine Einträge vorhanden</div>
         ) }

@@ -4,8 +4,13 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import {
   Card, CardContent,
-  Table, TableCell, TableFooter, TableRow,
+  Typography,
 } from '@material-ui/core';
+import {
+  ResponsiveTable,
+  ResponsiveTableFooter,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -21,20 +26,22 @@ const BudgetSummaryComponent = (props) => {
   return (
     <Card>
       <CardContent>
-        <Table>
-          <TableFooter>
-            <TableRow>
-              <TableCell>Total</TableCell>
-              <TableCell numeric>
-                {`${Math.round(budget.reduce((total, item) => total + item.monthly, 0))} ${currency}`}
-              </TableCell>
-              <TableCell numeric>
-                {`${Math.round(budget.reduce((total, item) => total + item.yearly, 0))} ${currency}`}
-              </TableCell>
-              <TableCell />
-            </TableRow>
-          </TableFooter>
-        </Table>
+        <ResponsiveTable breakpoint="xs">
+          <ResponsiveTableFooter>
+            <ResponsiveTableRow>
+              <ResponsiveTableCell>
+                <Typography>Total</Typography>
+              </ResponsiveTableCell>
+              <ResponsiveTableCell numeric columnHead="monatlich">
+                <Typography>{`${Math.round(budget.reduce((total, item) => total + item.monthly, 0))} ${currency}`}</Typography>
+              </ResponsiveTableCell>
+              <ResponsiveTableCell numeric columnHead="jährlich">
+                <Typography>{`${Math.round(budget.reduce((total, item) => total + item.yearly, 0))} ${currency}`}</Typography>
+              </ResponsiveTableCell>
+              <ResponsiveTableCell />
+            </ResponsiveTableRow>
+          </ResponsiveTableFooter>
+        </ResponsiveTable>
       </CardContent>
     </Card>
   );
