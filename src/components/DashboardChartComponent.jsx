@@ -11,7 +11,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary.main,
   },
   content: {
-    height: 200,
+    height: 300,
   },
 });
 
@@ -22,7 +22,7 @@ const DashboardChartComponent = (props) => {
     content,
   } = props;
   return (
-    <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+    <Grid item xs={12}>
       <Card>
         <CardHeader
           className={classes.header}

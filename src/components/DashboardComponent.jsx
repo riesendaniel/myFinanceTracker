@@ -8,6 +8,9 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthDown,
+} from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
@@ -103,21 +106,23 @@ class DashboardComponent extends Component {
       currentMonthsOutgoingSum,
       currentMonthsOutgoingsByCategory,
       lastTwelveMonthsOutgoingSum,
+      width,
     } = this.props;
     const currentMonthsBalance = this.mergeBudgetAndOutgoings(
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
     const name = auth.currentUser ?  auth.currentUser.displayName : '';
+    const lastOutgoingsCount = isWidthDown('xs', width) ? 3 : 5;
 
     return (
       <Grid container spacing={16} justify="center">
         <RedirectComponent />
-        <Grid item xs={12} md={10}>
+        <Grid item xs={12} xl={10}>
           <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
         </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
-          <Grid item xs={12} md={10} container spacing={16}>
+          <Grid item xs={12} xl={10} container spacing={16}>
             <Grid container spacing={16} item>
               <DashboardInfoComponent
                 icon={<MoneyIcon />}
@@ -156,8 +161,8 @@ class DashboardComponent extends Component {
                     <PieChart>
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <Pie
-                        innerRadius={60}
-                        outerRadius={80}
+                        innerRadius={isWidthDown('xs', width) ? 55 : 100}
+                        outerRadius={isWidthDown('xs', width) ? 80 : 140}
                         paddingAngle={4}
                         data={currentMonthsOutgoingsByCategory}
                         dataKey="amount"
@@ -167,7 +172,11 @@ class DashboardComponent extends Component {
                           <Cell key={entry.id} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Legend layout="vertical" align="right" verticalAlign="middle" />
+                      <Legend
+                        layout="vertical"
+                        align={isWidthDown('xs', width) ? 'center' : 'right'}
+                        verticalAlign={isWidthDown('xs', width) ? 'bottom' : 'middle'}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
@@ -181,9 +190,19 @@ class DashboardComponent extends Component {
                     >
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Bar name="Budget" dataKey="budget" fill="#083D77" />
-                      <Bar name="Ausgaben" dataKey="outgoing" fill="#A10702" />
-                      <XAxis dataKey="category" />
+                      <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
+                      <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
+                      <XAxis
+                        dataKey="category"
+                        interval={0}
+                        textAnchor="start"
+                        height={1}
+                        angle={-90}
+                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                        tickLine={false}
+                        tickMargin={-15}
+                        dx={-7}
+                      />
                       <YAxis>
                         <Label
                           value={`Betrag [${currency}]`}
@@ -206,7 +225,12 @@ class DashboardComponent extends Component {
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
                       <Line name="Betrag" dataKey="amount" stroke="#A10702" />
-                      <XAxis dataKey="month" textAnchor="end" angle={-45} height={55} />
+                      <XAxis
+                        dataKey="month"
+                        textAnchor="end"
+                        angle={-45}
+                        height={55}
+                      />
                       <YAxis>
                         <Label
                           value={`Betrag [${currency}]`}
@@ -220,7 +244,7 @@ class DashboardComponent extends Component {
                 )}
               />
               <DashboardChartComponent
-                title="letzte fünf Ausgaben"
+                title={isWidthDown('xs', width) ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
                 content={(
                   <ResponsiveTable breakpoint="xs">
                     <ResponsiveTableHead>
@@ -231,12 +255,18 @@ class DashboardComponent extends Component {
                       </ResponsiveTableRow>
                     </ResponsiveTableHead>
                     <ResponsiveTableBody>
-                      {outgoings.filter((value, index) => index < 5)
+                      {outgoings.filter((value, index) => index < lastOutgoingsCount)
                         .map(outgoing => (
                           <ResponsiveTableRow key={outgoing.id}>
-                            <ResponsiveTableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</ResponsiveTableCell>
-                            <ResponsiveTableCell>{outgoing.outgoingTitle}</ResponsiveTableCell>
-                            <ResponsiveTableCell>{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Datum">
+                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Beschreibung">
+                              <Typography>{outgoing.outgoingTitle}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Betrag">
+                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                            </ResponsiveTableCell>
                           </ResponsiveTableRow>
                         ))
                       }
@@ -258,7 +288,17 @@ class DashboardComponent extends Component {
                         ))}
                       </Bar>
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <XAxis dataKey="category" />
+                      <XAxis
+                        dataKey="category"
+                        interval={0}
+                        textAnchor="start"
+                        height={1}
+                        angle={-90}
+                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                        tickLine={false}
+                        tickMargin={-15}
+                        dx={-7}
+                      />
                       <YAxis>
                         <Label
                           value={`Betrag [${currency}]`}
@@ -291,6 +331,7 @@ DashboardComponent.propTypes = {
   currentMonthsOutgoingSum: PropTypes.number,
   currentMonthsOutgoingsByCategory: PropTypes.arrayOf(PropTypes.object).isRequired,
   lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.object).isRequired,
+  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
 };
 
 DashboardComponent.defaultProps = {
@@ -321,7 +362,9 @@ const actions = {
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(DashboardComponent);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DashboardComponent);
+)(componentWithWidth);
