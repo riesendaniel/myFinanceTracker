@@ -64,6 +64,7 @@ export function getIncomeValues() {
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           data = doc.data();
+          data.id = doc.id;
         });
       })
       .catch(function(error) {
@@ -89,6 +90,40 @@ export function getIncomeValues() {
       });
   });
 }
+
+export const updateDeduction = (deduction) => {
+  return database.collection('deductions')
+    .doc(deduction.id)
+    .update({
+      description: deduction.description,
+      type: deduction.type,
+      value: deduction.value,
+    });
+};
+
+export function addNewDeduction(deduction) {
+  return database.collection('deductions').add({
+    description: deduction.description,
+    type: deduction.type,
+    value: deduction.value,
+    userId: auth.currentUser.uid,
+  });
+}
+
+export const deleteDeduction = (id) => {
+  return database.collection("deductions")
+    .doc(id)
+    .delete();
+};
+
+export const updateGrossPay = (id, grossPay) => {
+  return database.collection('income')
+    .doc(id)
+    .update({
+      grossPay: grossPay,
+      userId: auth.currentUser.uid,
+    });
+};
 
 // ------------------------------------
 // Outgoing

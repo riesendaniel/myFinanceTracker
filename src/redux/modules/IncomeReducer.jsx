@@ -1,7 +1,13 @@
 // ------------------------------------
 // Selectors
 // ------------------------------------
-import { getIncomeValues } from '../database';
+import {
+  addNewDeduction,
+  deleteDeduction,
+  getIncomeValues,
+  updateDeduction, updateGrossPay,
+} from '../database';
+import { addMessage } from '../../components/Notifier';
 
 export const getIsLoading = state => state.income.isLoading;
 
@@ -50,7 +56,7 @@ const calcNetPay = income => ({
   income,
 });
 
-const updateGrossPay = grossPay => ({
+const updateGrossPayEntry = grossPay => ({
   type: UPDATE_GROSS_PAY,
   grossPay,
 });
@@ -60,12 +66,12 @@ const addDeduction = deduction => ({
   deduction,
 });
 
-const updateDeduction = deduction => ({
+const updateDeductionEntry = deduction => ({
   type: UPDATE_DEDUCTION,
   deduction,
 });
 
-const deleteDeduction = id => ({
+const deleteDeductionEntry = id => ({
   type: DELETE_DEDUCTION,
   id,
 });
@@ -89,36 +95,72 @@ export function doLoadIncome() {
     dispatch(isLoading(true));
     getIncomeValues().then(income => {
         const grossPay = income.grossPay;
+        const id = income.id;
         const deductions = income.deductions;
-        dispatch(receiveIncome({ grossPay, deductions }));
+        dispatch(receiveIncome({ grossPay, deductions, id }));
         updateCalculatedElements(dispatch, getState);
         dispatch(isLoading(false));
       }).catch(error => {
+        addMessage({ message: 'Einkommen konnte nicht geladen werden' });
         console.error(error);
         dispatch(isLoading(false));
       });
   };
 }
 
-const doUpdateGrossPay = grossPay => (dispatch, getState) => {
-  dispatch(updateGrossPay(grossPay));
-  updateCalculatedElements(dispatch, getState);
-};
 
-const doAddDeduction = deduction => (dispatch, getState) => {
-  dispatch(addDeduction(deduction));
-  updateCalculatedElements(dispatch, getState);
-};
+export function doUpdateGrossPay(grossPay) {
+  return (dispatch, getState) => {
+    updateGrossPay(getState().income.id, grossPay).then(() => {
+      dispatch(updateGrossPayEntry(grossPay));
+      updateCalculatedElements(dispatch, getState);
+      }
+    ).catch(error => {
+      addMessage({ message: 'Einkommen konnten nicht geändert werden' });
+      console.error(error);
+    });
+  };
+}
 
-const doUpdateDeduction = deduction => (dispatch, getState) => {
-  dispatch(updateDeduction(deduction));
-  updateCalculatedElements(dispatch, getState);
-};
+export function doAddDeduction(deduction) {
+  return (dispatch, getState) => {
+    addNewDeduction(deduction).then((item) => {
+        deduction.id = item.id;
+        dispatch(addDeduction(deduction));
+        updateCalculatedElements(dispatch, getState);
+      }
+    ).catch(error => {
+      addMessage({ message: 'Abzug konnte nicht gespeichert werden' });
+      console.error(error);
+    });
+  };
+}
 
-const doDeleteDeduction = id => (dispatch, getState) => {
-  dispatch(deleteDeduction(id));
-  updateCalculatedElements(dispatch, getState);
-};
+export function doUpdateDeduction(deduction) {
+  return (dispatch, getState) => {
+    updateDeduction(deduction).then(() => {
+        dispatch(updateDeductionEntry(deduction));
+        updateCalculatedElements(dispatch, getState);
+      }
+    ).catch(error => {
+      addMessage({ message: 'Abzug konnten nicht geändert werden' });
+      console.error(error);
+    });
+  };
+}
+
+export function doDeleteDeduction(id) {
+  return (dispatch, getState) => {
+    deleteDeduction(id).then(() => {
+      dispatch(deleteDeductionEntry(id));
+      updateCalculatedElements(dispatch, getState);
+      }
+    ).catch(error => {
+      addMessage({ message: 'Abzug konnte nicht gelöscht werden' });
+      console.error(error);
+    });
+  };
+}
 
 
 // ------------------------------------
@@ -155,8 +197,8 @@ const ACTION_HANDLERS = {
     { ...state, isLoading: action.status }
   ),
   [RECEIVE_INCOME]: (state, action) => {
-    const { grossPay, deductions } = action.income;
-    return { ...state, grossPay, deductions };
+    const { grossPay, deductions, id } = action.income;
+    return { ...state, grossPay,id , deductions };
   },
   [CALC_TOTAL_DEDUCTIONS]: (state, action) => {
     const { grossPay, deductions } = action.income;
