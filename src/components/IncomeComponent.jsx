@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   Card, CardContent,
   Grid,
@@ -11,6 +10,8 @@ import {
 import withWidth, {
   isWidthUp, isWidthDown,
 } from '@material-ui/core/withWidth';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -97,11 +98,15 @@ class IncomeComponent extends Component {
 
 IncomeComponent.propTypes = {
   doLoadIncome: PropTypes.func.isRequired,
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
-  currency: PropTypes.string.isRequired,
-  netPay: PropTypes.number.isRequired,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  netPay: PropTypes.number,
+  width: CustomPropTypes.breakpoint.isRequired,
+};
+
+IncomeComponent.defaultProps = {
+  netPay: 0,
 };
 
 const mapStateToProps = state => ({

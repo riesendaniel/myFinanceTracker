@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   Card, CardContent,
   Typography,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableFooter,
@@ -48,8 +49,8 @@ const BudgetSummaryComponent = (props) => {
 };
 
 BudgetSummaryComponent.propTypes = {
-  budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currency: PropTypes.string.isRequired,
+  budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
 };
 
 const mapStateToProps = state => ({

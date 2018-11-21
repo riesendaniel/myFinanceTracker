@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment/locale/de';
 import {
@@ -26,6 +25,8 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableHead, ResponsiveTableBody,
@@ -325,15 +326,19 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
-  budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currency: PropTypes.string.isRequired,
+  budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
   netPay: PropTypes.number,
-  outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
   currentMonthsOutgoingSum: PropTypes.number,
-  currentMonthsOutgoingsByCategory: PropTypes.arrayOf(PropTypes.object).isRequired,
-  lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.object).isRequired,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  currentMonthsOutgoingsByCategory: PropTypes
+    .arrayOf(CustomPropTypes.outgoingByCategory).isRequired,
+  lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.shape({
+    month: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+  })).isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 DashboardComponent.defaultProps = {

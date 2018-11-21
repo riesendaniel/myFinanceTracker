@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import {
   Button,
   Dialog, DialogActions, DialogContent,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableBody,
@@ -88,7 +89,7 @@ MainCategoryListComponent.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  mainCategories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  mainCategories: PropTypes.arrayOf(CustomPropTypes.mainCategory).isRequired,
 };
 
 const mapStateToProps = state => ({

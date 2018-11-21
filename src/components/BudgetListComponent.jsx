@@ -1,9 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
   Card, CardContent, CardHeader,
   Typography,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableHead, ResponsiveTableBody, ResponsiveTableFooter,
@@ -56,7 +57,7 @@ const BudgetListComponent = (props) => {
 };
 
 BudgetListComponent.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.object).isRequired,
+  list: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   title: PropTypes.string,
 };
 

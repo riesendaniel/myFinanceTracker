@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -12,6 +11,8 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions,
 } from '../redux/modules/AppReducer';
@@ -69,7 +70,7 @@ class HeaderComponent extends Component {
 }
 
 HeaderComponent.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 

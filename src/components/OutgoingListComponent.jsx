@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
   Button, IconButton,
@@ -15,6 +14,8 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableBody,
@@ -43,8 +44,8 @@ class OutgoingListComponent extends Component {
   static propTypes = {
     isLoadingOutgoings: PropTypes.bool.isRequired,
     isLoadingBudget: PropTypes.bool.isRequired,
-    outgoings: PropTypes.array.isRequired,
-    categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+    outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
+    categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
   };
 
   state = {
@@ -109,7 +110,7 @@ class OutgoingListComponent extends Component {
                   </Grid>
                   <Grid item xs={12}>
                     <ResponsiveTable breakpoint="sm">
-                      <OutgoingTableHead
+                      <OutgoingTableHead breakpoint="sm"
                         order={this.state.order}
                         orderBy={this.state.orderBy}
                         onRequestSort={this.handleRequestSort}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   IconButton,
@@ -15,6 +14,8 @@ import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
@@ -141,14 +142,11 @@ MainCategoryListItem.propTypes = {
   doAddMainCategory: PropTypes.func.isRequired,
   doUpdateMainCategory: PropTypes.func.isRequired,
   doDeleteMainCategory: PropTypes.func.isRequired,
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  classes: PropTypes.shape(PropTypes.object).isRequired,
-  mainCategory: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  mainCategory: CustomPropTypes.mainCategory.isRequired,
   editable: PropTypes.bool,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 MainCategoryListItem.defaultProps = {

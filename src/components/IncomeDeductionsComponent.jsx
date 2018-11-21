@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
   ResponsiveTableBody, ResponsiveTableFooter,
@@ -19,6 +20,7 @@ import { Typography } from '@material-ui/core';
 
 const IncomeDeductionsComponent = (props) => {
   const emptyDeduction = {
+    id: 'new',
     description: '',
     type: 'percentaged',
     value: 0,
@@ -52,13 +54,8 @@ const IncomeDeductionsComponent = (props) => {
 };
 
 IncomeDeductionsComponent.propTypes = {
-  currency: PropTypes.string.isRequired,
-  deductions: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-  })).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  deductions: PropTypes.arrayOf(CustomPropTypes.deduction).isRequired,
   totalDeductions: PropTypes.number.isRequired,
 };
 

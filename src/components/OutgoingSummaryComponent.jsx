@@ -1,10 +1,11 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import {
   Typography,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableFooter,
   ResponsiveTableRow, ResponsiveTableCell,
@@ -30,9 +31,9 @@ const OutgoingSummaryComponent = (props) => {
 };
 
 OutgoingSummaryComponent.propTypes = {
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  currency: PropTypes.string.isRequired,
-  outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
 };
 
 const mapStateToProps = state => ({

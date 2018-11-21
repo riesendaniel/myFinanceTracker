@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   Grid,
@@ -15,6 +14,8 @@ import withWidth, {
 import CancelIcon from '@material-ui/icons/Cancel';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -107,9 +108,9 @@ class IncomeGrossPayComponent extends Component {
 
 IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
-  currency: PropTypes.func.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
   grossPay: PropTypes.number.isRequired,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 const mapStateToProps = state => ({

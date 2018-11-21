@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {
   Divider,
@@ -12,6 +11,8 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import {
   actions,
@@ -89,8 +90,8 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  history: CustomPropTypes.history.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 
@@ -124,7 +125,7 @@ const MenuComponent = (props) => {
 };
 
 MenuComponent.propTypes = {
-  width: PropTypes.string.isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 export default MenuComponent;

@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core';
+import CustomPropTypes from '../helper/CustomPropTypes';
 
 const styles = () => ({
   container: {
@@ -21,7 +21,7 @@ const LoadingComponent = (props) => {
 };
 
 LoadingComponent.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
 };
 
 export default withStyles(styles)(LoadingComponent);

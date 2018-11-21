@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   IconButton,
   Typography,
@@ -12,6 +11,8 @@ import withWidth, {
 } from '@material-ui/core/withWidth';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
@@ -87,17 +88,11 @@ class BudgetListItemComponent extends Component {
 
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
-  breakpoint: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
-  classes: PropTypes.shape(PropTypes.object).isRequired,
-  currency: PropTypes.string.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    period: PropTypes.string.isRequired,
-    monthly: PropTypes.number.isRequired,
-    yearly: PropTypes.number.isRequired,
-  }).isRequired,
-  width: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  item: CustomPropTypes.budgetEntry.isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 const mapStateToProps = state => ({
