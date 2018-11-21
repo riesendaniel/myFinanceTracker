@@ -3,7 +3,6 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { CircularProgress } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import withWidth, {
   isWidthUp,
@@ -18,6 +17,7 @@ import BudgetItemForm from './BudgetItemFormComponent';
 import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
+import Loading from './LoadingComponent';
 import MainCategoryListComponent from './MainCategoryListComponent';
 import Menu from './MenuComponent';
 import NotFound from './NotFound';
@@ -35,11 +35,6 @@ const styles = theme => ({
     [theme.breakpoints.up('lg')]: {
       marginRight: menuWidth,
     },
-  },
-  circularProgressWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    paddingTop: `${theme.spacing.unit * 8}px`,
   },
 });
 
@@ -88,11 +83,7 @@ class AppComponent extends Component {
     return (
       <div>
         <Router history={history}>
-          {loading ? (
-            <div className={classes.circularProgressWrapper}>
-              <CircularProgress />
-            </div>
-          ) : (
+          {loading ? <Loading /> : (
             <div>
               <header>
                 <Header isLoggedIn={isLoggedIn} />
