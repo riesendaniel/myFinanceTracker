@@ -181,8 +181,8 @@ class DashboardComponent extends Component {
                     >
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Bar name="Budget" dataKey="budget" fill="#00C49F" />
-                      <Bar name="Ausgaben" dataKey="outgoing" fill="#FF8042" />
+                      <Bar name="Budget" dataKey="budget" fill="#083D77" />
+                      <Bar name="Ausgaben" dataKey="outgoing" fill="#A10702" />
                       <XAxis dataKey="category" />
                       <YAxis>
                         <Label
@@ -205,7 +205,7 @@ class DashboardComponent extends Component {
                     >
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Line name="Betrag" dataKey="amount" stroke="#FF8042" />
+                      <Line name="Betrag" dataKey="amount" stroke="#A10702" />
                       <XAxis dataKey="month" textAnchor="end" angle={-45} height={55} />
                       <YAxis>
                         <Label
