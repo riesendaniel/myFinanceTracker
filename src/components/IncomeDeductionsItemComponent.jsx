@@ -109,13 +109,14 @@ class IncomeDeductionsItemComponent extends Component {
       currency,
       width,
     } = this.props;
+    const breakpointUp = isWidthUp(breakpoint, width, false);
     return (
       <ResponsiveTableRow key={deduction.id} breakpoint={breakpoint}>
         <ResponsiveTableCell
           columnHead="Beschreibung"
         >
           <FormControl>
-            {(isWidthUp(breakpoint, width, false) && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
+            {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
               id="description"
               name="description"
@@ -128,7 +129,7 @@ class IncomeDeductionsItemComponent extends Component {
           </FormControl>
         </ResponsiveTableCell>
         <ResponsiveTableCell
-          className={isWidthUp(breakpoint, width, false) ? classes.value : undefined}
+          className={breakpointUp ? classes.value : undefined}
           numeric
           columnHead="Betrag"
         >
@@ -160,7 +161,7 @@ class IncomeDeductionsItemComponent extends Component {
         </ResponsiveTableCell>
         { editable ? (
           <ResponsiveTableCell
-            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            className={breakpointUp ? classes.actions : undefined}
             alignRight
           >
             <IconButton onClick={this.saveDeduction}>
@@ -176,7 +177,7 @@ class IncomeDeductionsItemComponent extends Component {
           </ResponsiveTableCell>
         ) : (
           <ResponsiveTableCell
-            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            className={breakpointUp ? classes.actions : undefined}
             alignRight
           >
             <IconButton onClick={() => this.setState({ editable: true })}>

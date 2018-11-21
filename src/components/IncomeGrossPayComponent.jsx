@@ -66,10 +66,11 @@ class IncomeGrossPayComponent extends Component {
       currency,
       width,
     } = this.props;
+    const smDown = isWidthDown('sm', width);
     return (
       <Grid container alignItems="flex-end">
         <Grid item xs={12} container justify="space-between" alignItems="center" wrap="nowrap">
-          <Typography color={isWidthDown('sm', width) ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+          <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
           <FormControl>
             <Input
               type="number"

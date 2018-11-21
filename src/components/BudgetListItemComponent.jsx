@@ -53,6 +53,7 @@ class BudgetListItemComponent extends Component {
       item,
       width,
     } = this.props;
+    const smDown = isWidthDown('sm', width);
     return (
       <ResponsiveTableRow key={item.id} breakpoint={breakpoint}>
         <ResponsiveTableCell component="th" columnHead="Kategorie">
@@ -73,10 +74,10 @@ class BudgetListItemComponent extends Component {
           alignRight
         >
           <IconButton onClick={this.handleEdit}>
-            <EditIcon fontSize={isWidthDown('sm', width) ? 'small' : 'default'} />
+            <EditIcon fontSize={smDown ? 'small' : 'default'} />
           </IconButton>
           <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon fontSize={isWidthDown('sm', width) ? 'small' : 'default'} />
+            <DeleteOutlineIcon fontSize={smDown ? 'small' : 'default'} />
           </IconButton>
         </ResponsiveTableCell>
       </ResponsiveTableRow>

@@ -57,6 +57,7 @@ class IncomeComponent extends Component {
       netPay,
       width,
     } = this.props;
+    const smDown = isWidthDown('sm', width);
 
     if (!auth.currentUser) {
       return <Redirect to="/signin/" />;
@@ -73,14 +74,14 @@ class IncomeComponent extends Component {
               <Card>
                 <CardContent>
                   <Grid container direction="row-reverse" justify="flex-end">
-                    <Grid item xs={12} md={4} className={isWidthDown('sm', width) ? classes.grossPay : undefined}>
+                    <Grid item xs={12} md={4} className={smDown ? classes.grossPay : undefined}>
                       <IncomeGrossPay />
                     </Grid>
                     <Grid item xs={12} md={8} className={isWidthUp('sm', width, false) ? classes.deductions : undefined}>
                       <IncomeDeductions />
                     </Grid>
-                    <Grid item xs={12} md={4} container justify="space-between" alignItems="center" className={isWidthDown('sm', width) ? classes.netPay : undefined}>
-                      <Typography color={isWidthDown('sm', width) ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
+                    <Grid item xs={12} md={4} container justify="space-between" alignItems="center" className={smDown ? classes.netPay : undefined}>
+                      <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
                       <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
                     </Grid>
                   </Grid>

@@ -114,7 +114,8 @@ class DashboardComponent extends Component {
     );
     const currentMonth = moment().format('MMMM');
     const name = auth.currentUser ?  auth.currentUser.displayName : '';
-    const lastOutgoingsCount = isWidthDown('xs', width) ? 3 : 5;
+    const xsDown = isWidthDown('xs', width);
+    const lastOutgoingsCount = xsDown ? 3 : 5;
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
@@ -162,8 +163,8 @@ class DashboardComponent extends Component {
                     <PieChart>
                       <Tooltip formatter={value => `${value} ${currency}`} />
                       <Pie
-                        innerRadius={isWidthDown('xs', width) ? 55 : 100}
-                        outerRadius={isWidthDown('xs', width) ? 80 : 140}
+                        innerRadius={xsDown ? 55 : 100}
+                        outerRadius={xsDown ? 80 : 140}
                         paddingAngle={4}
                         data={currentMonthsOutgoingsByCategory}
                         dataKey="amount"
@@ -175,8 +176,8 @@ class DashboardComponent extends Component {
                       </Pie>
                       <Legend
                         layout="vertical"
-                        align={isWidthDown('xs', width) ? 'center' : 'right'}
-                        verticalAlign={isWidthDown('xs', width) ? 'bottom' : 'middle'}
+                        align={xsDown ? 'center' : 'right'}
+                        verticalAlign={xsDown ? 'bottom' : 'middle'}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -245,7 +246,7 @@ class DashboardComponent extends Component {
                 )}
               />
               <DashboardChartComponent
-                title={isWidthDown('xs', width) ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
+                title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
                 content={(
                   <ResponsiveTable breakpoint="xs">
                     <ResponsiveTableHead>

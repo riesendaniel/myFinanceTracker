@@ -86,6 +86,7 @@ class MainCategoryListItem extends Component {
       classes,
       width,
     } = this.props;
+    const breakpointUp = isWidthUp(breakpoint, width, false);
     return (
       <ResponsiveTableRow breakpoint={breakpoint}>
         <ResponsiveTableCell>
@@ -104,7 +105,7 @@ class MainCategoryListItem extends Component {
         </ResponsiveTableCell>
         { editable ? (
           <ResponsiveTableCell
-            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            className={breakpointUp ? classes.actions : undefined}
             alignRight
           >
             <IconButton onClick={this.saveMainCategory}>
@@ -120,7 +121,7 @@ class MainCategoryListItem extends Component {
           </ResponsiveTableCell>
         ) : (
           <ResponsiveTableCell
-            className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+            className={breakpointUp ? classes.actions : undefined}
             alignRight
           >
             <IconButton onClick={() => this.setState({ editable: true })}>
