@@ -61,7 +61,7 @@ class MainCategoryListItem extends Component {
     const {
       mainCategory,
     } = this.state;
-    if (mainCategory.id) {
+    if (mainCategory.id !== 'new') {
       await doUpdateMainCategory(mainCategory);
       this.setState({ editable: this.initialEditable });
     } else {
