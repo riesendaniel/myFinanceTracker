@@ -32,6 +32,7 @@ import {
 import Loading from './LoadingComponent';
 import MainCategoryList from './MainCategoryListComponent';
 import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 class BudgetItemFormComponent extends Component {
   state = {
@@ -103,7 +104,7 @@ class BudgetItemFormComponent extends Component {
     return (
       <div>
         { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
-        <Grid container spacing={16} justify="center">
+        <Grid container spacing={gridSpacing} justify="center">
           <Hidden smDown>
             <Grid item sm={2} md={3} xl={4} />
           </Hidden>

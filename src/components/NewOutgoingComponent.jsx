@@ -23,6 +23,7 @@ import history from '../helper/history';
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
+import { gridSpacing } from '../theme';
 
 class NewOutgoingComponent extends Component {
   static propTypes = {
@@ -98,7 +99,7 @@ class NewOutgoingComponent extends Component {
     const { currency, categories } = this.props;
     const { outgoing } = this.state;
     return (
-      <Grid container spacing={16} justify="center">
+      <Grid container spacing={gridSpacing} justify="center">
         <Hidden smDown>
           <Grid item sm={2} md={3} xl={4} />
         </Hidden>
@@ -112,7 +113,7 @@ class NewOutgoingComponent extends Component {
           <Card>
             <form onSubmit={this.addOutgoing}>
               <CardContent>
-                <Grid item xs={12} container spacing={16} justify="space-between">
+                <Grid item xs={12} container spacing={gridSpacing} justify="space-between">
                   <Grid item xs={12}>
                     <TextField
                       fullWidth

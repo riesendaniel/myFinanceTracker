@@ -23,6 +23,7 @@ import IncomeGrossPay from './IncomeGrossPayComponent';
 import IncomeDeductions from './IncomeDeductionsComponent';
 import { Redirect } from 'react-router-dom';
 import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 const spacing = '48px';
 
@@ -62,7 +63,7 @@ class IncomeComponent extends Component {
     }
 
     return (
-      <Grid container spacing={16} justify="center">
+      <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
           <Typography variant="headline" component="h2">Einkommen</Typography>
         </Grid>

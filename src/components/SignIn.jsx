@@ -5,9 +5,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import { auth, uiConfig } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 const SignIn = () => (
-  <Grid container spacing={16} justify="center">
+  <Grid container spacing={gridSpacing} justify="center">
     <Grid item xs={12} md={10}>
       <Typography variant="headline" component="h2">Login</Typography>
     </Grid>

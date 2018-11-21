@@ -36,6 +36,7 @@ import {
   getOutgoings
 } from '../redux/modules/OutgoingReducer';
 import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 class OutgoingListComponent extends Component {
 
@@ -68,7 +69,7 @@ class OutgoingListComponent extends Component {
   render() {
     const { outgoings, isLoadingOutgoings, isLoadingBudget, categories } = this.props;
     return (
-      <Grid container spacing={16} justify="center">
+      <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent/>
         <Grid item xs={12} md={10}>
           <Typography variant="headline" component="h2">Ausgaben</Typography>
@@ -78,7 +79,7 @@ class OutgoingListComponent extends Component {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Grid item xs={12} container spacing={16}>
+                  <Grid item xs={12} container spacing={gridSpacing}>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth

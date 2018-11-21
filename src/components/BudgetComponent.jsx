@@ -20,8 +20,9 @@ import {
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
-import RedirectComponent from './RedirectComponent'
+import RedirectComponent from './RedirectComponent';
 import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 export class BudgetComponent extends Component {
   componentDidMount = async () => {
@@ -55,14 +56,14 @@ export class BudgetComponent extends Component {
     return (
       <div>
         <RedirectComponent />
-        <Grid container spacing={16} justify="center">
+        <Grid container spacing={gridSpacing} justify="center">
           <Grid item xs={12} md={10}>
             <Typography variant="headline" component="h2">Budget</Typography>
           </Grid>
           <Grid item xs={12} md={10}>
             { isLoadingBudget || isLoadingMainCategory ? <Loading /> : (
               <div>
-                <Grid container spacing={16}>
+                <Grid container spacing={gridSpacing}>
                   { mainCategories.map((mainCategory) => {
                     const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
                     return list.length !== 0 && (

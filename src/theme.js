@@ -82,3 +82,5 @@ theme.overrides = {
 };
 
 export default theme;
+
+export const gridSpacing = 2 * theme.spacing.unit;

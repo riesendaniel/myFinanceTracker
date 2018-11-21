@@ -4,9 +4,10 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import { gridSpacing } from '../theme';
 
 const NotFound = () => (
-  <Grid container spacing={16} justify="center">
+  <Grid container spacing={gridSpacing} justify="center">
     <Grid item xs={12} md={10}>
       <Typography variant="headline" component="h2">Seite nicht gefunden</Typography>
     </Grid>

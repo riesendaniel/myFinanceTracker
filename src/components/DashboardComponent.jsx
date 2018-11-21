@@ -55,8 +55,9 @@ import Loading from './LoadingComponent';
 import history from '../helper/history';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
-import RedirectComponent from './RedirectComponent'
+import RedirectComponent from './RedirectComponent';
 import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 moment.locale('de');
 
@@ -116,14 +117,14 @@ class DashboardComponent extends Component {
     const lastOutgoingsCount = isWidthDown('xs', width) ? 3 : 5;
 
     return (
-      <Grid container spacing={16} justify="center">
+      <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
           <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
         </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
-          <Grid item xs={12} xl={10} container spacing={16}>
-            <Grid container spacing={16} item>
+          <Grid item xs={12} xl={10} container spacing={gridSpacing}>
+            <Grid container spacing={gridSpacing} item>
               <DashboardInfoComponent
                 icon={<MoneyIcon />}
                 title={`Ausgaben im ${currentMonth}`}
@@ -153,7 +154,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            <Grid container spacing={16} item>
+            <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
                 content={(
