@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import {
   Card, CardContent,
   Grid,
+  Hidden,
   Typography,
   withStyles,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthUp, isWidthDown,
+  isWidthDown,
 } from '@material-ui/core/withWidth';
 import {
   getCurrency,
@@ -30,9 +31,6 @@ const spacing = '48px';
 const styles = () => ({
   grossPay: {
     marginBottom: spacing,
-  },
-  deductions: {
-    order: -1,
   },
   netPay: {
     marginTop: spacing,
@@ -65,22 +63,28 @@ class IncomeComponent extends Component {
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
-        <Grid item xs={12} md={10}>
+        <Hidden smDown>
+          <Grid item md={2} xl={3} />
+        </Hidden>
+        <Grid item xs={12} md={8} xl={6}>
           <Typography variant="headline" component="h2">Einkommen</Typography>
         </Grid>
+        <Hidden smDown>
+          <Grid item md={2} xl={3} />
+        </Hidden>
         { isLoadingIncome ? <Loading /> : (
-          <Grid item xs={12} md={10} container>
+          <Grid item xs={12} md={8} xl={6} container>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
                   <Grid container direction="row-reverse" justify="flex-end">
-                    <Grid item xs={12} md={4} className={smDown ? classes.grossPay : undefined}>
+                    <Grid item xs={12} className={classes.grossPay}>
                       <IncomeGrossPay />
                     </Grid>
-                    <Grid item xs={12} md={8} className={isWidthUp('sm', width, false) ? classes.deductions : undefined}>
+                    <Grid item xs={12}>
                       <IncomeDeductions />
                     </Grid>
-                    <Grid item xs={12} md={4} container justify="space-between" alignItems="center" className={smDown ? classes.netPay : undefined}>
+                    <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.netPay}>
                       <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
                       <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
                     </Grid>

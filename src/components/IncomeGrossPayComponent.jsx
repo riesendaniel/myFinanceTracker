@@ -68,8 +68,8 @@ class IncomeGrossPayComponent extends Component {
     } = this.props;
     const smDown = isWidthDown('sm', width);
     return (
-      <Grid container alignItems="flex-end">
-        <Grid item xs={12} container justify="space-between" alignItems="center" wrap="nowrap">
+      <Grid container>
+        <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
           <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
           <FormControl>
             <Input
@@ -84,7 +84,7 @@ class IncomeGrossPayComponent extends Component {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={12} container justify="flex-end">
+        <Grid item xs={12} md={3} lg={2} container justify="flex-end">
           { editGrossPay ? (
             <div>
               <IconButton onClick={this.saveGrossPay}>
