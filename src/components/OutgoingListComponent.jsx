@@ -78,7 +78,7 @@ class OutgoingListComponent extends Component {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Grid container spacing={16}>
+                  <Grid item xs={12} container spacing={16}>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -106,44 +106,40 @@ class OutgoingListComponent extends Component {
                       </IconButton>
                     </Grid>
                   </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <ResponsiveTable breakpoint="xs">
-                    <OutgoingTableHead
-                      order={this.state.order}
-                      orderBy={this.state.orderBy}
-                      onRequestSort={this.handleRequestSort}
+                  <Grid item xs={12}>
+                    <ResponsiveTable breakpoint="sm">
+                      <OutgoingTableHead
+                        order={this.state.order}
+                        orderBy={this.state.orderBy}
+                        onRequestSort={this.handleRequestSort}
+                      />
+                      <ResponsiveTableBody>
+                        {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
+                          .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
+                          .map(row => {
+                            const category = categories.filter(item => item.id === row.outgoingCategoryId);
+                            if (category.length > 0) {
+                              row.outgoingCategory = category[0].description;
+                            }
+                            return (
+                              <OutgoingItemComponent key={row.id} outgoing={row}/>
+                            );
+                          })}
+                      </ResponsiveTableBody>
+                      <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
+                    </ResponsiveTable>
+                    <ResponsiveTablePagination
+                      breakpoint="xs"
+                      component="div"
+                      count={this.filterTable(outgoings).length}
+                      rowsPerPage={this.state.rowsPerPage}
+                      page={this.state.page}
+                      labelRowsPerPage="Einträge pro Seite"
+                      labelDisplayedRows={({ from, to, count }) => `zeige ${from} bis ${to} von total ${count} Einträgen`}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     />
-                    <ResponsiveTableBody>
-                      {this.filterTable(this.stableSort(outgoings, this.getSorting(this.state.order, this.state.orderBy)))
-                        .slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)
-                        .map(row => {
-                          const category = categories.filter(item => item.id === row.outgoingCategoryId);
-                          if (category.length > 0) {
-                            row.outgoingCategory = category[0].description;
-                          }
-                          return (
-                            <OutgoingItemComponent key={row.id} outgoing={row}/>
-                          );
-                        })}
-                    </ResponsiveTableBody>
-                    <OutgoingSummaryComponent outgoings={this.filterTable(outgoings)}/>
-                  </ResponsiveTable>
-                  <ResponsiveTablePagination
-                    breakpoint="xs"
-                    component="div"
-                    count={this.filterTable(outgoings).length}
-                    rowsPerPage={this.state.rowsPerPage}
-                    page={this.state.page}
-                    labelRowsPerPage="Einträge pro Seite"
-                    labelDisplayedRows={({ from, to, count }) => `zeige ${from} bis ${to} von total ${count} Einträgen`}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  />
+                  </Grid>
                 </CardContent>
               </Card>
             </Grid>

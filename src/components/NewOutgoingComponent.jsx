@@ -6,6 +6,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import {
   Card, CardContent, CardActionArea, CardActions,
   Grid,
+  Hidden,
   FormControl,
   IconButton,
   Input,
@@ -98,10 +99,16 @@ class NewOutgoingComponent extends Component {
     const { outgoing } = this.state;
     return (
       <Grid container spacing={16} justify="center">
-        <Grid item xs={12} md={10}>
+        <Hidden smDown>
+          <Grid item sm={2} md={3} xl={4} />
+        </Hidden>
+        <Grid xs={12} sm={8} md={6} xl={4}>
           <Typography variant="headline" component="h2">Ausgabe erfassen</Typography>
         </Grid>
-        <Grid item xs={12} md={10}>
+        <Hidden smDown>
+          <Grid item sm={2} md={3} xl={4} />
+        </Hidden>
+        <Grid xs={12} sm={8} md={6} xl={4}>
           <Card>
             <form onSubmit={this.addOutgoing}>
               <CardContent>
