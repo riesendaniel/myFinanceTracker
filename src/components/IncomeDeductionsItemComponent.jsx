@@ -66,6 +66,7 @@ class IncomeDeductionsItemComponent extends Component {
   handleInputChange = (event) => {
     const { deduction } = this.state;
     let { value } = event.target;
+    event.preventDefault();
     if (isNaN(value)) {
       value = String(value);
     } else {
@@ -119,7 +120,7 @@ class IncomeDeductionsItemComponent extends Component {
           <FormControl>
             {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
-              id="description"
+              autoFocus={editable ? true : undefined}
               name="description"
               type="text"
               value={deduction.description}
