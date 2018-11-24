@@ -60,7 +60,7 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.props;
     this.initialDeduction = { ...deduction };
     this.initialEditable = editable;
-    this.setState({ deduction: this.initialDeduction, editable: this.initialEditable });
+    this.setState({ deduction, editable });
   }
 
   handleInputChange = (event) => {
