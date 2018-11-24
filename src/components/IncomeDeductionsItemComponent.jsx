@@ -60,16 +60,16 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.props;
     this.initialDeduction = { ...deduction };
     this.initialEditable = editable;
-    this.setState({ deduction, editable });
+    this.setState({ deduction: this.initialDeduction, editable: this.initialEditable });
   }
 
   handleInputChange = (event) => {
     const { deduction } = this.state;
     let { value } = event.target;
     event.preventDefault();
-    if (isNaN(value)) {
+    if (value.length > 0 && isNaN(value)) {
       value = String(value);
-    } else {
+    } else if (value.length > 0 && !isNaN(value)) {
       value = Number(value);
     }
     deduction[event.target.name] = value;
@@ -120,7 +120,6 @@ class IncomeDeductionsItemComponent extends Component {
           <FormControl>
             {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
-              autoFocus={editable ? true : undefined}
               name="description"
               type="text"
               value={deduction.description}
