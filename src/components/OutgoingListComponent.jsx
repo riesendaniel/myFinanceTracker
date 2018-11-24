@@ -51,7 +51,7 @@ class OutgoingListComponent extends Component {
   state = {
     rowsPerPage: 5,
     page: 0,
-    order: 'asc',
+    order: 'desc',
     searchValue: '',
     filterData: [],
     orderBy: 'outgoingDate',
@@ -96,7 +96,8 @@ class OutgoingListComponent extends Component {
                       }} inputProps={{
                         id: 'category-select',
                       }}>
-                        { outgoings.map(outgoing => <MenuItem key={outgoing.id} value={outgoing.outgoingCategoryId}>{outgoing.outgoingCategoryId}</MenuItem>) }
+                        {this.getFilterCategories(outgoings).map(id => <MenuItem key={id}
+                                                                                       value={id}>{this.getCategoryById(categories, id)}</MenuItem>)}
                       </Select>
                     </Grid>
                     <Grid item xs={2} sm={1}>
@@ -158,6 +159,21 @@ class OutgoingListComponent extends Component {
         )}
       </Grid>
     );
+  }
+
+  getFilterCategories(outgoings) {
+    const list = [];
+    outgoings.forEach(function (outgoing) {
+      list.push(outgoing.outgoingCategoryId);
+    });
+    return [...new Set(list)];
+  }
+
+  getCategoryById(categories, id) {
+    const desc = categories.find(x => x.id === id);
+    if(desc){
+      return desc.description;
+    }
   }
 
   getMostFrequentCategory(arr) {

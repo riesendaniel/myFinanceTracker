@@ -75,8 +75,8 @@ class IncomeGrossPayComponent extends Component {
           <FormControl>
             <Input
               type="number"
-              value={grossPay}
-              onChange={event => this.setState({ grossPay: event.target.value })}
+              value={grossPay || ''}
+              onChange={event => this.setState({ grossPay: Number(event.target.value) })}
               endAdornment={
                 <InputAdornment position="end">{currency}</InputAdornment>
               }
