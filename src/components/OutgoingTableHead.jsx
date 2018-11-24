@@ -9,9 +9,47 @@ import {
 } from './ResponsiveTable';
 
 class OutgoingTableHead extends Component {
+  rows = [
+    {
+      id: 'outgoingTitle',
+      numeric: false,
+      disablePadding: false,
+      disableSort: false,
+      label: 'Titel',
+    },
+    {
+      id: 'outgoingDate',
+      numeric: false,
+      disablePadding: false,
+      disableSort: false,
+      label: 'Datum',
+    },
+    {
+      id: 'outgoingCategoryId',
+      numeric: false,
+      disablePadding: false,
+      disableSort: false,
+      label: 'Kategorie',
+    },
+    {
+      id: 'outgoingAmount',
+      numeric: false,
+      disablePadding: false,
+      disableSort: false,
+      label: 'Betrag',
+    },
+    {
+      id: 'buttons',
+      numeric: false,
+      disablePadding: false,
+      disableSort: true,
+      label: 'Aktion',
+    },
+  ];
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
+  createSortHandler = property => (event) => {
+    const { onRequestSort } = this.props;
+    onRequestSort(event, property);
   };
 
   render() {
@@ -20,15 +58,14 @@ class OutgoingTableHead extends Component {
     return (
       <ResponsiveTableHead breakpoint={breakpoint} show>
         <ResponsiveTableRow>
-          {rows.map(row => {
-            return (
-              <ResponsiveTableCell
-                key={row.id}
-                numeric={row.numeric}
-                padding={row.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === row.id ? order : false}
-              >
-                {!row.disableSort > 0 &&
+          {this.rows.map(row => (
+            <ResponsiveTableCell
+              key={row.id}
+              numeric={row.numeric}
+              padding={row.disablePadding ? 'none' : 'default'}
+              sortDirection={orderBy === row.id ? order : false}
+            >
+              {!row.disableSort > 0 && (
                 <Tooltip
                   title="Sort"
                   placement={row.numeric ? 'bottom-end' : 'bottom-start'}
@@ -42,54 +79,14 @@ class OutgoingTableHead extends Component {
                     {row.label}
                   </TableSortLabel>
                 </Tooltip>
-                }
-
-              </ResponsiveTableCell>
-
-            );
-          }, this)}
+              )}
+            </ResponsiveTableCell>
+          ), this)}
         </ResponsiveTableRow>
       </ResponsiveTableHead>
     );
   }
 }
-const rows = [
-  {
-    id: 'outgoingTitle',
-    numeric: false,
-    disablePadding: false,
-    disableSort: false,
-    label: 'Titel'
-  },
-  {
-    id: 'outgoingDate',
-    numeric: false,
-    disablePadding: false,
-    disableSort: false,
-    label: 'Datum'
-  },
-  {
-    id: 'outgoingCategoryId',
-    numeric: false,
-    disablePadding: false,
-    disableSort: false,
-    label: 'Kategorie'
-  },
-  {
-    id: 'outgoingAmount',
-    numeric: false,
-    disablePadding: false,
-    disableSort: false,
-    label: 'Betrag'
-  },
-  {
-    id: 'buttons',
-    numeric: false,
-    disablePadding: false,
-    disableSort: true,
-    label: 'Aktion'
-  },
-];
 
 OutgoingTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,

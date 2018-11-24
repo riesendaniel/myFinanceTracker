@@ -1,9 +1,7 @@
 // ------------------------------------
 // Selectors
 // ------------------------------------
-
 export const getCurrency = state => state.app.currency;
-
 export const getMenuState = state => state.app.menuState;
 
 

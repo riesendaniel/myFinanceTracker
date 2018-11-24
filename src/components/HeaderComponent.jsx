@@ -71,6 +71,7 @@ class HeaderComponent extends Component {
 
 HeaderComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -23,7 +24,6 @@ import {
 import Loading from './LoadingComponent';
 import IncomeGrossPay from './IncomeGrossPayComponent';
 import IncomeDeductions from './IncomeDeductionsComponent';
-import { Redirect } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
@@ -38,70 +38,58 @@ const styles = () => ({
   },
 });
 
-class IncomeComponent extends Component {
-  componentDidMount = async () => {
-    const {
-      doLoadIncome,
-    } = this.props;
-    if (auth.currentUser) {
-      await doLoadIncome();
-    }
+const IncomeComponent = (props) => {
+  const {
+    classes,
+    isLoadingIncome,
+    currency,
+    netPay,
+    width,
+  } = props;
+  const smDown = isWidthDown('sm', width);
+
+  if (!auth.currentUser) {
+    return <Redirect to="/signin/" />;
   }
 
-  render = () => {
-    const {
-      classes,
-      isLoadingIncome,
-      currency,
-      netPay,
-      width,
-    } = this.props;
-    const smDown = isWidthDown('sm', width);
-
-    if (!auth.currentUser) {
-      return <Redirect to="/signin/" />;
-    }
-
-    return (
-      <Grid container spacing={gridSpacing} justify="center">
-        <Hidden smDown>
-          <Grid item md={2} xl={3} />
-        </Hidden>
-        <Grid item xs={12} md={8} xl={6}>
-          <Typography variant="headline" component="h2">Einkommen</Typography>
-        </Grid>
-        <Hidden smDown>
-          <Grid item md={2} xl={3} />
-        </Hidden>
-        { isLoadingIncome ? <Loading /> : (
-          <Grid item xs={12} md={8} xl={6} container>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Grid container direction="row-reverse" justify="flex-end">
-                    <Grid item xs={12} className={classes.grossPay}>
-                      <IncomeGrossPay />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <IncomeDeductions />
-                    </Grid>
-                    <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.netPay}>
-                      <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
-                      <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        ) }
+  return (
+    <Grid container spacing={gridSpacing} justify="center">
+      <Hidden smDown>
+        <Grid item md={2} xl={3} />
+      </Hidden>
+      <Grid item xs={12} md={8} xl={6}>
+        <Typography variant="headline" component="h2">Einkommen</Typography>
       </Grid>
-    );
-  }
-}
+      <Hidden smDown>
+        <Grid item md={2} xl={3} />
+      </Hidden>
+      { isLoadingIncome ? <Loading /> : (
+        <Grid item xs={12} md={8} xl={6} container>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Grid container direction="row-reverse" justify="flex-end">
+                  <Grid item xs={12} className={classes.grossPay}>
+                    <IncomeGrossPay />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <IncomeDeductions />
+                  </Grid>
+                  <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.netPay}>
+                    <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
+                    <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      ) }
+    </Grid>
+  );
+};
 
 IncomeComponent.propTypes = {
-  doLoadIncome: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   currency: CustomPropTypes.currency.isRequired,

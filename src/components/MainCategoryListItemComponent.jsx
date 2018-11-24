@@ -53,7 +53,7 @@ class MainCategoryListItem extends Component {
     this.setState({ mainCategory });
   }
 
-  saveMainCategory = async () => {
+  saveMainCategory = () => {
     const {
       doAddMainCategory,
       doUpdateMainCategory,
@@ -62,19 +62,19 @@ class MainCategoryListItem extends Component {
       mainCategory,
     } = this.state;
     if (mainCategory.id !== 'new') {
-      await doUpdateMainCategory(mainCategory);
+      doUpdateMainCategory(mainCategory);
       this.setState({ editable: this.initialEditable });
     } else {
-      await doAddMainCategory(mainCategory);
+      doAddMainCategory(mainCategory);
       this.setState({ mainCategory: this.initialMainCategory, editable: this.initialEditable });
     }
   }
 
-  deleteMainCategory = async (id) => {
+  deleteMainCategory = (id) => {
     const {
       doDeleteMainCategory,
     } = this.props;
-    await doDeleteMainCategory(id);
+    doDeleteMainCategory(id);
   }
 
   render = () => {
