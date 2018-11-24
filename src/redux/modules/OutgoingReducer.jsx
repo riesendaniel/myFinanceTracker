@@ -7,7 +7,7 @@ import {
 } from '../database';
 import history from '../../helper/history';
 
-const collection = 'outgoings';
+const collection = 'outgoing';
 
 // ------------------------------------
 // Selectors
