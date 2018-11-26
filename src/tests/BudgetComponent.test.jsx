@@ -2,7 +2,7 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { BottomNavigation } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { BudgetComponent } from '../components/BudgetComponent';
 import BudgetList from '../components/BudgetListComponent';
 import BudgetSummary from '../components/BudgetSummaryComponent';
@@ -20,8 +20,6 @@ describe('BudgetComponent', () => {
       monthlyBudgetSum: null,
     };
     const props = {
-      doLoadBudget: jest.fn(),
-      doLoadMainCategories: jest.fn(),
       history: { push: jest.fn() },
       classes: {},
       isLoadingBudget: false,
@@ -82,7 +80,7 @@ describe('BudgetComponent', () => {
     expect(wrapper.find(BudgetSummary).exists()).toBe(true);
   });
 
-  it('should render the bottom navigation', () => {
-    expect(wrapper.find(BottomNavigation).exists()).toBe(true);
+  it('should render the fab button', () => {
+    expect(wrapper.find(Button).exists()).toBe(true);
   });
 });

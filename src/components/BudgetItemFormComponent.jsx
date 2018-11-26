@@ -24,10 +24,9 @@ import {
   getCurrency,
 } from '../redux/modules/AppReducer';
 import {
-  actions as budgetActions,
+  actions,
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as mainCategoryActions,
   getIsLoading, getMainCategories,
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
@@ -51,7 +50,6 @@ class BudgetItemFormComponent extends Component {
   componentDidMount = () => {
     const {
       location,
-      doLoadMainCategories,
     } = this.props;
     if (location.state && location.state.item) {
       const { item } = location.state;
@@ -66,7 +64,6 @@ class BudgetItemFormComponent extends Component {
         },
       });
     }
-    doLoadMainCategories();
   }
 
   handleSubmit = async (e) => {
@@ -251,7 +248,6 @@ class BudgetItemFormComponent extends Component {
 BudgetItemFormComponent.propTypes = {
   location: CustomPropTypes.location.isRequired,
   isLoadingCategories: PropTypes.bool.isRequired,
-  doLoadMainCategories: PropTypes.func.isRequired,
   doUpdateBudgetEntry: PropTypes.func.isRequired,
   doAddBudgetEntry: PropTypes.func.isRequired,
   mainCategories: PropTypes.arrayOf(CustomPropTypes.mainCategory).isRequired,
@@ -263,11 +259,6 @@ const mapStateToProps = state => ({
   mainCategories: getMainCategories(state),
   currency: getCurrency(state),
 });
-
-const actions = {
-  ...budgetActions,
-  ...mainCategoryActions,
-};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

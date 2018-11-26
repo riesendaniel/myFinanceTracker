@@ -5,7 +5,6 @@ const secondaryColor = '#344955';
 
 const theme = createMuiTheme({
   palette: {
-    background: '#E5E5E5',
     primary: {
       main: primaryColor,
       contrastText: '#000000',

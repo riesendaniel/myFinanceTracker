@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import 'moment/locale/de';
 import {
@@ -36,19 +35,16 @@ import {
   getCurrency,
 } from '../redux/modules/AppReducer';
 import {
-  actions as budgetActions,
   getIsLoading as getBudgetIsLoading,
   getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as outgoingActions,
   getIsLoading as getOutgoingIsLoading,
   getOutgoings,
   getCurrentMonthsOutgoingSum, getCurrentMonthsOutgoingsByCategory,
   getLastTwelveMonthsOutgoingSum,
 } from '../redux/modules/OutgoingReducer';
 import {
-  actions as incomeActions,
   getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
@@ -63,19 +59,6 @@ import { gridSpacing } from '../theme';
 moment.locale('de');
 
 class DashboardComponent extends Component {
-  componentDidMount = async () => {
-    const {
-      doLoadBudget,
-      doLoadIncome,
-      doLoadOutgoings,
-    } = this.props;
-    if (auth.currentUser) {
-      await doLoadBudget();
-      await doLoadIncome();
-      await doLoadOutgoings();
-    }
-  }
-
   handleAddOutgoing = () => {
     history.push('/outgoing/edit');
   };
@@ -114,7 +97,7 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
-    const name = auth.currentUser ?  auth.currentUser.displayName : '';
+    const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
 
@@ -122,7 +105,7 @@ class DashboardComponent extends Component {
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
+          <Typography variant="headline" component="h2">{`Übersicht von ${name}`}</Typography>
         </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
           <Grid item xs={12} xl={10} container spacing={gridSpacing}>
@@ -361,17 +344,8 @@ const mapStateToProps = state => ({
   lastTwelveMonthsOutgoingSum: getLastTwelveMonthsOutgoingSum(state),
 });
 
-const actions = {
-  ...budgetActions,
-  ...incomeActions,
-  ...outgoingActions,
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
-
 const componentWithWidth = withWidth()(DashboardComponent);
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(componentWithWidth);

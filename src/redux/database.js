@@ -1,222 +1,48 @@
 import { auth, database } from '../config/firebase';
+import ErrorLogger from '../helper/ErrorLogger';
 
-// ------------------------------------
-// Budget
-// ------------------------------------
-export function getBudgetValues() {
-  return new Promise((resolve, reject) => {
-    var budgetList = [];
-    database.collection("budget").where("userId", "==", auth.currentUser.uid).get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          var key = doc.id;
-          var curBudget = doc.data();
-          curBudget.id = key;
-          budgetList.push(curBudget);
-        });
-        resolve(budgetList);
-      })
-      .catch(function(error) {
-        console.log("Error getting documents: ", error);
-        reject(error);
-      });
-  });
-}
-
-export function addNewBudget(budget) {
-  return database.collection('budget').add({
-    mainCategoryId: budget.mainCategoryId,
-    category: budget.category,
-    period: budget.period,
-    color: budget.color,
-    monthly: budget.monthly,
-    yearly: budget.yearly,
-    userId: auth.currentUser.uid,
-  });
-}
-
-export const updateBudget = (budget) => {
-  return database.collection('budget')
-    .doc(budget.id)
-    .update({
-      mainCategoryId: budget.mainCategoryId,
-      category: budget.category,
-      period: budget.period,
-      color: budget.color,
-      monthly: budget.monthly,
-      yearly: budget.yearly,
-    });
+const handleError = (error) => {
+  ErrorLogger.log(error, 'Fehler beim Laden der Daten aus der Datenbank.');
 };
 
-export const deleteBudget = (id) => {
-  return database.collection("budget")
-    .doc(id)
-    .delete();
+export const snapshotWatcher = async (collection, handleNext) => {
+  try {
+    database.collection(collection).where('userId', '==', auth.currentUser.uid)
+      .onSnapshot(handleNext, handleError);
+  } catch (error) {
+    ErrorLogger.log(error, `Fehler beim Laden der Sammlung ${collection} von der Datenbank.`);
+  }
 };
 
-// ------------------------------------
-// Income
-// ------------------------------------
-export function getIncomeValues() {
-  return new Promise((resolve, reject) => {
-    let data;
-    database.collection("income").where("userId", "==", auth.currentUser.uid).get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          data = doc.data();
-          data.id = doc.id;
-        });
-      })
-      .catch(function(error) {
-        console.log("Error getting documents: ", error);
-        reject(error);
-      });
-
-    var deductionList = [];
-    database.collection("deductions").where("userId", "==", auth.currentUser.uid).get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          var key = doc.id;
-          var curDecuction = doc.data();
-          curDecuction.id = key;
-          deductionList.push(curDecuction);
-        });
-        data.deductions = deductionList;
-        resolve(data);
-      })
-      .catch(function(error) {
-        console.log("Error getting documents: ", error);
-        reject(error);
-      });
-  });
-}
-
-export const updateDeduction = (deduction) => {
-  return database.collection('deductions')
-    .doc(deduction.id)
-    .update({
-      description: deduction.description,
-      type: deduction.type,
-      value: deduction.value,
-    });
+export const addDocument = async (collection, data) => {
+  try {
+    const tmpData = data;
+    delete tmpData.id;
+    await database.collection(collection)
+      .add({ ...tmpData, userId: auth.currentUser.uid });
+    return true;
+  } catch (error) {
+    ErrorLogger.log(error, `Fehler beim Speichern des Dokuments in der Sammlung ${collection}.`);
+    return false;
+  }
 };
 
-export function addNewDeduction(deduction) {
-  return database.collection('deductions').add({
-    description: deduction.description,
-    type: deduction.type,
-    value: deduction.value,
-    userId: auth.currentUser.uid,
-  });
-}
-
-export const deleteDeduction = (id) => {
-  return database.collection("deductions")
-    .doc(id)
-    .delete();
+export const updateDocument = async (collection, data) => {
+  try {
+    await database.collection(collection).doc(data.id).update(data);
+    return true;
+  } catch (error) {
+    ErrorLogger.log(error, `Fehler beim Anpassen des Dokuments in der Sammlung ${collection}.`);
+    return false;
+  }
 };
 
-export const updateGrossPay = (id, grossPay) => {
-  return database.collection('income')
-    .doc(id)
-    .update({
-      grossPay: grossPay,
-      userId: auth.currentUser.uid,
-    });
+export const deleteDocument = async (collection, id) => {
+  try {
+    await database.collection(collection).doc(id).delete();
+    return true;
+  } catch (error) {
+    ErrorLogger.log(error, `Fehler beim Löschen des Dokuments in der Sammlung ${collection}.`);
+    return false;
+  }
 };
-
-// ------------------------------------
-// Outgoing
-// ------------------------------------
-export function getOutgoingValues() {
-  return new Promise((resolve, reject) => {
-    var outgoingList = [];
-    database.collection("outgoing").where("userId", "==", auth.currentUser.uid).get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-          var key = doc.id;
-          var curOutgoing = doc.data();
-          curOutgoing.id = key;
-          outgoingList.push(curOutgoing);
-        });
-        resolve(outgoingList);
-      })
-      .catch(function(error) {
-        console.log("Error getting documents: ", error);
-        reject(error);
-      });
-  });
-}
-
-export function addNewOutgoing(outgoing) {
-  return database.collection('outgoing').add({
-    outgoingDate: outgoing.outgoingDate,
-    outgoingCategoryId: outgoing.outgoingCategoryId,
-    outgoingTitle: outgoing.outgoingTitle,
-    outgoingAmount: outgoing.outgoingAmount,
-    userId: auth.currentUser.uid,
-  });
-}
-
-export const updateOutgoing = (outgoing) => {
-  return database.collection('outgoing')
-    .doc(outgoing.id)
-    .update({
-      outgoingDate: outgoing.outgoingDate,
-      outgoingCategoryId: outgoing.outgoingCategoryId,
-      outgoingTitle: outgoing.outgoingTitle,
-      outgoingAmount: outgoing.outgoingAmount,
-    });
-};
-
-export const deleteOutgoing = (id) => {
-  return database.collection("outgoing")
-    .doc(id)
-    .delete();
-};
-
-// ------------------------------------
-// Main Categories
-// ------------------------------------
-export function getCategoryValues() {
-  return new Promise((resolve, reject) => {
-    var categories = [];
-    database.collection("categories").where("userId", "==", auth.currentUser.uid).get()
-      .then(function (querySnapshot) {
-        querySnapshot.forEach(function (doc) {
-          var key = doc.id;
-          var category = doc.data();
-          category.id = key;
-          categories.push(category);
-        });
-        resolve(categories);
-      })
-      .catch(function (error) {
-        console.log("Error getting documents: ", error);
-        reject(error);
-      });
-  });
-}
-
-export function addNewCategory(category) {
-  return database.collection('categories').add({
-    description: category.description,
-    userId: auth.currentUser.uid,
-  });
-}
-
-export const updateCategory = (category) => {
-  return database.collection('categories')
-    .doc(category.id)
-    .update({
-      description: category.description,
-    });
-};
-
-export const deleteCategory = (id) => {
-  return database.collection("categories")
-    .doc(id)
-    .delete();
-};
-
-

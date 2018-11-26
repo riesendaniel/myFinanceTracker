@@ -28,9 +28,7 @@ class MainCategoryListComponent extends Component {
   componentDidMount = async () => {
     const {
       open,
-      doLoadMainCategories,
     } = this.props;
-    await doLoadMainCategories();
     this.setState({ open });
   }
 
@@ -85,7 +83,6 @@ class MainCategoryListComponent extends Component {
 }
 
 MainCategoryListComponent.propTypes = {
-  doLoadMainCategories: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,

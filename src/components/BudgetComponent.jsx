@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import {
   Button,
@@ -11,11 +10,9 @@ import AddIcon from '@material-ui/icons/Add';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
-  actions as budgetActions,
   getIsLoading as getBudgetIsLoading, getBudget,
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as mainCategoryActions,
   getIsLoading as getMainCategoryIsLoading, getMainCategories,
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
@@ -26,17 +23,6 @@ import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 export class BudgetComponent extends Component {
-  componentDidMount = async () => {
-    const {
-      doLoadMainCategories,
-      doLoadBudget,
-    } = this.props;
-    if (auth.currentUser) {
-      await doLoadMainCategories();
-      await doLoadBudget();
-    }
-  }
-
   handleAdd = () => {
     const { history } = this.props;
     history.push('/budget/edit');
@@ -99,8 +85,6 @@ export class BudgetComponent extends Component {
 }
 
 BudgetComponent.propTypes = {
-  doLoadMainCategories: PropTypes.func.isRequired,
-  doLoadBudget: PropTypes.func.isRequired,
   history: CustomPropTypes.history.isRequired,
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingMainCategory: PropTypes.bool.isRequired,
@@ -115,14 +99,6 @@ const mapStateToProps = state => ({
   budget: getBudget(state),
 });
 
-const actions = {
-  ...budgetActions,
-  ...mainCategoryActions,
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(BudgetComponent);

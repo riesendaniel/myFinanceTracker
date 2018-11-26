@@ -21,9 +21,9 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
-import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
+import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
-import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
+import { getCategories } from '../redux/modules/BudgetReducer';
 import { gridSpacing } from '../theme';
 
 class NewOutgoingComponent extends Component {
@@ -63,7 +63,10 @@ class NewOutgoingComponent extends Component {
     }
     if (location.state && location.state.mostFrequentCategory) {
       this.setState({
-        outgoing: { ...this.state.outgoing, outgoingCategoryId: location.state.mostFrequentCategory },
+        outgoing: {
+          ...this.state.outgoing,
+          outgoingCategoryId: location.state.mostFrequentCategory,
+        },
       });
     }
   };
@@ -76,19 +79,15 @@ class NewOutgoingComponent extends Component {
 
   addOutgoing = (event) => {
     event.preventDefault();
-    try {
-      const {
-        doUpdateOutgoing,
-        doAddOutgoing,
-      } = this.props;
-      const { outgoing } = this.state;
-      if (outgoing.id) {
-        doUpdateOutgoing(outgoing);
-      } else {
-        doAddOutgoing(outgoing);
-      }
-    } catch (e) {
-      console.error(e);
+    const {
+      doUpdateOutgoing,
+      doAddOutgoing,
+    } = this.props;
+    const { outgoing } = this.state;
+    if (outgoing.id) {
+      doUpdateOutgoing(outgoing);
+    } else {
+      doAddOutgoing(outgoing);
     }
   };
 
@@ -218,11 +217,6 @@ const mapStateToProps = state => ({
   currency: getCurrency(state),
   categories: getCategories(state),
 });
-
-const actions = {
-  ...outgoingActions,
-  ...budgetActions,
-};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

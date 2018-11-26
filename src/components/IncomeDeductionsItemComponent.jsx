@@ -51,6 +51,7 @@ class IncomeDeductionsItemComponent extends Component {
   state = {
     deduction: {},
     editable: false,
+    focus: null,
   }
 
   componentDidMount = () => {
@@ -60,19 +61,26 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.props;
     this.initialDeduction = { ...deduction };
     this.initialEditable = editable;
-    this.setState({ deduction, editable });
+    let focus = null;
+    if (editable) {
+      focus = 'description';
+    }
+    this.setState({ deduction, editable, focus });
   }
 
   handleInputChange = (event) => {
     const { deduction } = this.state;
-    let { value } = event.target;
-    if (isNaN(value)) {
-      value = String(value);
+    const { name, value } = event.target;
+    event.preventDefault();
+    const newDeduction = { ...deduction };
+    if (value.length > 0 && isNaN(value)) {
+      newDeduction[name] = String(value);
+    } else if (value.length > 0 && !isNaN(value)) {
+      newDeduction[name] = Number(value);
     } else {
-      value = Number(value);
+      newDeduction[name] = value;
     }
-    deduction[event.target.name] = value;
-    this.setState({ deduction });
+    this.setState({ deduction: newDeduction, focus: name });
   }
 
   saveDeduction = async () => {
@@ -85,10 +93,14 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.state;
     if (deduction.id !== 'new') {
       await doUpdateDeduction(deduction);
-      this.setState({ editable: this.initialEditable });
+      this.setState({ editable: this.initialEditable, focus: null });
     } else {
       await doAddDeduction(deduction);
-      this.setState({ deduction: this.initialDeduction, editable: this.initialEditable });
+      this.setState({
+        deduction: this.initialDeduction,
+        editable: this.initialEditable,
+        focus: null,
+      });
     }
   }
 
@@ -103,6 +115,7 @@ class IncomeDeductionsItemComponent extends Component {
     const {
       deduction,
       editable,
+      focus,
     } = this.state;
     const {
       breakpoint,
@@ -119,7 +132,7 @@ class IncomeDeductionsItemComponent extends Component {
           <FormControl>
             {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
-              id="description"
+              autoFocus={focus === 'description'}
               name="description"
               type="text"
               value={deduction.description}
@@ -136,6 +149,7 @@ class IncomeDeductionsItemComponent extends Component {
         >
           <FormControl className={classes.editAmount}>
             <Input
+              autoFocus={focus === 'value'}
               className={classes.valueInput}
               name="value"
               type="number"
@@ -149,6 +163,7 @@ class IncomeDeductionsItemComponent extends Component {
             />
             { editable && (
               <Select
+                autoFocus={focus === 'type'}
                 className={classes.typeInput}
                 name="type"
                 value={deduction.type}
@@ -171,6 +186,7 @@ class IncomeDeductionsItemComponent extends Component {
             <IconButton onClick={() => this.setState({
               deduction: { ...this.initialDeduction },
               editable: this.initialEditable,
+              focus: null,
             })}
             >
               <CancelIcon />

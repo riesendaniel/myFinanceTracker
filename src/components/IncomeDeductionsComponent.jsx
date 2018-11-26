@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTable,
@@ -16,7 +17,6 @@ import {
   getDeductions, getTotalDeductions,
 } from '../redux/modules/IncomeReducer';
 import IncomDeductionsItem from './IncomeDeductionsItemComponent';
-import { Typography } from '@material-ui/core';
 
 const IncomeDeductionsComponent = (props) => {
   const emptyDeduction = {
