@@ -33,6 +33,8 @@ import {
 } from './ResponsiveTable';
 import {
   getCurrency,
+  getUserRole,
+  getIsLoading as getUserRightsIsLoading,
 } from '../redux/modules/AppReducer';
 import {
   getIsLoading as getBudgetIsLoading,
@@ -83,7 +85,9 @@ class DashboardComponent extends Component {
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
+      isLoadingUserRights,
       budget,
+      userRole,
       currency,
       monthlyBudgetSum,
       netPay,
@@ -100,6 +104,7 @@ class DashboardComponent extends Component {
     const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
+    const isAdmin = 'admin' === userRole;
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
@@ -107,7 +112,8 @@ class DashboardComponent extends Component {
         <Grid item xs={12} xl={10}>
           <Typography variant="headline" component="h2">{`Übersicht von ${name}`}</Typography>
         </Grid>
-        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
+        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing || isLoadingUserRights ? <Loading /> : (
+
           <Grid item xs={12} xl={10} container spacing={gridSpacing}>
             <Grid container spacing={gridSpacing} item>
               <DashboardInfoComponent
@@ -139,6 +145,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
+            { isAdmin ? 'Werde Admin' : (
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
@@ -298,6 +305,7 @@ class DashboardComponent extends Component {
                 )}
               />
             </Grid>
+            )}
           </Grid>
         ) }
       </Grid>
@@ -309,6 +317,7 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
+  isLoadingUserRights: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
@@ -334,7 +343,9 @@ const mapStateToProps = state => ({
   isLoadingBudget: getBudgetIsLoading(state),
   isLoadingIncome: getIncomeIsLoading(state),
   isLoadingOutgoing: getOutgoingIsLoading(state),
+  isLoadingUserRights: getUserRightsIsLoading(state),
   budget: getBudget(state),
+  userRole: getUserRole(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),
   netPay: getNetPay(state),

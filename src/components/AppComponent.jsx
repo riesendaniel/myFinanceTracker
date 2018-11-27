@@ -70,12 +70,14 @@ class AppComponent extends Component {
 
   initializeSnapshotWatcher = () => {
     const {
+      initializeAppWatcher,
       initializeMainCategoryWatcher,
       initializeBudgetWatcher,
       initializeGrossPayWatcher,
       initializeDeductionsWatcher,
       initializeOutgoingWatcher,
     } = this.props;
+    initializeAppWatcher();
     initializeMainCategoryWatcher();
     initializeBudgetWatcher();
     initializeGrossPayWatcher();
@@ -131,6 +133,7 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
   initializeBudgetWatcher: PropTypes.func.isRequired,
+  initializeAppWatcher: PropTypes.func.isRequired,
   initializeDeductionsWatcher: PropTypes.func.isRequired,
   initializeGrossPayWatcher: PropTypes.func.isRequired,
   initializeMainCategoryWatcher: PropTypes.func.isRequired,
