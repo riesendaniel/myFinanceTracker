@@ -1,15 +1,20 @@
 import history from '../../helper/history';
+import {
+  snapshotWatcher,
+  addDocument,
+  updateDocument,
+  deleteDocument,
+} from '../database';
+
+const collection = 'budget';
 
 // ------------------------------------
 // Selectors
 // ------------------------------------
 
 export const getIsLoading = state => state.budget.isLoading;
-
 export const getBudget = state => state.budget.budget;
-
 export const getCategories = state => state.budget.categories;
-
 export const getMonthlyBudgetSum = state => state.budget.monthlyBudgetSum;
 
 
@@ -20,9 +25,6 @@ export const BUDGET_IS_LOADING = 'BUDGET_IS_LOADING';
 export const RECEIVE_BUDGET = 'RECEIVE_BUDGET';
 export const LOAD_CATEGORIES = 'LOAD_CATEGORIES';
 export const CALC_MONTHLY_BUDGET_SUM = 'CALC_MONTHLY_BUDGET_SUM';
-export const ADD_BUDGET_ENTRY = 'ADD_BUDGET_ENTRY';
-export const UPDATE_BUDGET_ENTRY = 'UPDATE_BUDGET_ENTRY';
-export const DELETE_BUDGET_ENTRY = 'DELETE_BUDGET_ENTRY';
 
 
 // ------------------------------------
@@ -47,26 +49,10 @@ const calcMonthlyBudgetSum = budget => ({
   budget,
 });
 
-const addBudgetEntry = entry => ({
-  type: ADD_BUDGET_ENTRY,
-  entry,
-});
-
-const updateBudgetEntry = entry => ({
-  type: UPDATE_BUDGET_ENTRY,
-  entry,
-});
-
-const deleteBudgetEntry = id => ({
-  type: DELETE_BUDGET_ENTRY,
-  id,
-});
-
 
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
-
 const updateCalculatedElements = (dispatch, getState) => {
   const {
     budget,
@@ -75,40 +61,49 @@ const updateCalculatedElements = (dispatch, getState) => {
   dispatch(loadCategories());
 };
 
-const doLoadBudget = () => (dispatch, getState) => {
+const doLoadBudget = snapshot => (dispatch, getState) => {
   dispatch(isLoading(true));
-  setTimeout(() => {
-    const { budget } = getState().budget;
+  if (snapshot) {
+    const budget = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     dispatch(receiveBudget(budget));
     updateCalculatedElements(dispatch, getState);
-    dispatch(isLoading(false));
-  }, 1000);
+  }
+  dispatch(isLoading(false));
 };
 
-export const doAddBudgetEntry = entry => (dispatch, getState) => {
-  dispatch(addBudgetEntry(entry));
-  updateCalculatedElements(dispatch, getState);
+const initializeBudgetWatcher = () => (dispatch) => {
+  snapshotWatcher(collection, snapshot => dispatch(doLoadBudget(snapshot)));
+};
+
+const doAddBudgetEntry = entry => (dispatch) => {
+  dispatch(isLoading(true));
+  addDocument(collection, entry);
+  dispatch(isLoading(false));
   history.push('/budget');
 };
 
-export const doUpdateBudgetEntry = entry => (dispatch, getState) => {
-  dispatch(updateBudgetEntry(entry));
-  updateCalculatedElements(dispatch, getState);
+const doUpdateBudgetEntry = entry => (dispatch) => {
+  dispatch(isLoading(true));
+  updateDocument(collection, entry);
+  dispatch(isLoading(false));
   history.push('/budget');
 };
 
-export const doDeleteBudgetEntry = id => (dispatch, getState) => {
-  dispatch(deleteBudgetEntry(id));
-  updateCalculatedElements(dispatch, getState);
+const doDeleteBudgetEntry = id => (dispatch) => {
+  dispatch(isLoading(true));
+  deleteDocument(collection, id);
+  dispatch(isLoading(false));
 };
-
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 
 export const actions = {
-  doLoadBudget,
+  initializeBudgetWatcher,
   doAddBudgetEntry,
   doUpdateBudgetEntry,
   doDeleteBudgetEntry,
@@ -116,9 +111,6 @@ export const actions = {
   receiveBudget,
   loadCategories,
   calcMonthlyBudgetSum,
-  addBudgetEntry,
-  updateBudgetEntry,
-  deleteBudgetEntry,
 };
 
 
@@ -151,18 +143,6 @@ const ACTION_HANDLERS = {
     ), 0);
     return { ...state, monthlyBudgetSum };
   },
-  [ADD_BUDGET_ENTRY]: (state, action) => {
-    const budget = [...state.budget, action.entry];
-    return { ...state, budget };
-  },
-  [UPDATE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.map(item => (item.id !== action.entry.id ? item : action.entry));
-    return { ...state, budget };
-  },
-  [DELETE_BUDGET_ENTRY]: (state, action) => {
-    const budget = state.budget.filter(entry => entry.id !== action.id);
-    return { ...state, budget };
-  },
 };
 
 // ------------------------------------
@@ -171,44 +151,7 @@ const ACTION_HANDLERS = {
 const initialState = {
   isLoading: false,
   categories: [],
-  budget: [
-    {
-      id: 1,
-      mainCategoryId: 2,
-      category: 'Unterhalt',
-      color: '#FF0000',
-      period: 'monthly',
-      monthly: 100,
-      yearly: 1200,
-    },
-    {
-      id: 2,
-      mainCategoryId: 2,
-      category: 'Essen & Getränke',
-      color: '#FF9900',
-      period: 'monthly',
-      monthly: 250,
-      yearly: 3000,
-    },
-    {
-      id: 3,
-      mainCategoryId: 9,
-      category: 'öffentlicher Verkehr',
-      color: '#FF0099',
-      period: 'yearly',
-      monthly: 200,
-      yearly: 2400,
-    },
-    {
-      id: 4,
-      mainCategoryId: 5,
-      category: 'Tanken',
-      color: '#FF9999',
-      period: 'monthly',
-      monthly: 100,
-      yearly: 1200,
-    },
-  ],
+  budget: [],
   monthlyBudgetSum: null,
 };
 

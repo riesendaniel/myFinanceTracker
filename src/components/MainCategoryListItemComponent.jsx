@@ -1,20 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   IconButton,
-  TableRow, TableCell,
   Input, InputLabel,
+  withStyles,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
+import {
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   actions,
 } from '../redux/modules/MainCategoryReducer';
+
+const styles = () => ({
+  actions: {
+    width: '100px',
+  },
+});
 
 class MainCategoryListItem extends Component {
   state = {
@@ -33,13 +46,14 @@ class MainCategoryListItem extends Component {
   }
 
   handleInputChange = (event) => {
+    event.preventDefault();
     const { mainCategory } = this.state;
     const { value } = event.target;
     mainCategory[event.target.name] = value;
     this.setState({ mainCategory });
   }
 
-  saveMainCategory = async () => {
+  saveMainCategory = () => {
     const {
       doAddMainCategory,
       doUpdateMainCategory,
@@ -47,20 +61,20 @@ class MainCategoryListItem extends Component {
     const {
       mainCategory,
     } = this.state;
-    if (mainCategory.id) {
-      await doUpdateMainCategory(mainCategory);
+    if (mainCategory.id !== 'new') {
+      doUpdateMainCategory(mainCategory);
       this.setState({ editable: this.initialEditable });
     } else {
-      await doAddMainCategory(mainCategory);
+      doAddMainCategory(mainCategory);
       this.setState({ mainCategory: this.initialMainCategory, editable: this.initialEditable });
     }
   }
 
-  deleteMainCategory = async (id) => {
+  deleteMainCategory = (id) => {
     const {
       doDeleteMainCategory,
     } = this.props;
-    await doDeleteMainCategory(id);
+    doDeleteMainCategory(id);
   }
 
   render = () => {
@@ -68,13 +82,19 @@ class MainCategoryListItem extends Component {
       mainCategory,
       editable,
     } = this.state;
+    const {
+      breakpoint,
+      classes,
+      width,
+    } = this.props;
+    const breakpointUp = isWidthUp(breakpoint, width, false);
     return (
-      <TableRow key={mainCategory.id}>
-        <TableCell>
-          <FormControl>
+      <ResponsiveTableRow breakpoint={breakpoint}>
+        <ResponsiveTableCell>
+          <FormControl fullWidth={editable ? true : undefined}>
             {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
-              id="description"
+              autoFocus={editable ? true : undefined}
               name="description"
               type="text"
               value={mainCategory.description}
@@ -83,9 +103,12 @@ class MainCategoryListItem extends Component {
               readOnly={!editable}
             />
           </FormControl>
-        </TableCell>
+        </ResponsiveTableCell>
         { editable ? (
-          <TableCell>
+          <ResponsiveTableCell
+            className={breakpointUp ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={this.saveMainCategory}>
               <SaveIcon />
             </IconButton>
@@ -96,18 +119,21 @@ class MainCategoryListItem extends Component {
             >
               <CancelIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         ) : (
-          <TableCell>
+          <ResponsiveTableCell
+            className={breakpointUp ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={() => this.setState({ editable: true })}>
               <EditIcon />
             </IconButton>
             <IconButton onClick={() => this.deleteMainCategory(mainCategory.id)}>
               <DeleteOutlineIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         )}
-      </TableRow>
+      </ResponsiveTableRow>
     );
   }
 }
@@ -116,11 +142,11 @@ MainCategoryListItem.propTypes = {
   doAddMainCategory: PropTypes.func.isRequired,
   doUpdateMainCategory: PropTypes.func.isRequired,
   doDeleteMainCategory: PropTypes.func.isRequired,
-  mainCategory: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  mainCategory: CustomPropTypes.mainCategory.isRequired,
   editable: PropTypes.bool,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 MainCategoryListItem.defaultProps = {
@@ -132,7 +158,10 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(MainCategoryListItem);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(MainCategoryListItem);
+)(componentWithStyles);

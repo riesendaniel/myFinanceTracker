@@ -1,14 +1,20 @@
+import {
+  snapshotWatcher,
+  addDocument,
+  updateDocument,
+  deleteDocument,
+} from '../database';
+
+const incomeCollection = 'income';
+const deductionsCollection = 'deductions';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
 export const getIsLoading = state => state.income.isLoading;
-
 export const getGrossPay = state => state.income.grossPay;
-
 export const getDeductions = state => state.income.deductions;
-
 export const getTotalDeductions = state => state.income.totalDeductions;
-
 export const getNetPay = state => state.income.netPay;
 
 
@@ -16,13 +22,10 @@ export const getNetPay = state => state.income.netPay;
 // Action Types
 // ------------------------------------
 const INCOME_IS_LOADING = 'INCOME_IS_LOADING';
-const RECEIVE_INCOME = 'RECEIVE_INCOME';
+const RECEIVE_GROSS_PAY = 'RECEIVE_GROSS_PAY';
+const RECEIVE_DEDUCTIONS = 'RECEIVE_DEDUCTIONS';
 const CALC_TOTAL_DEDUCTIONS = 'CALC_TOTAL_DEDUCTIONS';
 const CALC_NET_PAY = 'CALC_NET_PAY';
-const UPDATE_GROSS_PAY = 'UPDATE_GROSS_PAY';
-const ADD_DEDUCTION = 'ADD_DEDUCTION';
-const UPDATE_DEDUCTION = 'UPDATE_DEDUCTION';
-const DELETE_DEDUCTION = 'DELETE_DEDUCTION';
 
 
 // ------------------------------------
@@ -33,9 +36,14 @@ const isLoading = status => ({
   status,
 });
 
-const receiveIncome = income => ({
-  type: RECEIVE_INCOME,
+const receiveGrossPay = income => ({
+  type: RECEIVE_GROSS_PAY,
   income,
+});
+
+const receiveDeductions = deductions => ({
+  type: RECEIVE_DEDUCTIONS,
+  deductions,
 });
 
 const calcTotalDeductions = income => ({
@@ -46,26 +54,6 @@ const calcTotalDeductions = income => ({
 const calcNetPay = income => ({
   type: CALC_NET_PAY,
   income,
-});
-
-const updateGrossPay = grossPay => ({
-  type: UPDATE_GROSS_PAY,
-  grossPay,
-});
-
-const addDeduction = deduction => ({
-  type: ADD_DEDUCTION,
-  deduction,
-});
-
-const updateDeduction = deduction => ({
-  type: UPDATE_DEDUCTION,
-  deduction,
-});
-
-const deleteDeduction = id => ({
-  type: DELETE_DEDUCTION,
-  id,
 });
 
 
@@ -82,37 +70,62 @@ const updateCalculatedElements = (dispatch, getState) => {
   dispatch(calcNetPay({ grossPay, totalDeductions }));
 };
 
-const doLoadIncome = () => (dispatch, getState) => {
+const doLoadGrossPay = snapshot => (dispatch, getState) => {
   dispatch(isLoading(true));
-  setTimeout(() => {
-    const {
-      grossPay,
-      deductions,
-    } = getState().income;
-    dispatch(receiveIncome({ grossPay, deductions }));
+  if (snapshot) {
+    const grossPay = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    dispatch(receiveGrossPay(grossPay));
     updateCalculatedElements(dispatch, getState);
-    dispatch(isLoading(false));
-  }, 1000);
+  }
+  dispatch(isLoading(false));
 };
 
-const doUpdateGrossPay = grossPay => (dispatch, getState) => {
-  dispatch(updateGrossPay(grossPay));
-  updateCalculatedElements(dispatch, getState);
+const initializeGrossPayWatcher = () => (dispatch) => {
+  snapshotWatcher(incomeCollection, snapshot => dispatch(doLoadGrossPay(snapshot)));
 };
 
-const doAddDeduction = deduction => (dispatch, getState) => {
-  dispatch(addDeduction(deduction));
-  updateCalculatedElements(dispatch, getState);
+const doLoadDeductions = snapshot => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  if (snapshot) {
+    const deductions = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    dispatch(receiveDeductions(deductions));
+    updateCalculatedElements(dispatch, getState);
+  }
+  dispatch(isLoading(false));
 };
 
-const doUpdateDeduction = deduction => (dispatch, getState) => {
-  dispatch(updateDeduction(deduction));
-  updateCalculatedElements(dispatch, getState);
+const initializeDeductionsWatcher = () => (dispatch) => {
+  snapshotWatcher(deductionsCollection, snapshot => dispatch(doLoadDeductions(snapshot)));
 };
 
-const doDeleteDeduction = id => (dispatch, getState) => {
-  dispatch(deleteDeduction(id));
-  updateCalculatedElements(dispatch, getState);
+const doUpdateGrossPay = grossPay => (dispatch) => {
+  dispatch(isLoading(true));
+  addDocument(incomeCollection, grossPay);
+  dispatch(isLoading(false));
+};
+
+const doAddDeduction = deduction => (dispatch) => {
+  dispatch(isLoading(true));
+  addDocument(deductionsCollection, deduction);
+  dispatch(isLoading(false));
+};
+
+const doUpdateDeduction = deduction => (dispatch) => {
+  dispatch(isLoading(true));
+  updateDocument(deductionsCollection, deduction);
+  dispatch(isLoading(false));
+};
+
+const doDeleteDeduction = id => (dispatch) => {
+  dispatch(isLoading(true));
+  deleteDocument(deductionsCollection, id);
+  dispatch(isLoading(false));
 };
 
 
@@ -120,7 +133,8 @@ const doDeleteDeduction = id => (dispatch, getState) => {
 // Actions
 // ------------------------------------
 export const actions = {
-  doLoadIncome,
+  initializeGrossPayWatcher,
+  initializeDeductionsWatcher,
   doUpdateGrossPay,
   doAddDeduction,
   doUpdateDeduction,
@@ -149,9 +163,13 @@ const ACTION_HANDLERS = {
   [INCOME_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
-  [RECEIVE_INCOME]: (state, action) => {
-    const { grossPay, deductions } = action.income;
-    return { ...state, grossPay, deductions };
+  [RECEIVE_GROSS_PAY]: (state, action) => {
+    const { grossPay } = action;
+    return { ...state, grossPay };
+  },
+  [RECEIVE_DEDUCTIONS]: (state, action) => {
+    const { deductions } = action;
+    return { ...state, deductions };
   },
   [CALC_TOTAL_DEDUCTIONS]: (state, action) => {
     const { grossPay, deductions } = action.income;
@@ -161,25 +179,7 @@ const ACTION_HANDLERS = {
   [CALC_NET_PAY]: (state, action) => {
     const { grossPay, totalDeductions } = action.income;
     const netPay = calculateNetPay(grossPay, totalDeductions);
-    return { ...state, netPay };
-  },
-  [UPDATE_GROSS_PAY]: (state, action) => {
-    const { grossPay } = action;
-    return { ...state, grossPay };
-  },
-  [ADD_DEDUCTION]: (state, action) => {
-    const deductions = [...state.deductions, action.deduction];
-    return { ...state, deductions };
-  },
-  [UPDATE_DEDUCTION]: (state, action) => {
-    const deductions = state.deductions.map(
-      deduction => (deduction.id !== action.deduction.id ? deduction : action.deduction),
-    );
-    return { ...state, deductions };
-  },
-  [DELETE_DEDUCTION]: (state, action) => {
-    const deductions = state.deductions.filter(deduction => deduction.id !== action.id);
-    return { ...state, deductions };
+    return { ...state, netPay, isLoading: false };
   },
 };
 
@@ -189,27 +189,8 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  grossPay: 4000,
-  deductions: [
-    {
-      id: 1,
-      description: 'AHV',
-      type: 'percentaged',
-      value: 20,
-    },
-    {
-      id: 2,
-      description: 'ALV',
-      type: 'percentaged',
-      value: 5,
-    },
-    {
-      id: 3,
-      description: 'Nichtberufsunfall',
-      type: 'fixed',
-      value: 5,
-    },
-  ],
+  grossPay: null,
+  deductions: [],
   totalDeductions: 0,
   netPay: null,
 };

@@ -2,9 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
-  Table, TableBody, TableRow, TableCell, TableFooter,
-} from '@material-ui/core';
+  ResponsiveTable,
+  ResponsiveTableBody, ResponsiveTableFooter,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -16,6 +20,7 @@ import IncomDeductionsItem from './IncomeDeductionsItemComponent';
 
 const IncomeDeductionsComponent = (props) => {
   const emptyDeduction = {
+    id: 'new',
     description: '',
     type: 'percentaged',
     value: 0,
@@ -26,32 +31,31 @@ const IncomeDeductionsComponent = (props) => {
     totalDeductions,
   } = props;
   return (
-    <Table>
-      <TableBody>
+    <ResponsiveTable breakpoint="sm">
+      <ResponsiveTableBody>
         {deductions.map(deduction => (
           <IncomDeductionsItem key={deduction.id} deduction={deduction} />
         ))}
         <IncomDeductionsItem deduction={emptyDeduction} editable />
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell>Total Abzüge</TableCell>
-          <TableCell numeric>{`${Math.round(totalDeductions)} ${currency}`}</TableCell>
-          <TableCell />
-        </TableRow>
-      </TableFooter>
-    </Table>
+      </ResponsiveTableBody>
+      <ResponsiveTableFooter>
+        <ResponsiveTableRow>
+          <ResponsiveTableCell>
+            <Typography>Total Abzüge</Typography>
+          </ResponsiveTableCell>
+          <ResponsiveTableCell numeric>
+            <Typography>{`${Math.round(totalDeductions)} ${currency}`}</Typography>
+          </ResponsiveTableCell>
+          <ResponsiveTableCell />
+        </ResponsiveTableRow>
+      </ResponsiveTableFooter>
+    </ResponsiveTable>
   );
 };
 
 IncomeDeductionsComponent.propTypes = {
-  currency: PropTypes.string.isRequired,
-  deductions: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-  })).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  deductions: PropTypes.arrayOf(CustomPropTypes.deduction).isRequired,
   totalDeductions: PropTypes.number.isRequired,
 };
 

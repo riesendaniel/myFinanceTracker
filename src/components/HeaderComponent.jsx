@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar,
+  Hidden,
   IconButton,
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions,
 } from '../redux/modules/AppReducer';
+import { auth } from '../config/firebase';
 
 const styles = theme => ({
+  link: {
+    textDecoration: 'none',
+  },
   toolbar: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -32,15 +40,28 @@ class HeaderComponent extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isLoggedIn } = this.props;
     return (
       <div className="Header">
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <Typography variant="title">myFinanceTracker</Typography>
-            <IconButton onClick={this.handleClick} aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
+            <Link to="/" className={classes.link}>
+              <Typography variant="title">myFinanceTracker</Typography>
+            </Link>
+            {isLoggedIn && (
+              <div>
+                <IconButton
+                  onClick={() => auth.signOut()}
+                >
+                  <PowerSettingsNew />
+                </IconButton>
+                <Hidden lgUp>
+                  <IconButton onClick={this.handleClick} aria-label="Menu">
+                    <MenuIcon />
+                  </IconButton>
+                </Hidden>
+              </div>
+            )}
           </Toolbar>
         </AppBar>
       </div>
@@ -49,7 +70,8 @@ class HeaderComponent extends Component {
 }
 
 HeaderComponent.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 

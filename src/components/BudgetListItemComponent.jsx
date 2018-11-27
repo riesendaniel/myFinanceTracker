@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   IconButton,
-  TableCell, TableRow,
   Typography,
+  withStyles,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthUp, isWidthDown,
+} from '@material-ui/core/withWidth';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
+import {
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import history from '../helper/history';
 import {
   getCurrency,
@@ -16,6 +23,12 @@ import {
 import {
   actions,
 } from '../redux/modules/BudgetReducer';
+
+const styles = () => ({
+  actions: {
+    width: '100px',
+  },
+});
 
 class BudgetListItemComponent extends Component {
   handleEdit = () => {
@@ -35,45 +48,51 @@ class BudgetListItemComponent extends Component {
 
   render = () => {
     const {
+      breakpoint,
+      classes,
       currency,
       item,
+      width,
     } = this.props;
+    const smDown = isWidthDown('sm', width);
     return (
-      <TableRow key={item.id}>
-        <TableCell component="th">{item.category}</TableCell>
-        <TableCell numeric>
+      <ResponsiveTableRow key={item.id} breakpoint={breakpoint}>
+        <ResponsiveTableCell component="th" columnHead="Kategorie">
+          <Typography>{item.category}</Typography>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell numeric columnHead="monatlich">
           <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.monthly)} ${currency}`}
           </Typography>
-        </TableCell>
-        <TableCell numeric>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell numeric columnHead="jährlich">
           <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
-        </TableCell>
-        <TableCell>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell
+          className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+          alignRight
+        >
           <IconButton onClick={this.handleEdit}>
-            <EditIcon />
+            <EditIcon fontSize={smDown ? 'small' : 'default'} />
           </IconButton>
           <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon />
+            <DeleteOutlineIcon fontSize={smDown ? 'small' : 'default'} />
           </IconButton>
-        </TableCell>
-      </TableRow>
+        </ResponsiveTableCell>
+      </ResponsiveTableRow>
     );
   }
 }
 
 BudgetListItemComponent.propTypes = {
   doDeleteBudgetEntry: PropTypes.func.isRequired,
-  currency: PropTypes.string.isRequired,
-  item: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    period: PropTypes.string.isRequired,
-    monthly: PropTypes.number.isRequired,
-    yearly: PropTypes.string.isRequired,
-  }).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  item: CustomPropTypes.budgetEntry.isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -82,7 +101,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(BudgetListItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(BudgetListItemComponent);
+)(componentWithStyles);

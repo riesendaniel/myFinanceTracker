@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   FormControl,
   IconButton,
-  TableRow, TableCell,
   Input, InputLabel, InputAdornment,
   Select,
   MenuItem,
+  withStyles,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditIcon from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
+import {
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -21,10 +28,30 @@ import {
   actions,
 } from '../redux/modules/IncomeReducer';
 
+const styles = () => ({
+  value: {
+    maxWidth: '150px',
+  },
+  editAmount: {
+    display: 'inline-block',
+    width: '145px',
+  },
+  typeInput: {
+    maxWidth: '70px',
+  },
+  valueInput: {
+    maxWidth: '75px',
+  },
+  actions: {
+    width: '100px',
+  },
+});
+
 class IncomeDeductionsItemComponent extends Component {
   state = {
     deduction: {},
     editable: false,
+    focus: null,
   }
 
   componentDidMount = () => {
@@ -34,19 +61,26 @@ class IncomeDeductionsItemComponent extends Component {
     } = this.props;
     this.initialDeduction = { ...deduction };
     this.initialEditable = editable;
-    this.setState({ deduction, editable });
+    let focus = null;
+    if (editable) {
+      focus = 'description';
+    }
+    this.setState({ deduction, editable, focus });
   }
 
   handleInputChange = (event) => {
     const { deduction } = this.state;
-    let { value } = event.target;
-    if (isNaN(value)) {
-      value = String(value);
+    const { name, value } = event.target;
+    event.preventDefault();
+    const newDeduction = { ...deduction };
+    if (value.length > 0 && isNaN(value)) {
+      newDeduction[name] = String(value);
+    } else if (value.length > 0 && !isNaN(value)) {
+      newDeduction[name] = Number(value);
     } else {
-      value = Number(value);
+      newDeduction[name] = value;
     }
-    deduction[event.target.name] = value;
-    this.setState({ deduction });
+    this.setState({ deduction: newDeduction, focus: name });
   }
 
   saveDeduction = async () => {
@@ -57,12 +91,16 @@ class IncomeDeductionsItemComponent extends Component {
     const {
       deduction,
     } = this.state;
-    if (deduction.id) {
+    if (deduction.id !== 'new') {
       await doUpdateDeduction(deduction);
-      this.setState({ editable: this.initialEditable });
+      this.setState({ editable: this.initialEditable, focus: null });
     } else {
       await doAddDeduction(deduction);
-      this.setState({ deduction: this.initialDeduction, editable: this.initialEditable });
+      this.setState({
+        deduction: this.initialDeduction,
+        editable: this.initialEditable,
+        focus: null,
+      });
     }
   }
 
@@ -77,17 +115,24 @@ class IncomeDeductionsItemComponent extends Component {
     const {
       deduction,
       editable,
+      focus,
     } = this.state;
     const {
+      breakpoint,
+      classes,
       currency,
+      width,
     } = this.props;
+    const breakpointUp = isWidthUp(breakpoint, width, false);
     return (
-      <TableRow key={deduction.id}>
-        <TableCell>
+      <ResponsiveTableRow key={deduction.id} breakpoint={breakpoint}>
+        <ResponsiveTableCell
+          columnHead="Beschreibung"
+        >
           <FormControl>
-            {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
+            {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
             <Input
-              id="description"
+              autoFocus={focus === 'description'}
               name="description"
               type="text"
               value={deduction.description}
@@ -96,11 +141,30 @@ class IncomeDeductionsItemComponent extends Component {
               readOnly={!editable}
             />
           </FormControl>
-        </TableCell>
-        <TableCell numeric>
-          <FormControl>
+        </ResponsiveTableCell>
+        <ResponsiveTableCell
+          className={breakpointUp ? classes.value : undefined}
+          numeric
+          columnHead="Betrag"
+        >
+          <FormControl className={classes.editAmount}>
+            <Input
+              autoFocus={focus === 'value'}
+              className={classes.valueInput}
+              name="value"
+              type="number"
+              value={deduction.value}
+              onChange={event => this.handleInputChange(event)}
+              endAdornment={editable ? undefined : (
+                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
+              )}
+              disableUnderline={!editable}
+              readOnly={!editable}
+            />
             { editable && (
               <Select
+                autoFocus={focus === 'type'}
+                className={classes.typeInput}
                 name="type"
                 value={deduction.type}
                 onChange={event => this.handleInputChange(event)}
@@ -109,43 +173,39 @@ class IncomeDeductionsItemComponent extends Component {
                 <MenuItem value="fixed">{currency}</MenuItem>
               </Select>
             )}
-            <Input
-              name="value"
-              type="number"
-              value={deduction.value}
-              onChange={event => this.handleInputChange(event)}
-              endAdornment={
-                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
-              }
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
           </FormControl>
-        </TableCell>
+        </ResponsiveTableCell>
         { editable ? (
-          <TableCell>
+          <ResponsiveTableCell
+            className={breakpointUp ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={this.saveDeduction}>
               <SaveIcon />
             </IconButton>
             <IconButton onClick={() => this.setState({
               deduction: { ...this.initialDeduction },
               editable: this.initialEditable,
+              focus: null,
             })}
             >
               <CancelIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         ) : (
-          <TableCell>
+          <ResponsiveTableCell
+            className={breakpointUp ? classes.actions : undefined}
+            alignRight
+          >
             <IconButton onClick={() => this.setState({ editable: true })}>
               <EditIcon />
             </IconButton>
             <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
               <DeleteOutlineIcon />
             </IconButton>
-          </TableCell>
+          </ResponsiveTableCell>
         )}
-      </TableRow>
+      </ResponsiveTableRow>
     );
   }
 }
@@ -154,14 +214,12 @@ IncomeDeductionsItemComponent.propTypes = {
   doAddDeduction: PropTypes.func.isRequired,
   doUpdateDeduction: PropTypes.func.isRequired,
   doDeleteDeduction: PropTypes.func.isRequired,
-  currency: PropTypes.string.isRequired,
-  deduction: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    value: PropTypes.number.isRequired,
-  }).isRequired,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  currency: CustomPropTypes.currency.isRequired,
+  deduction: CustomPropTypes.deduction.isRequired,
   editable: PropTypes.bool,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 IncomeDeductionsItemComponent.defaultProps = {
@@ -174,7 +232,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(IncomeDeductionsItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeDeductionsItemComponent);
+)(componentWithStyles);

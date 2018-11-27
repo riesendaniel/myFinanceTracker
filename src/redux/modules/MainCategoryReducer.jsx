@@ -1,8 +1,16 @@
+import {
+  snapshotWatcher,
+  addDocument,
+  updateDocument,
+  deleteDocument,
+} from '../database';
+
+const collection = 'categories';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
 export const getIsLoading = state => state.mainCategory.isLoading;
-
 export const getMainCategories = state => state.mainCategory.mainCategories;
 
 
@@ -12,9 +20,6 @@ export const getMainCategories = state => state.mainCategory.mainCategories;
 const MAIN_CATEGORY_IS_LOADING = 'MAIN_CATEGORY_IS_LOADING';
 const RECEIVE_MAIN_CATEGORIES = 'RECEIVE_MAIN_CATEGORIES';
 const GET_MAIN_CATEGORY_BY_ID = 'GET_MAIN_CATEGORY_BY_ID';
-const ADD_MAIN_CATEGORY = 'ADD_MAIN_CATEGORY';
-const UPDATE_MAIN_CATEGORY = 'UPDATE_MAIN_CATEGORY';
-const DELETE_MAIN_CATEGORY = 'DELETE_MAIN_CATEGORY';
 
 
 // ------------------------------------
@@ -35,46 +40,42 @@ const getMainCategoryById = id => ({
   id,
 });
 
-const addMainCategory = mainCategory => ({
-  type: ADD_MAIN_CATEGORY,
-  mainCategory,
-});
-
-const updateMainCategory = mainCategory => ({
-  type: UPDATE_MAIN_CATEGORY,
-  mainCategory,
-});
-
-const deleteMainCategory = id => ({
-  type: DELETE_MAIN_CATEGORY,
-  id,
-});
-
 
 // ------------------------------------
 // Async Action Creators
 // ------------------------------------
-const doLoadMainCategories = () => (dispatch, getState) => {
+const doLoadMainCategories = snapshot => (dispatch) => {
   dispatch(isLoading(true));
-  setTimeout(() => {
-    const {
-      mainCategories,
-    } = getState().mainCategory;
+  if (snapshot) {
+    const mainCategories = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     dispatch(receiveMainCategories(mainCategories));
-    dispatch(isLoading(false));
-  }, 1000);
+  }
+  dispatch(isLoading(false));
 };
 
-const doAddMainCategory = mainCategory => (dispatch) => {
-  dispatch(addMainCategory(mainCategory));
+const initializeMainCategoryWatcher = () => (dispatch) => {
+  snapshotWatcher(collection, snapshot => dispatch(doLoadMainCategories(snapshot)));
 };
 
-const doUpdateMainCategory = mainCategory => (dispatch) => {
-  dispatch(updateMainCategory(mainCategory));
+const doAddMainCategory = entry => (dispatch) => {
+  dispatch(isLoading(true));
+  addDocument(collection, entry);
+  dispatch(isLoading(false));
+};
+
+const doUpdateMainCategory = entry => (dispatch) => {
+  dispatch(isLoading(true));
+  updateDocument(collection, entry);
+  dispatch(isLoading(false));
 };
 
 const doDeleteMainCategory = id => (dispatch) => {
-  dispatch(deleteMainCategory(id));
+  dispatch(isLoading(true));
+  deleteDocument(collection, id);
+  dispatch(isLoading(false));
 };
 
 
@@ -82,7 +83,7 @@ const doDeleteMainCategory = id => (dispatch) => {
 // Actions
 // ------------------------------------
 export const actions = {
-  doLoadMainCategories,
+  initializeMainCategoryWatcher,
   doAddMainCategory,
   doUpdateMainCategory,
   doDeleteMainCategory,
@@ -101,27 +102,9 @@ const ACTION_HANDLERS = {
     const { mainCategories } = action;
     return { ...state, mainCategories };
   },
-  [GET_MAIN_CATEGORY_BY_ID]: (state, action) => {
-    return state.mainCategories.filter(mainCategory => mainCategory.id === action.id)[0];
-  },
-  [ADD_MAIN_CATEGORY]: (state, action) => {
-    const mainCategories = [...state.mainCategories, action.mainCategory];
-    return { ...state, mainCategories };
-  },
-  [UPDATE_MAIN_CATEGORY]: (state, action) => {
-    const mainCategories = state.mainCategories.map(
-      mainCategory => (
-        mainCategory.id !== action.mainCategory.id ? mainCategory : action.mainCategory
-      ),
-    );
-    return { ...state, mainCategories };
-  },
-  [DELETE_MAIN_CATEGORY]: (state, action) => {
-    const mainCategories = state.mainCategories.filter(mainCategory => (
-      mainCategory.id !== action.id
-    ));
-    return { ...state, mainCategories };
-  },
+  [GET_MAIN_CATEGORY_BY_ID]: (state, action) => (
+    state.mainCategories.filter(mainCategory => mainCategory.id === action.id)[0]
+  ),
 };
 
 
@@ -130,40 +113,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  mainCategories: [
-    {
-      id: 1,
-      description: 'Wohnen',
-    },
-    {
-      id: 2,
-      description: 'Haushalt',
-    },
-    {
-      id: 3,
-      description: 'Gesundheit & Körper',
-    },
-    {
-      id: 4,
-      description: 'Freizeit',
-    },
-    {
-      id: 5,
-      description: 'Reisen',
-    },
-    {
-      id: 6,
-      description: 'Versicherungen',
-    },
-    {
-      id: 7,
-      description: 'Steuern',
-    },
-    {
-      id: 8,
-      description: 'Sparen & Anlegen',
-    },
-  ],
+  mainCategories: [],
 };
 
 export default function reducer(state = initialState, action) {

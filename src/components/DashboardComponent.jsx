@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import 'moment/locale/de';
 import {
-  Paper,
-  Table, TableHead, TableBody, TableRow, TableCell,
+  Grid,
   Typography,
 } from '@material-ui/core';
+import withWidth, {
+  isWidthDown,
+} from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
@@ -24,46 +24,42 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
+import {
+  ResponsiveTable,
+  ResponsiveTableHead, ResponsiveTableBody,
+  ResponsiveTableRow, ResponsiveTableCell,
+} from './ResponsiveTable';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
 import {
-  actions as budgetActions,
   getIsLoading as getBudgetIsLoading,
   getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as outgoingActions,
   getIsLoading as getOutgoingIsLoading,
   getOutgoings,
   getCurrentMonthsOutgoingSum, getCurrentMonthsOutgoingsByCategory,
   getLastTwelveMonthsOutgoingSum,
 } from '../redux/modules/OutgoingReducer';
 import {
-  actions as incomeActions,
   getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
+import history from '../helper/history';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
+import RedirectComponent from './RedirectComponent';
+import { auth } from '../config/firebase';
+import { gridSpacing } from '../theme';
 
 moment.locale('de');
 
 class DashboardComponent extends Component {
-  componentDidMount = async () => {
-    const {
-      doLoadBudget,
-      doLoadIncome,
-      doLoadOutgoings,
-    } = this.props;
-    await doLoadBudget();
-    await doLoadIncome();
-    await doLoadOutgoings();
-  }
-
   handleAddOutgoing = () => {
-    const { history } = this.props;
     history.push('/outgoing/edit');
   };
 
@@ -95,168 +91,216 @@ class DashboardComponent extends Component {
       currentMonthsOutgoingSum,
       currentMonthsOutgoingsByCategory,
       lastTwelveMonthsOutgoingSum,
+      width,
     } = this.props;
     const currentMonthsBalance = this.mergeBudgetAndOutgoings(
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
+    const name = auth.currentUser ? auth.currentUser.displayName : '';
+    const xsDown = isWidthDown('xs', width);
+    const lastOutgoingsCount = xsDown ? 3 : 5;
+
     return (
-      <Paper>
-        <Typography variant="headline" component="h2">Übersicht</Typography>
+      <Grid container spacing={gridSpacing} justify="center">
+        <RedirectComponent />
+        <Grid item xs={12} xl={10}>
+          <Typography variant="headline" component="h2">{`Übersicht von ${name}`}</Typography>
+        </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
-          <div>
-            <DashboardInfoComponent
-              icon={<MoneyIcon />}
-              title={`Ausgaben im ${currentMonth}`}
-              value={`${currentMonthsOutgoingSum} ${currency}`}
-            />
-            <DashboardInfoComponent
-              icon={<AttachMoneyIcon />}
-              title={`Einkommen (Netto) im ${currentMonth}`}
-              value={`${netPay} ${currency}`}
-            />
-            <DashboardInfoComponent
-              icon={<CompareIcon />}
-              title={`Ersparnisse im ${currentMonth}`}
-              value={`${netPay - currentMonthsOutgoingSum} ${currency}`}
-            />
-            <DashboardInfoComponent
-              icon={<CompareIcon />}
-              title="Budgetierte Ersparnisse"
-              /* TODO: Dies geht von der Annahme aus, dass im Budget nur Ausgaben erfasst werden. */
-              value={`${netPay - monthlyBudgetSum} ${currency}`}
-            />
-            <DashboardInfoComponent
-              icon={<AddIcon />}
-              title="Ausgabe hinzufügen"
-              value="neue Ausgabe hinzufügen"
-              clickFn={this.handleAddOutgoing}
-            />
-            <DashboardChartComponent
-              title={`Ausgaben im ${currentMonth} pro Kategorie`}
-              content={(
-                <ResponsiveContainer>
-                  <PieChart>
-                    <Tooltip formatter={value => `${value} ${currency}`} />
-                    <Pie
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={4}
-                      data={currentMonthsOutgoingsByCategory}
-                      dataKey="amount"
-                      nameKey="category"
+          <Grid item xs={12} xl={10} container spacing={gridSpacing}>
+            <Grid container spacing={gridSpacing} item>
+              <DashboardInfoComponent
+                icon={<MoneyIcon />}
+                title={`Ausgaben im ${currentMonth}`}
+                value={`${Math.round(currentMonthsOutgoingSum)} ${currency}`}
+              />
+              <DashboardInfoComponent
+                icon={<AttachMoneyIcon />}
+                title={`Nettoeinkommen im ${currentMonth}`}
+                value={`${Math.round(netPay)} ${currency}`}
+              />
+              <DashboardInfoComponent
+                icon={<CompareIcon />}
+                title={`Ersparnisse im ${currentMonth}`}
+                value={`${Math.round(netPay - currentMonthsOutgoingSum)} ${currency}`}
+              />
+              <DashboardInfoComponent
+                icon={<CompareIcon />}
+                title="Budgetierte Ersparnisse"
+                /* TODO: Dies geht von der Annahme aus,
+                   dass im Budget nur Ausgaben erfasst werden. */
+                value={`${Math.round(netPay - monthlyBudgetSum)} ${currency}`}
+              />
+              <DashboardInfoComponent
+                icon={<AddIcon />}
+                title="Ausgabe hinzufügen"
+                value="neue Ausgabe hinzufügen"
+                clickFn={this.handleAddOutgoing}
+              />
+            </Grid>
+            <Grid container spacing={gridSpacing} item>
+              <DashboardChartComponent
+                title={`Ausgaben im ${currentMonth} pro Kategorie`}
+                content={(
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Tooltip formatter={value => `${value} ${currency}`} />
+                      <Pie
+                        innerRadius={xsDown ? 55 : 100}
+                        outerRadius={xsDown ? 80 : 140}
+                        paddingAngle={4}
+                        data={currentMonthsOutgoingsByCategory}
+                        dataKey="amount"
+                        nameKey="category"
+                      >
+                        {currentMonthsOutgoingsByCategory.map(entry => (
+                          <Cell key={entry.id} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Legend
+                        layout="vertical"
+                        align={xsDown ? 'center' : 'right'}
+                        verticalAlign={xsDown ? 'bottom' : 'middle'}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              />
+              <DashboardChartComponent
+                title={`Bilanz des Monats ${currentMonth}`}
+                content={(
+                  <ResponsiveContainer>
+                    <BarChart
+                      data={currentMonthsBalance}
                     >
-                      {currentMonthsOutgoingsByCategory.map(entry => (
-                        <Cell key={entry.id} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Legend layout="vertical" align="right" verticalAlign="middle" />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
-            />
-            <DashboardChartComponent
-              title={`Bilanz des Monats ${currentMonth}`}
-              content={(
-                <ResponsiveContainer>
-                  <BarChart
-                    data={currentMonthsBalance}
-                  >
-                    <Tooltip formatter={value => `${value} ${currency}`} />
-                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <Bar name="Budget" dataKey="budget" fill="#00C49F" />
-                    <Bar name="Ausgaben" dataKey="outgoing" fill="#FF8042" />
-                    <XAxis dataKey="category" />
-                    <YAxis>
-                      <Label
-                        value={`Betrag [${currency}]`}
+                      <Tooltip formatter={value => `${value} ${currency}`} />
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                      <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
+                      <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
+                      <XAxis
+                        dataKey="category"
+                        interval={0}
+                        textAnchor="start"
+                        height={1}
                         angle={-90}
-                        position="insideBottomLeft"
-                        offset={10}
+                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                        tickLine={false}
+                        tickMargin={-15}
+                        dx={-7}
                       />
-                    </YAxis>
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
-            />
-            <DashboardChartComponent
-              title="Ausgaben des vergangenen Jahres (pro Kategorie)"
-              content={(
-                <ResponsiveContainer>
-                  <LineChart
-                    data={lastTwelveMonthsOutgoingSum}
-                  >
-                    <Tooltip formatter={value => `${value} ${currency}`} />
-                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <Line name="Betrag" dataKey="amount" stroke="#FF8042" />
-                    <XAxis dataKey="month" textAnchor="end" angle={-45} height={55} />
-                    <YAxis>
-                      <Label
-                        value={`Betrag [${currency}]`}
+                      <YAxis>
+                        <Label
+                          value={`Betrag [${currency}]`}
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={10}
+                        />
+                      </YAxis>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              />
+              <DashboardChartComponent
+                title="Ausgaben des vergangenen Jahres"
+                content={(
+                  <ResponsiveContainer>
+                    <LineChart
+                      data={lastTwelveMonthsOutgoingSum}
+                    >
+                      <Tooltip formatter={value => `${value} ${currency}`} />
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                      <Line name="Betrag" dataKey="amount" stroke="#A10702" />
+                      <XAxis
+                        dataKey="month"
+                        textAnchor="end"
+                        angle={-45}
+                        height={55}
+                      />
+                      <YAxis>
+                        <Label
+                          value={`Betrag [${currency}]`}
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={10}
+                        />
+                      </YAxis>
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
+              />
+              <DashboardChartComponent
+                title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
+                content={(
+                  <ResponsiveTable breakpoint="xs">
+                    <ResponsiveTableHead>
+                      <ResponsiveTableRow>
+                        <ResponsiveTableCell>Datum</ResponsiveTableCell>
+                        <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
+                        <ResponsiveTableCell>Betrag</ResponsiveTableCell>
+                      </ResponsiveTableRow>
+                    </ResponsiveTableHead>
+                    <ResponsiveTableBody>
+                      {outgoings.filter((value, index) => index < lastOutgoingsCount)
+                        .map(outgoing => (
+                          <ResponsiveTableRow key={outgoing.id}>
+                            <ResponsiveTableCell columnHead="Datum">
+                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Beschreibung">
+                              <Typography>{outgoing.outgoingTitle}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Betrag">
+                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                            </ResponsiveTableCell>
+                          </ResponsiveTableRow>
+                        ))
+                      }
+                    </ResponsiveTableBody>
+                  </ResponsiveTable>
+                )}
+              />
+              <DashboardChartComponent
+                title="Budget (monatlich)"
+                content={(
+                  <ResponsiveContainer>
+                    <BarChart
+                      data={budget}
+                    >
+                      <Tooltip formatter={value => `${value} ${currency}`} />
+                      <Bar name="Budget" dataKey="monthly">
+                        {budget.map(entry => (
+                          <Cell key={entry.id} fill={entry.color} />
+                        ))}
+                      </Bar>
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                      <XAxis
+                        dataKey="category"
+                        interval={0}
+                        textAnchor="start"
+                        height={1}
                         angle={-90}
-                        position="insideBottomLeft"
-                        offset={10}
+                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                        tickLine={false}
+                        tickMargin={-15}
+                        dx={-7}
                       />
-                    </YAxis>
-                  </LineChart>
-                </ResponsiveContainer>
-              )}
-            />
-            <DashboardChartComponent
-              title="letzte fünf Ausgaben"
-              content={(
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Datum</TableCell>
-                      <TableCell>Beschreibung</TableCell>
-                      <TableCell>Betrag</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {outgoings.filter((value, index) => index < 5)
-                      .map(outgoing => (
-                        <TableRow key={outgoing.id}>
-                          <TableCell>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</TableCell>
-                          <TableCell>{outgoing.outgoingTitle}</TableCell>
-                          <TableCell>{`${outgoing.outgoingAmount} ${currency}`}</TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </TableBody>
-                </Table>
-              )}
-            />
-            <DashboardChartComponent
-              title="Budget (monatlich)"
-              content={(
-                <ResponsiveContainer>
-                  <BarChart
-                    data={budget}
-                  >
-                    <Tooltip formatter={value => `${value} ${currency}`} />
-                    <Bar name="Budget" dataKey="monthly">
-                      {budget.map(entry => (
-                        <Cell key={entry.id} fill={entry.color} />
-                      ))}
-                    </Bar>
-                    <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                    <XAxis dataKey="category" />
-                    <YAxis>
-                      <Label
-                        value={`Betrag [${currency}]`}
-                        angle={-90}
-                        position="insideBottomLeft"
-                        offset={10}
-                      />
-                    </YAxis>
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
-            />
-          </div>
+                      <YAxis>
+                        <Label
+                          value={`Betrag [${currency}]`}
+                          angle={-90}
+                          position="insideBottomLeft"
+                          offset={10}
+                        />
+                      </YAxis>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+              />
+            </Grid>
+          </Grid>
         ) }
-      </Paper>
+      </Grid>
     );
   }
 }
@@ -265,15 +309,19 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  budget: PropTypes.arrayOf(PropTypes.object).isRequired,
-  currency: PropTypes.string.isRequired,
+  budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
+  currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
   netPay: PropTypes.number,
-  outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
   currentMonthsOutgoingSum: PropTypes.number,
-  currentMonthsOutgoingsByCategory: PropTypes.arrayOf(PropTypes.object).isRequired,
-  lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.object).isRequired,
+  currentMonthsOutgoingsByCategory: PropTypes
+    .arrayOf(CustomPropTypes.outgoingByCategory).isRequired,
+  lastTwelveMonthsOutgoingSum: PropTypes.arrayOf(PropTypes.shape({
+    month: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+  })).isRequired,
+  width: CustomPropTypes.breakpoint.isRequired,
 };
 
 DashboardComponent.defaultProps = {
@@ -296,15 +344,8 @@ const mapStateToProps = state => ({
   lastTwelveMonthsOutgoingSum: getLastTwelveMonthsOutgoingSum(state),
 });
 
-const actions = {
-  ...budgetActions,
-  ...incomeActions,
-  ...outgoingActions,
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
+const componentWithWidth = withWidth()(DashboardComponent);
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(DashboardComponent);
+)(componentWithWidth);
