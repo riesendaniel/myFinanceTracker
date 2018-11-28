@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from 'react-material-ui-form-validator';
+import {
   FormControl,
   IconButton,
-  Input, InputLabel, InputAdornment,
-  Select,
+  InputAdornment,
   MenuItem,
   withStyles,
 } from '@material-ui/core';
@@ -126,85 +130,95 @@ class IncomeDeductionsItemComponent extends Component {
     const breakpointUp = isWidthUp(breakpoint, width, false);
     return (
       <ResponsiveTableRow key={deduction.id} breakpoint={breakpoint}>
-        <ResponsiveTableCell
-          columnHead="Beschreibung"
-        >
-          <FormControl>
-            {(breakpointUp && editable) && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
-            <Input
-              autoFocus={focus === 'description'}
-              name="description"
-              type="text"
-              value={deduction.description}
-              onChange={event => this.handleInputChange(event)}
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
-          </FormControl>
-        </ResponsiveTableCell>
-        <ResponsiveTableCell
-          className={breakpointUp ? classes.value : undefined}
-          numeric
-          columnHead="Betrag"
-        >
-          <FormControl className={classes.editAmount}>
-            <Input
-              autoFocus={focus === 'value'}
-              className={classes.valueInput}
-              name="value"
-              type="number"
-              value={deduction.value}
-              onChange={event => this.handleInputChange(event)}
-              endAdornment={editable ? undefined : (
-                <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
-              )}
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
-            { editable && (
-              <Select
-                autoFocus={focus === 'type'}
-                className={classes.typeInput}
-                name="type"
-                value={deduction.type}
-                onChange={event => this.handleInputChange(event)}
-              >
-                <MenuItem value="percentaged">%</MenuItem>
-                <MenuItem value="fixed">{currency}</MenuItem>
-              </Select>
+        <ResponsiveTableCell>
+          <ValidatorForm onSubmit={this.saveDeduction}>
+            <div>
+              <FormControl>
+                <TextValidator
+                  autoFocus={focus === 'description'}
+                  name="description"
+                  label="Beschreibung"
+                  type="text"
+                  value={deduction.description}
+                  onChange={event => this.handleInputChange(event)}
+                  disableUnderline={!editable}
+                  readOnly={!editable}
+                  validators={[
+                    'required',
+                    'minStringLength:3',
+                  ]}
+                  errorMessages={[
+                    'Die Bezeichnung muss ausgefüllt werden.',
+                    'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                  ]}
+                />
+              </FormControl>
+              <FormControl className={classes.editAmount}>
+                <TextValidator
+                  autoFocus={focus === 'value'}
+                  className={classes.valueInput}
+                  name="value"
+                  type="number"
+                  value={deduction.value}
+                  onChange={event => this.handleInputChange(event)}
+                  endAdornment={editable ? undefined : (
+                    <InputAdornment position="end">{deduction.type === 'percentaged' ? '%' : currency}</InputAdornment>
+                  )}
+                  disableUnderline={!editable}
+                  readOnly={!editable}
+                  validators={[
+                    'required',
+                    'isPositive',
+                  ]}
+                  errorMessages={[
+                    'Ein Betrag muss eingegeben werden.',
+                    'Nur positive Beträge sind erlaubt.',
+                  ]}
+                />
+                { editable && (
+                  <SelectValidator
+                    autoFocus={focus === 'type'}
+                    className={classes.typeInput}
+                    name="type"
+                    value={deduction.type}
+                    validators={['required']}
+                    errorMessages={['Ein Typ muss ausgewählt werden.']}
+                    onChange={event => this.handleInputChange(event)}
+                  >
+                    <MenuItem value="percentaged">%</MenuItem>
+                    <MenuItem value="fixed">{currency}</MenuItem>
+                  </SelectValidator>
+                )}
+              </FormControl>
+            </div>
+            { editable ? (
+              <div>
+                <IconButton type="submit">
+                  <SaveIcon />
+                </IconButton>
+                <IconButton
+                  type="reset"
+                  onClick={() => this.setState({
+                    deduction: { ...this.initialDeduction },
+                    editable: this.initialEditable,
+                    focus: null,
+                  })}
+                >
+                  <CancelIcon />
+                </IconButton>
+              </div>
+            ) : (
+              <div>
+                <IconButton onClick={() => this.setState({ editable: true })}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </div>
             )}
-          </FormControl>
+          </ValidatorForm>
         </ResponsiveTableCell>
-        { editable ? (
-          <ResponsiveTableCell
-            className={breakpointUp ? classes.actions : undefined}
-            alignRight
-          >
-            <IconButton onClick={this.saveDeduction}>
-              <SaveIcon />
-            </IconButton>
-            <IconButton onClick={() => this.setState({
-              deduction: { ...this.initialDeduction },
-              editable: this.initialEditable,
-              focus: null,
-            })}
-            >
-              <CancelIcon />
-            </IconButton>
-          </ResponsiveTableCell>
-        ) : (
-          <ResponsiveTableCell
-            className={breakpointUp ? classes.actions : undefined}
-            alignRight
-          >
-            <IconButton onClick={() => this.setState({ editable: true })}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
-              <DeleteOutlineIcon />
-            </IconButton>
-          </ResponsiveTableCell>
-        )}
       </ResponsiveTableRow>
     );
   }
