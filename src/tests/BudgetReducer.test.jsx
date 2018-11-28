@@ -11,10 +11,41 @@ const initialState = {
   isLoading: false,
   categories: [],
   budget: [],
+  budgetHistory: [],
   monthlyBudgetSum: null,
 };
 
 const budget = [
+  {
+    id: 1,
+    mainCategoryId: 2,
+    category: 'Unterhalt',
+    color: '#FF0000',
+    period: 'monthly',
+    monthly: 100,
+    yearly: 1200,
+  },
+  {
+    id: 2,
+    mainCategoryId: 2,
+    category: 'Essen & Getränke',
+    color: '#FF9900',
+    period: 'monthly',
+    monthly: 250,
+    yearly: 3000,
+  },
+  {
+    id: 3,
+    mainCategoryId: 9,
+    category: 'öffentlicher Verkehr',
+    color: '#FF0099',
+    period: 'yearly',
+    monthly: 200,
+    yearly: 2400,
+  },
+];
+
+const budgetLoaded = [
   {
     id: 1,
     mainCategoryId: 2,
@@ -50,12 +81,13 @@ const budget = [
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
+    disabled: true,
   },
 ];
 
 const newStatus = true;
 
-const monthlyBudgetSum = 650;
+const monthlyBudgetSum = 550;
 
 const isLoadingAction = {
   type: BUDGET_IS_LOADING,
@@ -64,7 +96,7 @@ const isLoadingAction = {
 
 const receiveBudgetAction = {
   type: RECEIVE_BUDGET,
-  budget,
+  budget: budgetLoaded,
 };
 
 const loadCategoriesAction = {
@@ -83,7 +115,7 @@ describe('BudgetReducer', () => {
     });
 
     it('should create an action to save the received budget', () => {
-      expect(actions.receiveBudget(budget)).toEqual(receiveBudgetAction);
+      expect(actions.receiveBudget(budgetLoaded)).toEqual(receiveBudgetAction);
     });
 
     it('should create an action to extract the categories from budget', () => {
@@ -106,7 +138,7 @@ describe('BudgetReducer', () => {
     });
 
     it('should save the recieved budget', () => {
-      const state = { ...initialState, budget };
+      const state = { ...initialState, budget, budgetHistory: budgetLoaded };
       expect(reducer(initialState, receiveBudgetAction)).toEqual(state);
     });
 
@@ -120,10 +152,13 @@ describe('BudgetReducer', () => {
         { id: 1, description: 'Unterhalt', color: '#FF0000' },
         { id: 2, description: 'Essen & Getränke', color: '#FF9900' },
         { id: 3, description: 'öffentlicher Verkehr', color: '#FF0099' },
-        { id: 4, description: 'Tanken', color: '#FF9999' },
+        { id: 4, description: 'Tanken', color: '#FF9999', disabled: true },
       ];
-      const state = { ...initialState, budget, categories };
-      expect(reducer({ ...initialState, budget }, loadCategoriesAction)).toEqual(state);
+      const state = { ...initialState, budgetHistory: budgetLoaded, categories };
+      expect(reducer(
+        { ...initialState, budgetHistory: budgetLoaded },
+        loadCategoriesAction,
+      )).toEqual(state);
     });
   });
 });
