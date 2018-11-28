@@ -74,10 +74,17 @@ const doLoadGrossPay = snapshot => (dispatch, getState) => {
   dispatch(isLoading(true));
   if (snapshot) {
     const doc = snapshot.docs[0];
-    const grossPay = {
-      id: doc.id,
-      ...doc.data(),
-    };
+    let grossPay;
+    if (doc) {
+      grossPay = {
+        id: doc.id,
+        ...doc.data(),
+      };
+    } else {
+      grossPay = {
+        amount: 0,
+      };
+    }
     dispatch(receiveGrossPay(grossPay));
     updateCalculatedElements(dispatch, getState);
   }
