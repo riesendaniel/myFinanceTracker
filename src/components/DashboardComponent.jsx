@@ -145,7 +145,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            { isAdmin ? 'Werde Admin' : (
+            { !isAdmin ? 'Werde Admin' : (
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
