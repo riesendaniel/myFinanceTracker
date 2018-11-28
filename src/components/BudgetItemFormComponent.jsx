@@ -4,6 +4,11 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from 'react-material-ui-form-validator';
+import {
   Button,
   Card, CardContent, CardActionArea, CardActions,
   FormControl,
@@ -12,9 +17,7 @@ import {
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
-  Select,
   Switch,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
@@ -114,15 +117,16 @@ class BudgetItemFormComponent extends Component {
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
             <Card>
-              <form onSubmit={this.handleSubmit}>
+              <ValidatorForm onSubmit={this.handleSubmit}>
                 <CardContent>
                   <Grid container justify="space-between">
                     { isLoadingCategories ? <Loading /> : (
                       <Grid item xs={12} container justify="space-between">
                         <Grid item xs={8}>
                           <FormControl fullWidth>
-                            <InputLabel htmlFor="main-category-select">Gruppe</InputLabel>
-                            <Select
+                            <SelectValidator
+                              name="mainCategory"
+                              label="Gruppe"
                               value={budgetEntry.mainCategoryId || ''}
                               onChange={(event) => {
                                 this.setState({
@@ -132,17 +136,15 @@ class BudgetItemFormComponent extends Component {
                                   },
                                 });
                               }}
-                              inputProps={{
-                                name: 'mainCategory',
-                                id: 'main-category-select',
-                              }}
+                              validators={['required']}
+                              errorMessages={['Eine Hauptkategorie muss ausgewählt werden.']}
                             >
                               { mainCategories.map(mainCategory => (
                                 <MenuItem key={mainCategory.id} value={mainCategory.id}>
                                   {mainCategory.description}
                                 </MenuItem>
                               )) }
-                            </Select>
+                            </SelectValidator>
                           </FormControl>
                         </Grid>
                         <Grid item xs={2}>
@@ -157,8 +159,8 @@ class BudgetItemFormComponent extends Component {
                     )}
                     <Grid item xs={12}>
                       <FormControl fullWidth>
-                        <TextField
-                          id="category"
+                        <TextValidator
+                          name="category"
                           label="Bezeichnung"
                           value={budgetEntry.category}
                           onChange={(event) => {
@@ -169,6 +171,14 @@ class BudgetItemFormComponent extends Component {
                               },
                             });
                           }}
+                          validators={[
+                            'required',
+                            'minStringLength:3',
+                          ]}
+                          errorMessages={[
+                            'Die Bezeichnung muss ausgefüllt werden.',
+                            'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                          ]}
                         />
                       </FormControl>
                     </Grid>
@@ -179,7 +189,6 @@ class BudgetItemFormComponent extends Component {
                       <Grid>
                         <FormControl>
                           <Switch
-                            id="monthly"
                             value={budgetEntry.period}
                             checked={budgetEntry.period === 'monthly'}
                             onChange={(event) => {
@@ -197,9 +206,9 @@ class BudgetItemFormComponent extends Component {
                     </Grid>
                     <Grid item xs={8}>
                       <FormControl fullWidth>
-                        <InputLabel htmlFor="amount">Betrag</InputLabel>
-                        <Input
-                          id="amount"
+                        <TextValidator
+                          name="amount"
+                          label="Betrag"
                           type="number"
                           value={budgetEntry.amount || ''}
                           onChange={(event) => {
@@ -210,6 +219,14 @@ class BudgetItemFormComponent extends Component {
                           startAdornment={
                             <InputAdornment position="start">{currency}</InputAdornment>
                           }
+                          validators={[
+                            'required',
+                            'isPositive',
+                          ]}
+                          errorMessages={[
+                            'Ein Betrag muss eingegeben werden.',
+                            'Nur positive Beträge sind erlaubt.',
+                          ]}
                         />
                       </FormControl>
                     </Grid>
@@ -217,7 +234,6 @@ class BudgetItemFormComponent extends Component {
                       <FormControl fullWidth>
                         <InputLabel htmlFor="color">Farbe</InputLabel>
                         <Input
-                          id="color"
                           name="color"
                           type="color"
                           value={budgetEntry.color}
@@ -226,6 +242,8 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, color: event.target.value },
                             });
                           }}
+                          validators={['required']}
+                          errorMessages={['Eine Farbe muss ausgewählt werden.']}
                         />
                       </FormControl>
                     </Grid>
@@ -236,7 +254,7 @@ class BudgetItemFormComponent extends Component {
                     <Button variant="contained" type="submit">Hinzufügen</Button>
                   </CardActions>
                 </CardActionArea>
-              </form>
+              </ValidatorForm>
             </Card>
           </Grid>
         </Grid>
