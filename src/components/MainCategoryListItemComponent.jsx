@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
+  ValidatorForm,
+  TextValidator,
+} from 'react-material-ui-form-validator';
+import {
   FormControl,
   IconButton,
-  Input, InputLabel,
   withStyles,
 } from '@material-ui/core';
 import withWidth, {
@@ -91,48 +94,56 @@ class MainCategoryListItem extends Component {
     return (
       <ResponsiveTableRow breakpoint={breakpoint}>
         <ResponsiveTableCell>
-          <FormControl fullWidth={editable ? true : undefined}>
-            {editable && <InputLabel htmlFor="description">Beschreibung</InputLabel>}
-            <Input
-              autoFocus={editable ? true : undefined}
-              name="description"
-              type="text"
-              value={mainCategory.description}
-              onChange={event => this.handleInputChange(event)}
-              disableUnderline={!editable}
-              readOnly={!editable}
-            />
-          </FormControl>
+          <ValidatorForm onSubmit={this.saveMainCategory}>
+            <div>
+              <FormControl fullWidth={editable ? true : undefined}>
+                <TextValidator
+                  autoFocus={editable ? true : undefined}
+                  name="description"
+                  label={editable ? 'Beschreibung' : undefined}
+                  type="text"
+                  value={mainCategory.description}
+                  onChange={event => this.handleInputChange(event)}
+                  disableUnderline={!editable}
+                  readOnly={!editable}
+                  validators={[
+                    'required',
+                    'minStringLength:3',
+                  ]}
+                  errorMessages={[
+                    'Die Bezeichnung muss ausgefüllt werden.',
+                    'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                  ]}
+                />
+              </FormControl>
+            </div>
+            { editable ? (
+              <div>
+                <IconButton type="submit">
+                  <SaveIcon />
+                </IconButton>
+                <IconButton
+                  type="reset"
+                  onClick={() => this.setState({
+                    mainCategory: { ...this.initialMainCategory },
+                    editable: this.initialEditable,
+                  })}
+                >
+                  <CancelIcon />
+                </IconButton>
+              </div>
+            ) : (
+              <div>
+                <IconButton onClick={() => this.setState({ editable: true })}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => this.deleteMainCategory(mainCategory.id)}>
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </div>
+            )}
+          </ValidatorForm>
         </ResponsiveTableCell>
-        { editable ? (
-          <ResponsiveTableCell
-            className={breakpointUp ? classes.actions : undefined}
-            alignRight
-          >
-            <IconButton onClick={this.saveMainCategory}>
-              <SaveIcon />
-            </IconButton>
-            <IconButton onClick={() => this.setState({
-              mainCategory: { ...this.initialMainCategory },
-              editable: this.initialEditable,
-            })}
-            >
-              <CancelIcon />
-            </IconButton>
-          </ResponsiveTableCell>
-        ) : (
-          <ResponsiveTableCell
-            className={breakpointUp ? classes.actions : undefined}
-            alignRight
-          >
-            <IconButton onClick={() => this.setState({ editable: true })}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={() => this.deleteMainCategory(mainCategory.id)}>
-              <DeleteOutlineIcon />
-            </IconButton>
-          </ResponsiveTableCell>
-        )}
       </ResponsiveTableRow>
     );
   }
