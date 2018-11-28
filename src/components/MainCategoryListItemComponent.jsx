@@ -26,6 +26,10 @@ import {
 import {
   actions,
 } from '../redux/modules/MainCategoryReducer';
+import {
+  getBudget,
+} from '../redux/modules/BudgetReducer';
+import ErrorLogger from '../helper/ErrorLogger';
 
 const styles = () => ({
   form: {
@@ -79,9 +83,20 @@ class MainCategoryListItem extends Component {
 
   deleteMainCategory = (id) => {
     const {
+      mainCategory,
+    } = this.state;
+    const {
       doDeleteMainCategory,
+      budget,
     } = this.props;
-    doDeleteMainCategory(id);
+    const budgetEntryInMainCategory = budget.filter(item => (
+      item.mainCategoryId === mainCategory.id
+    ));
+    if (budgetEntryInMainCategory.length === 0) {
+      doDeleteMainCategory(id);
+    } else {
+      ErrorLogger.log(undefined, 'Diese Hauptkategorie darf nicht gelöscht werden, da ihr noch Budgeteinträge zugeordnet sind.');
+    }
   }
 
   render = () => {
@@ -168,6 +183,7 @@ MainCategoryListItem.propTypes = {
   doUpdateMainCategory: PropTypes.func.isRequired,
   doDeleteMainCategory: PropTypes.func.isRequired,
   breakpoint: CustomPropTypes.breakpoint.isRequired,
+  budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   classes: CustomPropTypes.classes.isRequired,
   mainCategory: CustomPropTypes.mainCategory.isRequired,
   editable: PropTypes.bool,
@@ -178,7 +194,8 @@ MainCategoryListItem.defaultProps = {
   editable: false,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  budget: getBudget(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
