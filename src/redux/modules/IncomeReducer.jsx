@@ -12,7 +12,7 @@ const deductionsCollection = 'deductions';
 // Selectors
 // ------------------------------------
 export const getIsLoading = state => state.income.isLoading;
-export const getGrossPay = state => state.income.grossPay;
+export const getGrossPay = state => state.income.grossPay.amount;
 export const getDeductions = state => state.income.deductions;
 export const getTotalDeductions = state => state.income.totalDeductions;
 export const getNetPay = state => state.income.netPay;
@@ -36,9 +36,9 @@ const isLoading = status => ({
   status,
 });
 
-const receiveGrossPay = income => ({
+const receiveGrossPay = grossPay => ({
   type: RECEIVE_GROSS_PAY,
-  income,
+  grossPay,
 });
 
 const receiveDeductions = deductions => ({
@@ -65,18 +65,26 @@ const updateCalculatedElements = (dispatch, getState) => {
     grossPay,
     deductions,
   } = getState().income;
-  dispatch(calcTotalDeductions({ grossPay, deductions }));
+  dispatch(calcTotalDeductions({ grossPay: grossPay.amount, deductions }));
   const { totalDeductions } = getState().income;
-  dispatch(calcNetPay({ grossPay, totalDeductions }));
+  dispatch(calcNetPay({ grossPay: grossPay.amount, totalDeductions }));
 };
 
 const doLoadGrossPay = snapshot => (dispatch, getState) => {
   dispatch(isLoading(true));
   if (snapshot) {
-    const grossPay = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const doc = snapshot.docs[0];
+    let grossPay;
+    if (doc) {
+      grossPay = {
+        id: doc.id,
+        ...doc.data(),
+      };
+    } else {
+      grossPay = {
+        amount: 0,
+      };
+    }
     dispatch(receiveGrossPay(grossPay));
     updateCalculatedElements(dispatch, getState);
   }
@@ -104,9 +112,16 @@ const initializeDeductionsWatcher = () => (dispatch) => {
   snapshotWatcher(deductionsCollection, snapshot => dispatch(doLoadDeductions(snapshot)));
 };
 
-const doUpdateGrossPay = grossPay => (dispatch) => {
+const doUpdateGrossPay = amount => (dispatch, getState) => {
   dispatch(isLoading(true));
-  addDocument(incomeCollection, grossPay);
+  const {
+    grossPay,
+  } = getState().income;
+  if (grossPay.id) {
+    updateDocument(incomeCollection, { id: grossPay.id, amount });
+  } else {
+    addDocument(incomeCollection, { id: grossPay.id, amount });
+  }
   dispatch(isLoading(false));
 };
 
@@ -189,7 +204,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  grossPay: null,
+  grossPay: {},
   deductions: [],
   totalDeductions: 0,
   netPay: null,
