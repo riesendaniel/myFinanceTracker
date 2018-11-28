@@ -1,5 +1,6 @@
 {
- "name": "App",
+ "short_name": "myFinanceTracker App",
+ "name": "myFinanceTracker App",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",
@@ -38,4 +39,8 @@
    "density": "4.0"
   }
  ]
+ "start_url": "./index.html",
+ "display": "standalone",
+ "theme_color": "#000000",
+ "background_color": "#ffffff"
 }
