@@ -24,7 +24,6 @@ import {
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
-import RedirectComponent from './RedirectComponent';
 import OutgoingTableHead from './OutgoingTableHead';
 import {
   getCategories,
@@ -173,7 +172,6 @@ class OutgoingListComponent extends Component {
     } = this.state;
     return (
       <Grid container spacing={gridSpacing} justify="center">
-        <RedirectComponent />
         <Grid item xs={12} md={10}>
           <Typography variant="headline" component="h2">Ausgaben</Typography>
         </Grid>

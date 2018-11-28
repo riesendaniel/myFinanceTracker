@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Redirect } from 'react-router-dom';
 import randomColor from 'randomcolor';
 import {
   Button,
@@ -31,7 +30,6 @@ import {
 } from '../redux/modules/MainCategoryReducer';
 import Loading from './LoadingComponent';
 import MainCategoryList from './MainCategoryListComponent';
-import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 class BudgetItemFormComponent extends Component {
@@ -94,10 +92,6 @@ class BudgetItemFormComponent extends Component {
       mainCategories,
       currency,
     } = this.props;
-
-    if (!auth.currentUser) {
-      return <Redirect to="/signin/" />;
-    }
 
     return (
       <div>

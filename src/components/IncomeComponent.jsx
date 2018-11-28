@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -24,7 +23,6 @@ import {
 import Loading from './LoadingComponent';
 import IncomeGrossPay from './IncomeGrossPayComponent';
 import IncomeDeductions from './IncomeDeductionsComponent';
-import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 const spacing = '48px';
@@ -47,10 +45,6 @@ const IncomeComponent = (props) => {
     width,
   } = props;
   const smDown = isWidthDown('sm', width);
-
-  if (!auth.currentUser) {
-    return <Redirect to="/signin/" />;
-  }
 
   return (
     <Grid container spacing={gridSpacing} justify="center">
