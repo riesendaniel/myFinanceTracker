@@ -151,14 +151,16 @@ export const ResponsiveTableCell = (props) => {
   const Component = withStyles(styles)(TableCell);
   return (
     <Component {...props}>
-      <Hidden
-        smUp={breakpoint === 'xs'}
-        mdUp={breakpoint === 'sm'}
-        lgUp={breakpoint === 'md'}
-        xlUp={breakpoint === 'lg'}
-      >
-        <Typography color="textSecondary">{columnHead}</Typography>
-      </Hidden>
+      { columnHead && (
+        <Hidden
+          smUp={breakpoint === 'xs'}
+          mdUp={breakpoint === 'sm'}
+          lgUp={breakpoint === 'md'}
+          xlUp={breakpoint === 'lg'}
+        >
+          <Typography color="textSecondary">{columnHead}</Typography>
+        </Hidden>
+      )}
       {children}
     </Component>
   );
@@ -170,8 +172,7 @@ const ResponsiveTableRowFormCellComponent = (props) => {
     breakpoint,
     children,
     classes,
-    label,
-    type,
+    columnHead,
     width,
   } = props;
   return (
@@ -179,18 +180,17 @@ const ResponsiveTableRowFormCellComponent = (props) => {
       className={classNames({
         [classes.cell]: !isWidthDown(breakpoint, width),
         [classes.responsiveCell]: isWidthDown(breakpoint, width),
-        [classes.responsiveNumeric]: isWidthDown(breakpoint, width) && type === 'numeric',
         [classes.alignRight]: alignRight,
       })}
     >
-      { label && (
+      { columnHead && (
         <Hidden
           smUp={breakpoint === 'xs'}
           mdUp={breakpoint === 'sm'}
           lgUp={breakpoint === 'md'}
           xlUp={breakpoint === 'lg'}
         >
-          <Typography color="textSecondary">{label}</Typography>
+          <Typography color="textSecondary">{columnHead}</Typography>
         </Hidden>
       )}
       {children}
@@ -206,15 +206,13 @@ ResponsiveTableRowFormCellComponent.propTypes = {
     PropTypes.node,
   ]).isRequired,
   classes: CustomPropTypes.classes.isRequired,
-  label: PropTypes.string,
-  type: PropTypes.oneOf(['numeric', 'text']),
+  columnHead: PropTypes.string,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
 ResponsiveTableRowFormCellComponent.defaultProps = {
   alignRight: false,
-  label: undefined,
-  type: 'text',
+  columnHead: undefined,
 };
 
 const formCellStyles = () => ({
@@ -222,6 +220,7 @@ const formCellStyles = () => ({
     display: 'table-cell',
   },
   responsiveCell: {
+    width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -11,6 +11,7 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import withWidth, {
   isWidthDown,
@@ -27,6 +28,12 @@ import {
   actions,
   getGrossPay,
 } from '../redux/modules/IncomeReducer';
+
+const styles = () => ({
+  form: {
+    width: '100%',
+  },
+});
 
 class IncomeGrossPayComponent extends Component {
   state = {
@@ -68,13 +75,14 @@ class IncomeGrossPayComponent extends Component {
       editGrossPay,
     } = this.state;
     const {
+      classes,
       currency,
       width,
     } = this.props;
     const smDown = isWidthDown('sm', width);
     return (
-      <Grid container>
-        <ValidatorForm onSubmit={this.saveGrossPay}>
+      <ValidatorForm className={classes.form} onSubmit={this.saveGrossPay}>
+        <Grid container>
           <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
             <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
             <FormControl>
@@ -83,11 +91,11 @@ class IncomeGrossPayComponent extends Component {
                 type="number"
                 value={grossPay || ''}
                 onChange={event => this.setState({ grossPay: Number(event.target.value) })}
-                endAdornment={
-                  <InputAdornment position="end">{currency}</InputAdornment>
-                }
-                disableUnderline={!editGrossPay}
-                readOnly={!editGrossPay}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
+                  disableUnderline: !editGrossPay,
+                  readOnly: !editGrossPay,
+                }}
                 validators={[
                   'required',
                   'isPositive',
@@ -115,14 +123,15 @@ class IncomeGrossPayComponent extends Component {
               </IconButton>
             )}
           </Grid>
-        </ValidatorForm>
-      </Grid>
+        </Grid>
+      </ValidatorForm>
     );
   }
 }
 
 IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   grossPay: PropTypes.number.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
@@ -135,7 +144,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithStyles = withStyles(styles)(IncomeGrossPayComponent);
+
 export default withWidth()(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeGrossPayComponent));
+)(componentWithStyles));
