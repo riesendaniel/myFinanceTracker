@@ -41,6 +41,11 @@ class IncomeGrossPayComponent extends Component {
     editGrossPay: false,
   };
 
+  constructor(props) {
+    super(props);
+    this.formRef = React.createRef();
+  }
+
   componentDidMount = async () => {
     const {
       grossPay,
@@ -56,6 +61,7 @@ class IncomeGrossPayComponent extends Component {
       grossPay,
       editGrossPay: false,
     });
+    this.formRef.current.resetValidations();
   }
 
   saveGrossPay = () => {
@@ -81,12 +87,13 @@ class IncomeGrossPayComponent extends Component {
     } = this.props;
     const smDown = isWidthDown('sm', width);
     return (
-      <ValidatorForm className={classes.form} onSubmit={this.saveGrossPay}>
+      <ValidatorForm ref={this.formRef} className={classes.form} onSubmit={this.saveGrossPay}>
         <Grid container>
           <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
             <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
             <FormControl>
               <TextValidator
+                ref={this.formRef}
                 name="grossPay"
                 type="number"
                 value={grossPay || ''}
