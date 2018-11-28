@@ -18,21 +18,25 @@ import {
 } from '../redux/modules/AppReducer';
 import {
   actions,
-  getIsLoading, getGrossPay, getNetPay,
+  getIsLoading,
+  getGrossPay, getNetPay, getTotalDeductions,
 } from '../redux/modules/IncomeReducer';
 import Loading from './LoadingComponent';
 import IncomeGrossPay from './IncomeGrossPayComponent';
 import IncomeDeductions from './IncomeDeductionsComponent';
 import { gridSpacing } from '../theme';
 
-const spacing = '48px';
+const spacing = 48;
 
 const styles = () => ({
   grossPay: {
-    marginBottom: spacing,
+    marginBottom: `${spacing}px`,
   },
   netPay: {
-    marginTop: spacing,
+    marginTop: `${spacing / 2}px`,
+  },
+  totalDeductions: {
+    marginTop: `${spacing}px`,
   },
 });
 
@@ -42,6 +46,7 @@ const IncomeComponent = (props) => {
     isLoadingIncome,
     currency,
     netPay,
+    totalDeductions,
     width,
   } = props;
   const smDown = isWidthDown('sm', width);
@@ -69,6 +74,10 @@ const IncomeComponent = (props) => {
                   <Grid item xs={12}>
                     <IncomeDeductions />
                   </Grid>
+                  <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.totalDeductions}>
+                    <Typography color={smDown ? 'textSecondary' : undefined}>Total Abzüge</Typography>
+                    <Typography>{`${Math.round(totalDeductions)} ${currency}`}</Typography>
+                  </Grid>
                   <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.netPay}>
                     <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
                     <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
@@ -88,6 +97,7 @@ IncomeComponent.propTypes = {
   isLoadingIncome: PropTypes.bool.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   netPay: PropTypes.number,
+  totalDeductions: PropTypes.number.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
@@ -100,6 +110,7 @@ const mapStateToProps = state => ({
   currency: getCurrency(state),
   grossPay: getGrossPay(state),
   netPay: getNetPay(state),
+  totalDeductions: getTotalDeductions(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

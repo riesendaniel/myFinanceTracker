@@ -10,11 +10,13 @@ const CustomPropTypes = {
     period: PropTypes.oneOf(['monthly', 'yearly']).isRequired,
     monthly: PropTypes.number.isRequired,
     yearly: PropTypes.number.isRequired,
+    disabled: PropTypes.bool,
   }),
   category: PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     color: PropTypes.color,
+    disabled: PropTypes.bool,
   }),
   classes: PropTypes.objectOf(PropTypes.string),
   currency: PropTypes.oneOf(['CHF']),
