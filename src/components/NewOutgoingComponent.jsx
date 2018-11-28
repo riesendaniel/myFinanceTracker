@@ -2,18 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SaveIcon from '@material-ui/icons/Save';
+import { ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
 import {
   Card, CardContent, CardActionArea, CardActions,
   Grid,
   Hidden,
   FormControl,
   IconButton,
-  Input,
   InputAdornment,
-  InputLabel,
   MenuItem,
-  Select,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -107,16 +104,21 @@ class NewOutgoingComponent extends Component {
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
           <Card>
-            <form onSubmit={this.addOutgoing}>
+            <ValidatorForm
+              ref="form"
+              onSubmit={this.addOutgoing}
+            >
               <CardContent>
                 <Grid item xs={12} container spacing={gridSpacing} justify="space-between">
                   <Grid item xs={12}>
-                    <TextField
+                    <TextValidator
                       fullWidth
                       id="outgoing-title"
                       name="outgoingTitle"
                       type="text"
                       placeholder="Titel eingeben"
+                      validators={['required']}
+                      errorMessages={['Das ist ein Pflichtfeld']}
                       autoComplete="on"
                       value={outgoing.outgoingTitle}
                       onChange={(event) => {
@@ -128,9 +130,12 @@ class NewOutgoingComponent extends Component {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor="amount">Betrag</InputLabel>
-                      <Input
+                      <TextValidator
                         id="amount"
+                        name="amount"
+                        placeholder="Betrag eingeben"
+                        validators={['required']}
+                        errorMessages={['Das ist ein Pflichtfeld']}
                         type="number"
                         value={outgoing.outgoingAmount || ''}
                         onChange={(event) => {
@@ -141,17 +146,22 @@ class NewOutgoingComponent extends Component {
                             },
                           });
                         }}
-                        startAdornment={
-                          <InputAdornment position="start">{currency}</InputAdornment>
-                        }
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                        }}
+
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
-                      <Select
+                      <SelectValidator
                         value={outgoing.outgoingCategoryId || ''}
+                        id="category"
+                        name="category"
+                        validators={['required']}
+                        errorMessages={['Das ist ein Pflichtfeld']}
+                        helperText="Kategorie auswählen"
                         onChange={(event) => {
                           this.setState({
                             outgoing: { ...outgoing, outgoingCategoryId: event.target.value },
@@ -170,14 +180,16 @@ class NewOutgoingComponent extends Component {
                             {category.description}
                           </MenuItem>
                         )) }
-                      </Select>
+                      </SelectValidator>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
+                    <TextValidator
                       fullWidth
                       id="outgoing-date"
                       name="outgoingDate"
+                      validators={['required']}
+                      errorMessages={['Das ist ein Pflichtfeld']}
                       placeholder="Datum auswählen"
                       autoComplete="on"
                       type="date"
@@ -205,7 +217,7 @@ class NewOutgoingComponent extends Component {
                   </IconButton>
                 </CardActions>
               </CardActionArea>
-            </form>
+            </ValidatorForm>
           </Card>
         </Grid>
       </Grid>
