@@ -122,17 +122,19 @@ const ACTION_HANDLERS = {
     { ...state, isLoading: action.status }
   ),
   [RECEIVE_BUDGET]: (state, action) => {
-    const budget = [...action.budget];
-    return { ...state, budget };
+    const budget = action.budget.filter(budgetEntry => !budgetEntry.disabled);
+    const budgetHistory = [...action.budget];
+    return { ...state, budget, budgetHistory };
   },
   [LOAD_CATEGORIES]: (state) => {
     const categories = [];
-    for (let i = 0; i < state.budget.length; i += 1) {
-      const budgetEntry = state.budget[i];
+    for (let i = 0; i < state.budgetHistory.length; i += 1) {
+      const budgetEntry = state.budgetHistory[i];
       categories.push({
         id: budgetEntry.id,
         description: budgetEntry.category,
         color: budgetEntry.color,
+        disabled: budgetEntry.disabled,
       });
     }
     return { ...state, categories };
@@ -152,6 +154,7 @@ const initialState = {
   isLoading: false,
   categories: [],
   budget: [],
+  budgetHistory: [],
   monthlyBudgetSum: null,
 };
 

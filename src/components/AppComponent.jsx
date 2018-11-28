@@ -18,6 +18,7 @@ import { actions as mainCategoryActions } from '../redux/modules/MainCategoryRed
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import history from '../helper/history';
 import Budget from './BudgetComponent';
+import RedirectComponent from './RedirectComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
 import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
@@ -104,6 +105,7 @@ class AppComponent extends Component {
         <Router history={history}>
           {loading ? <Loading /> : (
             <div>
+              <RedirectComponent/>
               <header>
                 <Header isLoggedIn={isLoggedIn} />
                 { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }

@@ -13,6 +13,8 @@ const collection = 'outgoing';
 // Selectors
 // ------------------------------------
 export const getOutgoings = state => state.outgoings.outgoings;
+export const getOutgoingsByCategory = state => state.outgoings.outgoingsByCategory;
+export const getMostFrequentCategory = state => state.outgoings.mostFrequentCategory;
 export const getCurrentMonthsOutgoingSum = state => state.outgoings.currentMonthsOutgoingSum;
 export const getCurrentMonthsOutgoingsByCategory = (
   state => state.outgoings.currentMonthsOutgoingsByCategory
@@ -26,6 +28,8 @@ export const getIsLoading = state => state.outgoings.isLoading;
 // ------------------------------------
 const OUTGOING_IS_LOADING = 'OUTGOING_IS_LOADING';
 const LOADED_OUTGOINGS = 'LOADED_OUTGOINGS';
+const FILTER_OUTGOINGS_BY_CATEGORY = 'FILTER_OUTGOINGS_BY_CATEGORY';
+const SET_MOST_FREQUENT_CATEGORY = 'SET_MOST_FREQUENT_CATEGORY';
 const SET_CURRENT_MONTHS_OUTGOINGS = 'SET_CURRENT_MONTHS_OUTGOINGS';
 const CALC_CURRENT_MONTHS_OUTGOING_SUM = 'CALC_CURRENT_MONTHS_OUTGOING_SUM';
 const CALC_CURRENT_MONTHS_OUTGOINGS_BY_CATEGORY = 'CALC_CURRENT_MONTHS_OUTGOINGS_BY_CATEGORY';
@@ -43,6 +47,17 @@ const isLoading = status => ({
 const loadedOutgoings = outgoings => ({
   type: LOADED_OUTGOINGS,
   payload: outgoings,
+});
+
+const filterOutgoingsByCategory = (outgoings, categories) => ({
+  type: FILTER_OUTGOINGS_BY_CATEGORY,
+  outgoings,
+  categories,
+});
+
+const setMostFrequentCategory = outgoingsByCategory => ({
+  type: SET_MOST_FREQUENT_CATEGORY,
+  outgoingsByCategory,
 });
 
 const setCurrentMonthsOutgoings = outgoings => ({
@@ -83,7 +98,12 @@ const updateCalculatedElements = (dispatch, getState) => {
   const {
     categories,
   } = getState().budget;
+  dispatch(filterOutgoingsByCategory(outgoings, categories));
   dispatch(calcCurrentMonthsOutgoingsByCategory(currentMonthsOutgoings, categories));
+  const {
+    outgoingsByCategory,
+  } = getState().outgoings;
+  dispatch(setMostFrequentCategory(outgoingsByCategory));
 };
 
 const doLoadOutgoings = snapshot => (dispatch, getState) => {
@@ -146,6 +166,41 @@ const ACTION_HANDLERS = {
   [LOADED_OUTGOINGS]: (state, action) => (
     { ...state, outgoings: action.payload }
   ),
+  [FILTER_OUTGOINGS_BY_CATEGORY]: (state, action) => {
+    const outgoingsByCategory = [];
+    if (typeof action.categories !== 'undefined') {
+      for (let i = 0; i < action.categories.length; i += 1) {
+        const category = action.categories[i];
+        const outgoings = action.outgoings.filter(
+          outgoing => outgoing.outgoingCategoryId === category.id,
+        );
+        if (outgoings.length > 0) {
+          outgoingsByCategory.push({
+            id: category.id,
+            category: category.description,
+            disabled: category.disabled,
+            outgoings,
+          });
+        }
+      }
+    }
+    return { ...state, outgoingsByCategory };
+  },
+  [SET_MOST_FREQUENT_CATEGORY]: (state, action) => {
+    let mostFrequentCategory = '';
+    let highestCount = 0;
+    for (let i = 0; i < action.outgoingsByCategory.length; i += 1) {
+      const categoryOutgoings = action.outgoingsByCategory[i];
+      if (!categoryOutgoings.disabled) {
+        const count = categoryOutgoings.outgoings.length;
+        if (count > highestCount) {
+          highestCount = count;
+          mostFrequentCategory = categoryOutgoings.id;
+        }
+      }
+    }
+    return { ...state, mostFrequentCategory };
+  },
   [SET_CURRENT_MONTHS_OUTGOINGS]: (state, action) => {
     const startOfMonth = moment().startOf('month');
     const endOfMonth = moment().endOf('month');
@@ -208,6 +263,8 @@ const ACTION_HANDLERS = {
 const initialState = {
   isLoading: false,
   outgoings: [],
+  outgoingsByCategory: [],
+  mostFrequentCategory: null,
   currentMonthsOutgoings: [],
   currentMonthsOutgoingSum: null,
   currentMonthsOutgoingsByCategory: [],

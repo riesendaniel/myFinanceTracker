@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
+  ValidatorForm,
+  TextValidator,
+} from 'react-material-ui-form-validator';
+import {
   FormControl,
   Grid,
   IconButton,
-  Input, InputAdornment,
+  InputAdornment,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import withWidth, {
   isWidthDown,
@@ -24,11 +29,22 @@ import {
   getGrossPay,
 } from '../redux/modules/IncomeReducer';
 
+const styles = () => ({
+  form: {
+    width: '100%',
+  },
+});
+
 class IncomeGrossPayComponent extends Component {
   state = {
     grossPay: null,
     editGrossPay: false,
   };
+
+  constructor(props) {
+    super(props);
+    this.formRef = React.createRef();
+  }
 
   componentDidMount = async () => {
     const {
@@ -45,6 +61,7 @@ class IncomeGrossPayComponent extends Component {
       grossPay,
       editGrossPay: false,
     });
+    this.formRef.current.resetValidations();
   }
 
   saveGrossPay = () => {
@@ -64,50 +81,64 @@ class IncomeGrossPayComponent extends Component {
       editGrossPay,
     } = this.state;
     const {
+      classes,
       currency,
       width,
     } = this.props;
     const smDown = isWidthDown('sm', width);
     return (
-      <Grid container>
-        <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
-          <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
-          <FormControl>
-            <Input
-              type="number"
-              value={grossPay || ''}
-              onChange={event => this.setState({ grossPay: Number(event.target.value) })}
-              endAdornment={
-                <InputAdornment position="end">{currency}</InputAdornment>
-              }
-              disableUnderline={!editGrossPay}
-              readOnly={!editGrossPay}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} md={3} lg={2} container justify="flex-end">
-          { editGrossPay ? (
-            <div>
-              <IconButton onClick={this.saveGrossPay}>
-                <SaveIcon />
+      <ValidatorForm ref={this.formRef} className={classes.form} onSubmit={this.saveGrossPay}>
+        <Grid container>
+          <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
+            <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+            <FormControl>
+              <TextValidator
+                ref={this.formRef}
+                name="grossPay"
+                type="number"
+                value={grossPay || ''}
+                onChange={event => this.setState({ grossPay: Number(event.target.value) })}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
+                  disableUnderline: !editGrossPay,
+                  readOnly: !editGrossPay,
+                }}
+                validators={[
+                  'required',
+                  'isPositive',
+                ]}
+                errorMessages={[
+                  'Ein Betrag muss eingegeben werden.',
+                  'Nur positive Beträge sind erlaubt.',
+                ]}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={3} lg={2} container justify="flex-end">
+            { editGrossPay ? (
+              <div>
+                <IconButton type="submit">
+                  <SaveIcon />
+                </IconButton>
+                <IconButton type="reset" onClick={this.handleCancel}>
+                  <CancelIcon />
+                </IconButton>
+              </div>
+            ) : (
+              <IconButton onClick={() => this.setState({ editGrossPay: true })}>
+                <EditIcon />
               </IconButton>
-              <IconButton onClick={this.handleCancel}>
-                <CancelIcon />
-              </IconButton>
-            </div>
-          ) : (
-            <IconButton onClick={() => this.setState({ editGrossPay: true })}>
-              <EditIcon />
-            </IconButton>
-          )}
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </ValidatorForm>
     );
   }
 }
 
 IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
+  classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   grossPay: PropTypes.number.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
@@ -120,7 +151,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithStyles = withStyles(styles)(IncomeGrossPayComponent);
+
 export default withWidth()(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(IncomeGrossPayComponent));
+)(componentWithStyles));
