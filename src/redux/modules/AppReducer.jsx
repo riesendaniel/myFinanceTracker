@@ -48,10 +48,10 @@ const doLoadUserRights = snapshot => (dispatch) => {
       id: doc.id,
       ...doc.data(),
     }));
-    if(users) {
+    if(users[0]) {
       dispatch(loadedUserRights(users));
-      dispatch(isLoading(false));
     }
+    dispatch(isLoading(false));
   }
 };
 
