@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/de';
+import NotAuthorizedComponent from './NotAuthorizedComponent'
 import {
-  Grid,
-  Typography,
+Grid,
+Typography,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthDown,
+isWidthDown,
 } from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -145,7 +146,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            { !isAdmin ? 'Werde Admin' : (
+            { !isAdmin ? <NotAuthorizedComponent /> : (
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
