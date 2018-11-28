@@ -8,6 +8,10 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 
 export const ResponsiveTable = (props) => {
   const styles = theme => ({
@@ -159,3 +163,79 @@ export const ResponsiveTableCell = (props) => {
     </Component>
   );
 };
+
+const ResponsiveTableRowFormCellComponent = (props) => {
+  const {
+    alignRight,
+    breakpoint,
+    children,
+    classes,
+    label,
+    type,
+    width,
+  } = props;
+  return (
+    <div
+      className={classNames({
+        [classes.cell]: !isWidthDown(breakpoint, width),
+        [classes.responsiveCell]: isWidthDown(breakpoint, width),
+        [classes.responsiveNumeric]: isWidthDown(breakpoint, width) && type === 'numeric',
+        [classes.alignRight]: alignRight,
+      })}
+    >
+      { label && (
+        <Hidden
+          smUp={breakpoint === 'xs'}
+          mdUp={breakpoint === 'sm'}
+          lgUp={breakpoint === 'md'}
+          xlUp={breakpoint === 'lg'}
+        >
+          <Typography color="textSecondary">{label}</Typography>
+        </Hidden>
+      )}
+      {children}
+    </div>
+  );
+};
+
+ResponsiveTableRowFormCellComponent.propTypes = {
+  alignRight: PropTypes.bool,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  label: PropTypes.string,
+  type: PropTypes.oneOf(['numeric', 'text']),
+  width: CustomPropTypes.breakpoint.isRequired,
+};
+
+ResponsiveTableRowFormCellComponent.defaultProps = {
+  alignRight: false,
+  label: undefined,
+  type: 'text',
+};
+
+const formCellStyles = () => ({
+  cell: {
+    display: 'table-cell',
+  },
+  responsiveCell: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: 'none',
+  },
+  responsiveNumeric: {
+    flexDirection: 'row',
+  },
+  alignRight: {
+    justifyContent: 'flex-end',
+  },
+});
+
+const ResponsiveTableRowFormCellWithStyles = withStyles(formCellStyles)(
+  ResponsiveTableRowFormCellComponent,
+);
+export const ResponsiveTableRowFormCell = withWidth()(ResponsiveTableRowFormCellWithStyles);

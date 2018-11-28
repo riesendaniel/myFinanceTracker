@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
+  ResponsiveTableRowFormCell,
 } from './ResponsiveTable';
 import {
   actions,
@@ -95,17 +96,19 @@ class MainCategoryListItem extends Component {
       <ResponsiveTableRow breakpoint={breakpoint}>
         <ResponsiveTableCell>
           <ValidatorForm onSubmit={this.saveMainCategory}>
-            <div>
+            <ResponsiveTableRowFormCell breakpoint={breakpoint}>
               <FormControl fullWidth={editable ? true : undefined}>
                 <TextValidator
                   autoFocus={editable ? true : undefined}
                   name="description"
-                  label={editable ? 'Beschreibung' : undefined}
+                  placeholder="Beschreibung"
                   type="text"
                   value={mainCategory.description}
                   onChange={event => this.handleInputChange(event)}
-                  disableUnderline={!editable}
-                  readOnly={!editable}
+                  InputProps={{
+                    disableUnderline: !editable,
+                    readOnly: !editable,
+                  }}
                   validators={[
                     'required',
                     'minStringLength:3',
@@ -116,9 +119,13 @@ class MainCategoryListItem extends Component {
                   ]}
                 />
               </FormControl>
-            </div>
+            </ResponsiveTableRowFormCell>
             { editable ? (
-              <div>
+              <ResponsiveTableRowFormCell
+                breakpoint={breakpoint}
+                className={breakpointUp ? classes.actions : undefined}
+                alignRight
+              >
                 <IconButton type="submit">
                   <SaveIcon />
                 </IconButton>
@@ -131,16 +138,20 @@ class MainCategoryListItem extends Component {
                 >
                   <CancelIcon />
                 </IconButton>
-              </div>
+              </ResponsiveTableRowFormCell>
             ) : (
-              <div>
+              <ResponsiveTableRowFormCell
+                breakpoint={breakpoint}
+                className={breakpointUp ? classes.actions : undefined}
+                alignRight
+              >
                 <IconButton onClick={() => this.setState({ editable: true })}>
                   <EditIcon />
                 </IconButton>
                 <IconButton onClick={() => this.deleteMainCategory(mainCategory.id)}>
                   <DeleteOutlineIcon />
                 </IconButton>
-              </div>
+              </ResponsiveTableRowFormCell>
             )}
           </ValidatorForm>
         </ResponsiveTableCell>
