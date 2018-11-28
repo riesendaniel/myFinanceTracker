@@ -227,7 +227,7 @@ class NewOutgoingComponent extends Component {
 
 const mapStateToProps = state => ({
   currency: getCurrency(state),
-  categories: getCategories(state),
+  categories: getCategories(state).filter(category => !category.disabled),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
