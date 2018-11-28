@@ -28,6 +28,9 @@ import {
 } from '../redux/modules/MainCategoryReducer';
 
 const styles = () => ({
+  form: {
+    width: '100%',
+  },
   actions: {
     width: '100px',
   },
@@ -95,7 +98,7 @@ class MainCategoryListItem extends Component {
     return (
       <ResponsiveTableRow breakpoint={breakpoint}>
         <ResponsiveTableCell>
-          <ValidatorForm onSubmit={this.saveMainCategory}>
+          <ValidatorForm className={classes.form} onSubmit={this.saveMainCategory}>
             <ResponsiveTableRowFormCell breakpoint={breakpoint}>
               <FormControl fullWidth={editable ? true : undefined}>
                 <TextValidator
