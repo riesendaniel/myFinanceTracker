@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SaveIcon from '@material-ui/icons/Save';
-import { ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import {
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   Grid,
   Hidden,
   FormControl,
@@ -203,20 +203,18 @@ class NewOutgoingComponent extends Component {
                   </Grid>
                 </Grid>
               </CardContent>
-              <CardActionArea>
-                <CardActions>
-                  <IconButton
-                    type="submit"
-                    variant="contained"
-                    aria-label="add outgoing"
-                  >
-                    <SaveIcon />
-                  </IconButton>
-                  <IconButton onClick={this.handleCancel}>
-                    <CancelIcon />
-                  </IconButton>
-                </CardActions>
-              </CardActionArea>
+              <CardActions>
+                <IconButton
+                  type="submit"
+                  variant="contained"
+                  aria-label="add outgoing"
+                >
+                  <SaveIcon />
+                </IconButton>
+                <IconButton onClick={this.handleCancel}>
+                  <CancelIcon />
+                </IconButton>
+              </CardActions>
             </ValidatorForm>
           </Card>
         </Grid>

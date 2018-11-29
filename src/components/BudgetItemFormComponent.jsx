@@ -9,7 +9,7 @@ import {
 } from 'react-material-ui-form-validator';
 import {
   Button,
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   FormControl,
   Grid,
   Hidden,
@@ -243,11 +243,9 @@ class BudgetItemFormComponent extends Component {
                     </Grid>
                   </Grid>
                 </CardContent>
-                <CardActionArea>
-                  <CardActions>
-                    <Button variant="contained" type="submit">Hinzufügen</Button>
-                  </CardActions>
-                </CardActionArea>
+                <CardActions>
+                  <Button variant="contained" type="submit">Hinzufügen</Button>
+                </CardActions>
               </ValidatorForm>
             </Card>
           </Grid>
