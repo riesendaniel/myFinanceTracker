@@ -18,6 +18,7 @@ import { actions as mainCategoryActions } from '../redux/modules/MainCategoryRed
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import history from '../helper/history';
 import Budget from './BudgetComponent';
+import RedirectComponent from './RedirectComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
 import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
@@ -70,12 +71,14 @@ class AppComponent extends Component {
 
   initializeSnapshotWatcher = () => {
     const {
+      initializeAppWatcher,
       initializeMainCategoryWatcher,
       initializeBudgetWatcher,
       initializeGrossPayWatcher,
       initializeDeductionsWatcher,
       initializeOutgoingWatcher,
     } = this.props;
+    initializeAppWatcher();
     initializeMainCategoryWatcher();
     initializeBudgetWatcher();
     initializeGrossPayWatcher();
@@ -102,6 +105,7 @@ class AppComponent extends Component {
         <Router history={history}>
           {loading ? <Loading /> : (
             <div>
+              <RedirectComponent/>
               <header>
                 <Header isLoggedIn={isLoggedIn} />
                 { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
@@ -131,6 +135,7 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
   initializeBudgetWatcher: PropTypes.func.isRequired,
+  initializeAppWatcher: PropTypes.func.isRequired,
   initializeDeductionsWatcher: PropTypes.func.isRequired,
   initializeGrossPayWatcher: PropTypes.func.isRequired,
   initializeMainCategoryWatcher: PropTypes.func.isRequired,

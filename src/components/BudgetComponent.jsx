@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import {
   Button,
   Grid,
@@ -18,8 +17,6 @@ import {
 import Loading from './LoadingComponent';
 import BudgetList from './BudgetListComponent';
 import BudgetSummary from './BudgetSummaryComponent';
-import RedirectComponent from './RedirectComponent';
-import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 export class BudgetComponent extends Component {
@@ -36,13 +33,8 @@ export class BudgetComponent extends Component {
       mainCategories,
     } = this.props;
 
-    if (!auth.currentUser) {
-      return <Redirect to="/signin/" />;
-    }
-
     return (
       <div>
-        <RedirectComponent />
         <Grid container spacing={gridSpacing} justify="center">
           <Grid item xs={12} md={10}>
             <Typography variant="headline" component="h2">Budget</Typography>

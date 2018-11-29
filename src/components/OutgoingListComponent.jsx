@@ -24,7 +24,6 @@ import {
 import Loading from './LoadingComponent';
 import OutgoingSummaryComponent from './OutgoingSummaryComponent';
 import OutgoingItemComponent from './OutgoingItemComponent';
-import RedirectComponent from './RedirectComponent';
 import OutgoingTableHead from './OutgoingTableHead';
 import {
   getCategories,
@@ -34,6 +33,7 @@ import {
   actions,
   getIsLoading as getOutgoingIsLoading,
   getOutgoings,
+  getMostFrequentCategory,
 } from '../redux/modules/OutgoingReducer';
 import { gridSpacing } from '../theme';
 
@@ -43,6 +43,7 @@ class OutgoingListComponent extends Component {
     isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
     categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
+    mostFrequentCategory: PropTypes.string.isRequired,
   };
 
   state = {
@@ -53,25 +54,6 @@ class OutgoingListComponent extends Component {
     orderBy: 'outgoingDate',
     filterValue: null,
   };
-
-  getMostFrequentCategory = (arr) => {
-    let currHighest = 0;
-    let anzahlElement = 0;
-    let currItem;
-    for (let i = 0; i < arr.length; i += 1) {
-      for (let j = i; j < arr.length; j += 1) {
-        if (arr[i].outgoingCategoryId === arr[j].outgoingCategoryId) {
-          anzahlElement += 1;
-        }
-        if (currHighest < anzahlElement) {
-          currHighest = anzahlElement;
-          currItem = arr[i].outgoingCategoryId;
-        }
-      }
-      anzahlElement = 0;
-    }
-    return currItem;
-  }
 
   getSorting(order, orderBy) {
     return order === 'desc' ? (a, b) => this.desc(a, b, orderBy) : (a, b) => -this.desc(a, b, orderBy);
@@ -162,6 +144,7 @@ class OutgoingListComponent extends Component {
       isLoadingOutgoings,
       isLoadingBudget,
       categories,
+      mostFrequentCategory,
     } = this.props;
     const {
       filterValue,
@@ -173,7 +156,6 @@ class OutgoingListComponent extends Component {
     } = this.state;
     return (
       <Grid container spacing={gridSpacing} justify="center">
-        <RedirectComponent />
         <Grid item xs={12} md={10}>
           <Typography variant="headline" component="h2">Ausgaben</Typography>
         </Grid>
@@ -267,7 +249,6 @@ class OutgoingListComponent extends Component {
                 color="primary"
                 type="button"
                 onClick={() => {
-                  const mostFrequentCategory = this.getMostFrequentCategory(outgoings);
                   history.push({
                     pathname: '/outgoing/edit',
                     state: { mostFrequentCategory },
@@ -291,6 +272,7 @@ const mapStateToProps = state => ({
   isLoadingBudget: getBudgetIsLoading(state),
   outgoings: getOutgoings(state),
   categories: getCategories(state),
+  mostFrequentCategory: getMostFrequentCategory(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
