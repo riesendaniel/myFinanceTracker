@@ -46,7 +46,7 @@ export class BudgetComponent extends Component {
                   { mainCategories.map((mainCategory) => {
                     const list = budget.filter(item => item.mainCategoryId === mainCategory.id);
                     return list.length !== 0 && (
-                      <Grid item xs={12}>
+                      <Grid item xs={12} key={mainCategory.id}>
                         <BudgetList
                           key={mainCategory.id}
                           title={mainCategory.description}
