@@ -149,8 +149,14 @@ export const ResponsiveTableCell = (props) => {
     },
   });
   const Component = withStyles(styles)(TableCell);
+  const nativeProps = {};
+  Object.keys(props).forEach((key) => {
+    if (!['alignRight', 'breakpoint', 'columnHead'].includes(key)) {
+      nativeProps[key] = props[key];
+    }
+  });
   return (
-    <Component {...props}>
+    <Component {...nativeProps}>
       { columnHead && (
         <Hidden
           smUp={breakpoint === 'xs'}
