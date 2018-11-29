@@ -210,9 +210,9 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, amount: Number(event.target.value) },
                             });
                           }}
-                          startAdornment={
-                            <InputAdornment position="start">{currency}</InputAdornment>
-                          }
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
+                          }}
                           validators={[
                             'required',
                             'isPositive',
@@ -236,8 +236,6 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, color: event.target.value },
                             });
                           }}
-                          validators={['required']}
-                          errorMessages={['Eine Farbe muss ausgewählt werden.']}
                         />
                       </FormControl>
                     </Grid>
