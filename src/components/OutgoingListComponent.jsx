@@ -43,7 +43,11 @@ class OutgoingListComponent extends Component {
     isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
     categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
-    mostFrequentCategory: PropTypes.string.isRequired,
+    mostFrequentCategory: PropTypes.string,
+  };
+
+  static defaultProps = {
+    mostFrequentCategory: undefined,
   };
 
   state = {
