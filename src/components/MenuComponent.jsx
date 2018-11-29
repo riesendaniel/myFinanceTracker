@@ -124,7 +124,7 @@ const MenuComponent = (props) => {
 };
 
 MenuComponent.propTypes = {
-  width: CustomPropTypes.breakpoint.isRequired,
+  width: PropTypes.string.isRequired,
 };
 
 export default MenuComponent;
