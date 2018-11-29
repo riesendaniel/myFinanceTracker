@@ -4,6 +4,9 @@ const primaryColor = '#F9AA33';
 const secondaryColor = '#344955';
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   palette: {
     primary: {
       main: primaryColor,
@@ -45,8 +48,22 @@ theme.overrides = {
     },
   },
   MuiTypography: {
-    headline: {
+    h1: {
+      fontSize: '1.25rem',
       fontWeight: 500,
+      lineHeight: 1.6,
+      letterSpacing: '0.0075em',
+    },
+    h2: {
+      fontSize: '1.5rem',
+      fontWeight: 500,
+      lineHeight: '1.35417em',
+    },
+    body1: {
+      fontSize: '0.875rem',
+      fontWeight: 500,
+      lineHeight: 1.5,
+      letterSpacing: '0.01071em',
     },
   },
   MuiListItem: {

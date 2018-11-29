@@ -46,7 +46,7 @@ class HeaderComponent extends Component {
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Link to="/" className={classes.link}>
-              <Typography variant="title">myFinanceTracker</Typography>
+              <Typography variant="h1">myFinanceTracker</Typography>
             </Link>
             {isLoggedIn && (
               <div>

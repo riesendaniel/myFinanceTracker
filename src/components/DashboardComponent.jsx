@@ -111,7 +111,7 @@ class DashboardComponent extends Component {
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="headline" component="h2">{`Übersicht von ${ name || 'anonym'}`}</Typography>
+          <Typography variant="h2" component="h2">{`Übersicht von ${ name || 'anonym'}`}</Typography>
         </Grid>
         { isLoadingBudget || isLoadingIncome || isLoadingOutgoing || isLoadingUserRights ? <Loading /> : (
 

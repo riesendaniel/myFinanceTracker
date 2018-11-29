@@ -57,7 +57,7 @@ const IncomeComponent = (props) => {
         <Grid item md={2} xl={3} />
       </Hidden>
       <Grid item xs={12} md={8} xl={6}>
-        <Typography variant="headline" component="h2">Einkommen</Typography>
+        <Typography variant="h2" component="h2">Einkommen</Typography>
       </Grid>
       <Hidden smDown>
         <Grid item md={2} xl={3} />

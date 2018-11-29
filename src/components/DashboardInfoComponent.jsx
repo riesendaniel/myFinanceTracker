@@ -47,7 +47,7 @@ const DashboardInfoComponent = (props) => {
           {icon}
         </CardMedia>
         <CardContent className={classes.content}>
-          <Typography component="div" variant="body2">{title}</Typography>
+          <Typography component="div" variant="body1">{title}</Typography>
           <Typography component="div">{value}</Typography>
         </CardContent>
       </Card>
