@@ -12,6 +12,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
+import LogoutIcon from '@material-ui/icons/PowerSettingsNew';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import {
@@ -44,18 +45,26 @@ class Menu extends Component {
       text: 'Ausgaben',
       icon: <MoneyIcon />,
     },
+
+    {
+      id: 4,
+      link: '/logout',
+      text: 'Logout',
+      showName: true,
+      icon: <LogoutIcon />,
+    },
   ];
 
   handleMenuClick = (menuItem) => {
-    history.push(menuItem.link);
     const {
       toggleMenu,
     } = this.props;
     toggleMenu();
+    history.push(menuItem.link);
   }
 
   render = () => {
-    const { classes } = this.props;
+    const { classes, userName } = this.props;
     const { location } = history;
     return (
       <div className="Menu">
@@ -78,7 +87,7 @@ class Menu extends Component {
                 <ListItemIcon>
                   {menuItem.icon}
                 </ListItemIcon>
-                <ListItemText primary={menuItem.text} />
+                <ListItemText primary={!menuItem.showName ? menuItem.text : menuItem.text + ' ' + userName} />
               </ListItem>
             ))}
           </List>
@@ -105,7 +114,7 @@ const MenuConnected = connect(
 )(Menu);
 
 const MenuComponent = (props) => {
-  const { width } = props;
+  const { width, userName } = props;
 
   const styles = theme => ({
     divider: {
@@ -120,7 +129,7 @@ const MenuComponent = (props) => {
   });
 
   const MenuWithStyles = withStyles(styles)(MenuConnected);
-  return <MenuWithStyles />;
+  return <MenuWithStyles userName={userName}/>;
 };
 
 MenuComponent.propTypes = {

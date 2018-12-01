@@ -16,7 +16,7 @@ import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions,
 } from '../redux/modules/AppReducer';
-import { auth } from '../config/firebase';
+import history from '../helper/history';
 
 const styles = theme => ({
   link: {
@@ -51,7 +51,7 @@ class HeaderComponent extends Component {
             {isLoggedIn && (
               <div>
                 <IconButton
-                  onClick={() => auth.signOut()}
+                  onClick={() =>  history.push({pathname: '/logout'})}
                 >
                   <PowerSettingsNew />
                 </IconButton>
