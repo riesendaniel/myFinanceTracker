@@ -8,6 +8,10 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import withWidth, { isWidthDown } from '@material-ui/core/withWidth';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
 
 export const ResponsiveTable = (props) => {
   const styles = theme => ({
@@ -147,15 +151,90 @@ export const ResponsiveTableCell = (props) => {
   const Component = withStyles(styles)(TableCell);
   return (
     <Component {...props}>
-      <Hidden
-        smUp={breakpoint === 'xs'}
-        mdUp={breakpoint === 'sm'}
-        lgUp={breakpoint === 'md'}
-        xlUp={breakpoint === 'lg'}
-      >
-        <Typography color="textSecondary">{columnHead}</Typography>
-      </Hidden>
+      { columnHead && (
+        <Hidden
+          smUp={breakpoint === 'xs'}
+          mdUp={breakpoint === 'sm'}
+          lgUp={breakpoint === 'md'}
+          xlUp={breakpoint === 'lg'}
+        >
+          <Typography color="textSecondary">{columnHead}</Typography>
+        </Hidden>
+      )}
       {children}
     </Component>
   );
 };
+
+const ResponsiveTableRowFormCellComponent = (props) => {
+  const {
+    alignRight,
+    breakpoint,
+    children,
+    classes,
+    columnHead,
+    width,
+  } = props;
+  return (
+    <div
+      className={classNames({
+        [classes.cell]: !isWidthDown(breakpoint, width),
+        [classes.responsiveCell]: isWidthDown(breakpoint, width),
+        [classes.alignRight]: alignRight,
+      })}
+    >
+      { columnHead && (
+        <Hidden
+          smUp={breakpoint === 'xs'}
+          mdUp={breakpoint === 'sm'}
+          lgUp={breakpoint === 'md'}
+          xlUp={breakpoint === 'lg'}
+        >
+          <Typography color="textSecondary">{columnHead}</Typography>
+        </Hidden>
+      )}
+      {children}
+    </div>
+  );
+};
+
+ResponsiveTableRowFormCellComponent.propTypes = {
+  alignRight: PropTypes.bool,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+  classes: CustomPropTypes.classes.isRequired,
+  columnHead: PropTypes.string,
+  width: CustomPropTypes.breakpoint.isRequired,
+};
+
+ResponsiveTableRowFormCellComponent.defaultProps = {
+  alignRight: false,
+  columnHead: undefined,
+};
+
+const formCellStyles = () => ({
+  cell: {
+    display: 'table-cell',
+  },
+  responsiveCell: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: 'none',
+  },
+  responsiveNumeric: {
+    flexDirection: 'row',
+  },
+  alignRight: {
+    justifyContent: 'flex-end',
+  },
+});
+
+const ResponsiveTableRowFormCellWithStyles = withStyles(formCellStyles)(
+  ResponsiveTableRowFormCellComponent,
+);
+export const ResponsiveTableRowFormCell = withWidth()(ResponsiveTableRowFormCellWithStyles);

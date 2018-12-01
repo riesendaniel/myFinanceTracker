@@ -1,22 +1,20 @@
+import {
+  snapshotWatcher,
+  addDocument,
+  updateDocument,
+  deleteDocument,
+} from '../database';
+
+const incomeCollection = 'income';
+const deductionsCollection = 'deductions';
+
 // ------------------------------------
 // Selectors
 // ------------------------------------
-import {
-  addNewDeduction,
-  deleteDeduction,
-  getIncomeValues,
-  updateDeduction, updateGrossPay,
-} from '../database';
-import { addMessage } from '../../components/Notifier';
-
 export const getIsLoading = state => state.income.isLoading;
-
-export const getGrossPay = state => state.income.grossPay;
-
+export const getGrossPay = state => state.income.grossPay.amount;
 export const getDeductions = state => state.income.deductions;
-
 export const getTotalDeductions = state => state.income.totalDeductions;
-
 export const getNetPay = state => state.income.netPay;
 
 
@@ -24,13 +22,10 @@ export const getNetPay = state => state.income.netPay;
 // Action Types
 // ------------------------------------
 const INCOME_IS_LOADING = 'INCOME_IS_LOADING';
-const RECEIVE_INCOME = 'RECEIVE_INCOME';
+const RECEIVE_GROSS_PAY = 'RECEIVE_GROSS_PAY';
+const RECEIVE_DEDUCTIONS = 'RECEIVE_DEDUCTIONS';
 const CALC_TOTAL_DEDUCTIONS = 'CALC_TOTAL_DEDUCTIONS';
 const CALC_NET_PAY = 'CALC_NET_PAY';
-const UPDATE_GROSS_PAY = 'UPDATE_GROSS_PAY';
-const ADD_DEDUCTION = 'ADD_DEDUCTION';
-const UPDATE_DEDUCTION = 'UPDATE_DEDUCTION';
-const DELETE_DEDUCTION = 'DELETE_DEDUCTION';
 
 
 // ------------------------------------
@@ -41,9 +36,14 @@ const isLoading = status => ({
   status,
 });
 
-const receiveIncome = income => ({
-  type: RECEIVE_INCOME,
-  income,
+const receiveGrossPay = grossPay => ({
+  type: RECEIVE_GROSS_PAY,
+  grossPay,
+});
+
+const receiveDeductions = deductions => ({
+  type: RECEIVE_DEDUCTIONS,
+  deductions,
 });
 
 const calcTotalDeductions = income => ({
@@ -56,26 +56,6 @@ const calcNetPay = income => ({
   income,
 });
 
-const updateGrossPayEntry = grossPay => ({
-  type: UPDATE_GROSS_PAY,
-  grossPay,
-});
-
-const addDeduction = deduction => ({
-  type: ADD_DEDUCTION,
-  deduction,
-});
-
-const updateDeductionEntry = deduction => ({
-  type: UPDATE_DEDUCTION,
-  deduction,
-});
-
-const deleteDeductionEntry = id => ({
-  type: DELETE_DEDUCTION,
-  id,
-});
-
 
 // ------------------------------------
 // Async Action Creators
@@ -85,89 +65,91 @@ const updateCalculatedElements = (dispatch, getState) => {
     grossPay,
     deductions,
   } = getState().income;
-  dispatch(calcTotalDeductions({ grossPay, deductions }));
+  dispatch(calcTotalDeductions({ grossPay: grossPay.amount, deductions }));
   const { totalDeductions } = getState().income;
-  dispatch(calcNetPay({ grossPay, totalDeductions }));
+  dispatch(calcNetPay({ grossPay: grossPay.amount, totalDeductions }));
 };
 
-export function doLoadIncome() {
-  return (dispatch, getState) => {
-    dispatch(isLoading(true));
-    getIncomeValues().then(income => {
-        const grossPay = income.grossPay;
-        const id = income.id;
-        const deductions = income.deductions;
-        dispatch(receiveIncome({ grossPay, deductions, id }));
-        updateCalculatedElements(dispatch, getState);
-        dispatch(isLoading(false));
-      }).catch(error => {
-        addMessage({ message: 'Einkommen konnte nicht geladen werden' });
-        console.error(error);
-        dispatch(isLoading(false));
-      });
-  };
-}
+const doLoadGrossPay = snapshot => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  if (snapshot) {
+    const doc = snapshot.docs[0];
+    let grossPay;
+    if (doc) {
+      grossPay = {
+        id: doc.id,
+        ...doc.data(),
+      };
+    } else {
+      grossPay = {
+        amount: 0,
+      };
+    }
+    dispatch(receiveGrossPay(grossPay));
+    updateCalculatedElements(dispatch, getState);
+  }
+  dispatch(isLoading(false));
+};
 
+const initializeGrossPayWatcher = () => (dispatch) => {
+  snapshotWatcher(incomeCollection, snapshot => dispatch(doLoadGrossPay(snapshot)));
+};
 
-export function doUpdateGrossPay(grossPay) {
-  return (dispatch, getState) => {
-    updateGrossPay(getState().income.id, grossPay).then(() => {
-      dispatch(updateGrossPayEntry(grossPay));
-      updateCalculatedElements(dispatch, getState);
-      }
-    ).catch(error => {
-      addMessage({ message: 'Einkommen konnten nicht geändert werden' });
-      console.error(error);
-    });
-  };
-}
+const doLoadDeductions = snapshot => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  if (snapshot) {
+    const deductions = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    dispatch(receiveDeductions(deductions));
+    updateCalculatedElements(dispatch, getState);
+  }
+  dispatch(isLoading(false));
+};
 
-export function doAddDeduction(deduction) {
-  return (dispatch, getState) => {
-    addNewDeduction(deduction).then((item) => {
-        deduction.id = item.id;
-        dispatch(addDeduction(deduction));
-        updateCalculatedElements(dispatch, getState);
-      }
-    ).catch(error => {
-      addMessage({ message: 'Abzug konnte nicht gespeichert werden' });
-      console.error(error);
-    });
-  };
-}
+const initializeDeductionsWatcher = () => (dispatch) => {
+  snapshotWatcher(deductionsCollection, snapshot => dispatch(doLoadDeductions(snapshot)));
+};
 
-export function doUpdateDeduction(deduction) {
-  return (dispatch, getState) => {
-    updateDeduction(deduction).then(() => {
-        dispatch(updateDeductionEntry(deduction));
-        updateCalculatedElements(dispatch, getState);
-      }
-    ).catch(error => {
-      addMessage({ message: 'Abzug konnten nicht geändert werden' });
-      console.error(error);
-    });
-  };
-}
+const doUpdateGrossPay = amount => (dispatch, getState) => {
+  dispatch(isLoading(true));
+  const {
+    grossPay,
+  } = getState().income;
+  if (grossPay.id) {
+    updateDocument(incomeCollection, { id: grossPay.id, amount });
+  } else {
+    addDocument(incomeCollection, { id: grossPay.id, amount });
+  }
+  dispatch(isLoading(false));
+};
 
-export function doDeleteDeduction(id) {
-  return (dispatch, getState) => {
-    deleteDeduction(id).then(() => {
-      dispatch(deleteDeductionEntry(id));
-      updateCalculatedElements(dispatch, getState);
-      }
-    ).catch(error => {
-      addMessage({ message: 'Abzug konnte nicht gelöscht werden' });
-      console.error(error);
-    });
-  };
-}
+const doAddDeduction = deduction => (dispatch) => {
+  dispatch(isLoading(true));
+  addDocument(deductionsCollection, deduction);
+  dispatch(isLoading(false));
+};
+
+const doUpdateDeduction = deduction => (dispatch) => {
+  dispatch(isLoading(true));
+  updateDocument(deductionsCollection, deduction);
+  dispatch(isLoading(false));
+};
+
+const doDeleteDeduction = id => (dispatch) => {
+  dispatch(isLoading(true));
+  deleteDocument(deductionsCollection, id);
+  dispatch(isLoading(false));
+};
 
 
 // ------------------------------------
 // Actions
 // ------------------------------------
 export const actions = {
-  doLoadIncome,
+  initializeGrossPayWatcher,
+  initializeDeductionsWatcher,
   doUpdateGrossPay,
   doAddDeduction,
   doUpdateDeduction,
@@ -196,9 +178,13 @@ const ACTION_HANDLERS = {
   [INCOME_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
-  [RECEIVE_INCOME]: (state, action) => {
-    const { grossPay, deductions, id } = action.income;
-    return { ...state, grossPay,id , deductions };
+  [RECEIVE_GROSS_PAY]: (state, action) => {
+    const { grossPay } = action;
+    return { ...state, grossPay };
+  },
+  [RECEIVE_DEDUCTIONS]: (state, action) => {
+    const { deductions } = action;
+    return { ...state, deductions };
   },
   [CALC_TOTAL_DEDUCTIONS]: (state, action) => {
     const { grossPay, deductions } = action.income;
@@ -210,24 +196,6 @@ const ACTION_HANDLERS = {
     const netPay = calculateNetPay(grossPay, totalDeductions);
     return { ...state, netPay, isLoading: false };
   },
-  [UPDATE_GROSS_PAY]: (state, action) => {
-    const { grossPay } = action;
-    return { ...state, grossPay };
-  },
-  [ADD_DEDUCTION]: (state, action) => {
-    const deductions = [...state.deductions, action.deduction];
-    return { ...state, deductions };
-  },
-  [UPDATE_DEDUCTION]: (state, action) => {
-    const deductions = state.deductions.map(
-      deduction => (deduction.id !== action.deduction.id ? deduction : action.deduction),
-    );
-    return { ...state, deductions };
-  },
-  [DELETE_DEDUCTION]: (state, action) => {
-    const deductions = state.deductions.filter(deduction => deduction.id !== action.id);
-    return { ...state, deductions };
-  },
 };
 
 
@@ -236,7 +204,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   isLoading: false,
-  grossPay: null,
+  grossPay: {},
   deductions: [],
   totalDeductions: 0,
   netPay: null,

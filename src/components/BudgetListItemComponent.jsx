@@ -23,6 +23,9 @@ import {
 import {
   actions,
 } from '../redux/modules/BudgetReducer';
+import {
+  getOutgoingsByCategory,
+} from '../redux/modules/OutgoingReducer';
 
 const styles = () => ({
   actions: {
@@ -42,8 +45,18 @@ class BudgetListItemComponent extends Component {
   }
 
   handleDelete = () => {
-    const { doDeleteBudgetEntry, item } = this.props;
-    doDeleteBudgetEntry(item.id);
+    const {
+      doUpdateBudgetEntry,
+      doDeleteBudgetEntry,
+      item,
+      outgoingsByCategory,
+    } = this.props;
+    const categoryOutgoings = outgoingsByCategory.find(category => item.id === category.id);
+    if ((typeof categoryOutgoings === 'undefined') || (categoryOutgoings.outgoings.length === 0)) {
+      doDeleteBudgetEntry(item.id);
+    } else {
+      doUpdateBudgetEntry({ ...item, disabled: true });
+    }
   }
 
   render = () => {
@@ -87,16 +100,19 @@ class BudgetListItemComponent extends Component {
 }
 
 BudgetListItemComponent.propTypes = {
+  doUpdateBudgetEntry: PropTypes.func.isRequired,
   doDeleteBudgetEntry: PropTypes.func.isRequired,
   breakpoint: CustomPropTypes.breakpoint.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   item: CustomPropTypes.budgetEntry.isRequired,
+  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
 const mapStateToProps = state => ({
   currency: getCurrency(state),
+  outgoingsByCategory: getOutgoingsByCategory(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

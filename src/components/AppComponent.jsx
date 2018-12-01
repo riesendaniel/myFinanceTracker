@@ -9,11 +9,16 @@ import withWidth, {
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
-  actions,
+  actions as appActions,
   getMenuState,
 } from '../redux/modules/AppReducer';
+import { actions as budgetActions } from '../redux/modules/BudgetReducer';
+import { actions as incomeActions } from '../redux/modules/IncomeReducer';
+import { actions as mainCategoryActions } from '../redux/modules/MainCategoryReducer';
+import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
 import history from '../helper/history';
 import Budget from './BudgetComponent';
+import RedirectComponent from './RedirectComponent';
 import BudgetItemForm from './BudgetItemFormComponent';
 import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
@@ -40,9 +45,7 @@ const styles = theme => ({
 });
 
 class AppComponent extends Component {
-
   state = {
-    isSignedIn: false,
     loading: true,
   };
 
@@ -50,12 +53,11 @@ class AppComponent extends Component {
     this.unregisterAuthObserver = auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({
-          isSignedIn: true,
           loading: false,
         });
+        this.initializeSnapshotWatcher();
       } else {
         this.setState({
-          isSignedIn: false,
           loading: false,
         });
       }
@@ -65,6 +67,23 @@ class AppComponent extends Component {
   componentWillUnmount() {
     // un-register Firebase observers when the component unmounts
     this.unregisterAuthObserver();
+  }
+
+  initializeSnapshotWatcher = () => {
+    const {
+      initializeAppWatcher,
+      initializeMainCategoryWatcher,
+      initializeBudgetWatcher,
+      initializeGrossPayWatcher,
+      initializeDeductionsWatcher,
+      initializeOutgoingWatcher,
+    } = this.props;
+    initializeAppWatcher();
+    initializeMainCategoryWatcher();
+    initializeBudgetWatcher();
+    initializeGrossPayWatcher();
+    initializeDeductionsWatcher();
+    initializeOutgoingWatcher();
   }
 
   render = () => {
@@ -86,6 +105,7 @@ class AppComponent extends Component {
         <Router history={history}>
           {loading ? <Loading /> : (
             <div>
+              <RedirectComponent/>
               <header>
                 <Header isLoggedIn={isLoggedIn} />
                 { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
@@ -114,6 +134,12 @@ class AppComponent extends Component {
 }
 
 AppComponent.propTypes = {
+  initializeBudgetWatcher: PropTypes.func.isRequired,
+  initializeAppWatcher: PropTypes.func.isRequired,
+  initializeDeductionsWatcher: PropTypes.func.isRequired,
+  initializeGrossPayWatcher: PropTypes.func.isRequired,
+  initializeMainCategoryWatcher: PropTypes.func.isRequired,
+  initializeOutgoingWatcher: PropTypes.func.isRequired,
   toggleMenu: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   menuState: CustomPropTypes.menuState.isRequired,
@@ -125,6 +151,14 @@ const AppWithStyles = withStyles(styles)(AppComponent);
 const mapStateToProps = state => ({
   menuState: getMenuState(state),
 });
+
+const actions = {
+  ...appActions,
+  ...budgetActions,
+  ...incomeActions,
+  ...mainCategoryActions,
+  ...outgoingActions,
+};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

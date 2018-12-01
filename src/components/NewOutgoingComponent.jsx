@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SaveIcon from '@material-ui/icons/Save';
-import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
 import {
   Card, CardContent, CardActionArea, CardActions,
   Grid,
   Hidden,
   FormControl,
   IconButton,
-  Input,
   InputAdornment,
-  InputLabel,
   MenuItem,
-  Select,
-  TextField,
   Typography,
 } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -22,9 +18,9 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
-import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
+import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
-import { actions as budgetActions, getCategories } from '../redux/modules/BudgetReducer';
+import { getCategories } from '../redux/modules/BudgetReducer';
 import { gridSpacing } from '../theme';
 
 class NewOutgoingComponent extends Component {
@@ -64,7 +60,10 @@ class NewOutgoingComponent extends Component {
     }
     if (location.state && location.state.mostFrequentCategory) {
       this.setState({
-        outgoing: { ...this.state.outgoing, outgoingCategoryId: location.state.mostFrequentCategory },
+        outgoing: {
+          ...this.state.outgoing,
+          outgoingCategoryId: location.state.mostFrequentCategory,
+        },
       });
     }
   };
@@ -77,19 +76,15 @@ class NewOutgoingComponent extends Component {
 
   addOutgoing = (event) => {
     event.preventDefault();
-    try {
-      const {
-        doUpdateOutgoing,
-        doAddOutgoing,
-      } = this.props;
-      const { outgoing } = this.state;
-      if (outgoing.id) {
-        doUpdateOutgoing(outgoing);
-      } else {
-        doAddOutgoing(outgoing);
-      }
-    } catch (e) {
-      console.error(e);
+    const {
+      doUpdateOutgoing,
+      doAddOutgoing,
+    } = this.props;
+    const { outgoing } = this.state;
+    if (outgoing.id) {
+      doUpdateOutgoing(outgoing);
+    } else {
+      doAddOutgoing(outgoing);
     }
   };
 
@@ -135,9 +130,12 @@ class NewOutgoingComponent extends Component {
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor="amount">Betrag</InputLabel>
-                      <Input
+                      <TextValidator
                         id="amount"
+                        name="amount"
+                        placeholder="Betrag eingeben"
+                        validators={['required']}
+                        errorMessages={['Das ist ein Pflichtfeld']}
                         type="number"
                         value={outgoing.outgoingAmount || ''}
                         onChange={(event) => {
@@ -148,17 +146,22 @@ class NewOutgoingComponent extends Component {
                             },
                           });
                         }}
-                        startAdornment={
-                          <InputAdornment position="start">{currency}</InputAdornment>
-                        }
+                        InputProps={{
+                          startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
+                        }}
+
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor="group-select">Kategorie auswählen</InputLabel>
-                      <Select
+                      <SelectValidator
                         value={outgoing.outgoingCategoryId || ''}
+                        id="category"
+                        name="category"
+                        validators={['required']}
+                        errorMessages={['Das ist ein Pflichtfeld']}
+                        helperText="Kategorie auswählen"
                         onChange={(event) => {
                           this.setState({
                             outgoing: { ...outgoing, outgoingCategoryId: event.target.value },
@@ -177,14 +180,16 @@ class NewOutgoingComponent extends Component {
                             {category.description}
                           </MenuItem>
                         )) }
-                      </Select>
+                      </SelectValidator>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12}>
-                    <TextField
+                    <TextValidator
                       fullWidth
                       id="outgoing-date"
                       name="outgoingDate"
+                      validators={['required']}
+                      errorMessages={['Das ist ein Pflichtfeld']}
                       placeholder="Datum auswählen"
                       autoComplete="on"
                       type="date"
@@ -222,13 +227,8 @@ class NewOutgoingComponent extends Component {
 
 const mapStateToProps = state => ({
   currency: getCurrency(state),
-  categories: getCategories(state),
+  categories: getCategories(state).filter(category => !category.disabled),
 });
-
-const actions = {
-  ...outgoingActions,
-  ...budgetActions,
-};
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 

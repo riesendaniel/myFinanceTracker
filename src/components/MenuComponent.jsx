@@ -90,7 +90,6 @@ class Menu extends Component {
 }
 
 Menu.propTypes = {
-  history: CustomPropTypes.history.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };

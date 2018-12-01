@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import 'moment/locale/de';
+import NotAuthorizedComponent from './NotAuthorizedComponent'
 import {
-  Grid,
-  Typography,
+Grid,
+Typography,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthDown,
+isWidthDown,
 } from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -34,21 +34,20 @@ import {
 } from './ResponsiveTable';
 import {
   getCurrency,
+  getUserRole,
+  getIsLoading as getUserRightsIsLoading,
 } from '../redux/modules/AppReducer';
 import {
-  actions as budgetActions,
   getIsLoading as getBudgetIsLoading,
   getBudget, getMonthlyBudgetSum,
 } from '../redux/modules/BudgetReducer';
 import {
-  actions as outgoingActions,
   getIsLoading as getOutgoingIsLoading,
   getOutgoings,
   getCurrentMonthsOutgoingSum, getCurrentMonthsOutgoingsByCategory,
   getLastTwelveMonthsOutgoingSum,
 } from '../redux/modules/OutgoingReducer';
 import {
-  actions as incomeActions,
   getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
@@ -63,19 +62,6 @@ import { gridSpacing } from '../theme';
 moment.locale('de');
 
 class DashboardComponent extends Component {
-  componentDidMount = async () => {
-    const {
-      doLoadBudget,
-      doLoadIncome,
-      doLoadOutgoings,
-    } = this.props;
-    if (auth.currentUser) {
-      await doLoadBudget();
-      await doLoadIncome();
-      await doLoadOutgoings();
-    }
-  }
-
   handleAddOutgoing = () => {
     history.push('/outgoing/edit');
   };
@@ -100,7 +86,9 @@ class DashboardComponent extends Component {
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
+      isLoadingUserRights,
       budget,
+      userRole,
       currency,
       monthlyBudgetSum,
       netPay,
@@ -114,17 +102,19 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
-    const name = auth.currentUser ?  auth.currentUser.displayName : '';
+    const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
+    const isAdmin = 'admin' === userRole;
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="headline" component="h2">Übersicht von {name}</Typography>
+          <Typography variant="headline" component="h2">{`Übersicht von ${ name || 'anonym'}`}</Typography>
         </Grid>
-        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing ? <Loading /> : (
+        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing || isLoadingUserRights ? <Loading /> : (
+
           <Grid item xs={12} xl={10} container spacing={gridSpacing}>
             <Grid container spacing={gridSpacing} item>
               <DashboardInfoComponent
@@ -156,6 +146,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
+            { !isAdmin ? <NotAuthorizedComponent /> : (
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
@@ -315,6 +306,7 @@ class DashboardComponent extends Component {
                 )}
               />
             </Grid>
+            )}
           </Grid>
         ) }
       </Grid>
@@ -326,6 +318,7 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
+  isLoadingUserRights: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
@@ -351,7 +344,9 @@ const mapStateToProps = state => ({
   isLoadingBudget: getBudgetIsLoading(state),
   isLoadingIncome: getIncomeIsLoading(state),
   isLoadingOutgoing: getOutgoingIsLoading(state),
+  isLoadingUserRights: getUserRightsIsLoading(state),
   budget: getBudget(state),
+  userRole: getUserRole(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),
   netPay: getNetPay(state),
@@ -361,17 +356,8 @@ const mapStateToProps = state => ({
   lastTwelveMonthsOutgoingSum: getLastTwelveMonthsOutgoingSum(state),
 });
 
-const actions = {
-  ...budgetActions,
-  ...incomeActions,
-  ...outgoingActions,
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
-
 const componentWithWidth = withWidth()(DashboardComponent);
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(componentWithWidth);
