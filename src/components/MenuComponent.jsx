@@ -20,40 +20,44 @@ import {
 } from '../redux/modules/AppReducer';
 
 class Menu extends Component {
-  menu = [
-    {
-      id: 0,
-      link: '/',
-      text: 'Home',
-      icon: <HomeIcon />,
-    },
-    {
-      id: 1,
-      link: '/budget',
-      text: 'Budget',
-      icon: <CompareIcon />,
-    },
-    {
-      id: 2,
-      link: '/income',
-      text: 'Einkommen',
-      icon: <AttachMoneyIcon />,
-    },
-    {
-      id: 3,
-      link: '/outgoings',
-      text: 'Ausgaben',
-      icon: <MoneyIcon />,
-    },
+  menu = [];
 
-    {
-      id: 4,
-      link: '/logout',
-      text: 'Logout',
-      showName: true,
-      icon: <LogoutIcon />,
-    },
-  ];
+  componentWillMount = () => {
+    const { userName } = this.props;
+    this.menu = [
+      {
+        id: 0,
+        link: '/',
+        text: 'Home',
+        icon: <HomeIcon />,
+      },
+      {
+        id: 1,
+        link: '/budget',
+        text: 'Budget',
+        icon: <CompareIcon />,
+      },
+      {
+        id: 2,
+        link: '/income',
+        text: 'Einkommen',
+        icon: <AttachMoneyIcon />,
+      },
+      {
+        id: 3,
+        link: '/outgoings',
+        text: 'Ausgaben',
+        icon: <MoneyIcon />,
+      },
+
+      {
+        id: 4,
+        link: '/logout',
+        text: userName? 'Logout'.concat(' ').concat(userName) : 'Logout',
+        icon: <LogoutIcon />,
+      },
+    ];
+  }
 
   handleMenuClick = (menuItem) => {
     const {
@@ -67,7 +71,7 @@ class Menu extends Component {
   }
 
   render = () => {
-    const { classes, userName } = this.props;
+    const { classes } = this.props;
     const { location } = history;
     return (
       <div className="Menu">
@@ -90,7 +94,7 @@ class Menu extends Component {
                 <ListItemIcon>
                   {menuItem.icon}
                 </ListItemIcon>
-                <ListItemText primary={!menuItem.showName ? menuItem.text : menuItem.text + ' ' + userName} />
+                <ListItemText primary={menuItem.text} />
               </ListItem>
             ))}
           </List>
