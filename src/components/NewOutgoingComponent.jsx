@@ -74,7 +74,7 @@ class NewOutgoingComponent extends Component {
     });
   };
 
-  addOutgoing = (event) => {
+  addOutgoing = async (event) => {
     event.preventDefault();
     const {
       doUpdateOutgoing,
@@ -82,9 +82,9 @@ class NewOutgoingComponent extends Component {
     } = this.props;
     const { outgoing } = this.state;
     if (outgoing.id) {
-      doUpdateOutgoing(outgoing);
+      await doUpdateOutgoing(outgoing);
     } else {
-      doAddOutgoing(outgoing);
+      await doAddOutgoing(outgoing);
     }
   };
 

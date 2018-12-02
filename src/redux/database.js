@@ -5,7 +5,7 @@ const handleError = (error) => {
   ErrorLogger.log(error, 'Fehler beim Laden der Daten aus der Datenbank.');
 };
 
-export const snapshotWatcher = async (collection, handleNext) => {
+export const snapshotWatcher = (collection, handleNext) => {
   try {
     database.collection(collection).where('userId', '==', auth.currentUser.uid)
       .onSnapshot(handleNext, handleError);

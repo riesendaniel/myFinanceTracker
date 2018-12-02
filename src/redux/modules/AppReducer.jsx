@@ -95,7 +95,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = {
   currency: 'CHF',
-  isLoading: false,
+  isLoading: true,
   userRole: '',
   menuState: 'closed',
 };

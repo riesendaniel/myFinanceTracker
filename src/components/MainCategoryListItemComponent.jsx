@@ -64,7 +64,7 @@ class MainCategoryListItem extends Component {
     this.setState({ mainCategory });
   }
 
-  saveMainCategory = () => {
+  saveMainCategory = async () => {
     const {
       doAddMainCategory,
       doUpdateMainCategory,
@@ -73,15 +73,15 @@ class MainCategoryListItem extends Component {
       mainCategory,
     } = this.state;
     if (mainCategory.id !== 'new') {
-      doUpdateMainCategory(mainCategory);
+      await doUpdateMainCategory(mainCategory);
       this.setState({ editable: this.initialEditable });
     } else {
-      doAddMainCategory(mainCategory);
+      await doAddMainCategory(mainCategory);
       this.setState({ mainCategory: this.initialMainCategory, editable: this.initialEditable });
     }
   }
 
-  deleteMainCategory = (id) => {
+  deleteMainCategory = async (id) => {
     const {
       mainCategory,
     } = this.state;
@@ -93,7 +93,7 @@ class MainCategoryListItem extends Component {
       item.mainCategoryId === mainCategory.id
     ));
     if (budgetEntryInMainCategory.length === 0) {
-      doDeleteMainCategory(id);
+      await doDeleteMainCategory(id);
     } else {
       ErrorLogger.log(undefined, 'Diese Hauptkategorie darf nicht gelöscht werden, da ihr noch Budgeteinträge zugeordnet sind.');
     }

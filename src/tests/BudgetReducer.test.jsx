@@ -8,7 +8,7 @@ import reducer,
 } from '../redux/modules/BudgetReducer';
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   categories: [],
   budget: [],
   budgetHistory: [],
@@ -85,7 +85,7 @@ const budgetLoaded = [
   },
 ];
 
-const newStatus = true;
+const newStatus = false;
 
 const monthlyBudgetSum = 550;
 

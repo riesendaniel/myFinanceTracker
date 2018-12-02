@@ -123,23 +123,23 @@ const initializeOutgoingWatcher = () => (dispatch) => {
   snapshotWatcher(collection, snapshot => dispatch(doLoadOutgoings(snapshot)));
 };
 
-const doAddOutgoing = entry => (dispatch) => {
+const doAddOutgoing = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(collection, entry);
+  await addDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/outgoings');
 };
 
-const doUpdateOutgoing = entry => (dispatch) => {
+const doUpdateOutgoing = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(collection, entry);
+  await updateDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/outgoings');
 };
 
-const doDeleteOutgoing = id => (dispatch) => {
+const doDeleteOutgoing = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(collection, id);
+  await deleteDocument(collection, id);
   dispatch(isLoading(false));
 };
 
@@ -261,7 +261,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   outgoings: [],
   outgoingsByCategory: [],
   mostFrequentCategory: null,
