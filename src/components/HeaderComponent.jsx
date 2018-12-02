@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar,
-  Hidden,
   IconButton,
   Typography,
 } from '@material-ui/core';
@@ -40,7 +39,7 @@ class HeaderComponent extends Component {
   }
 
   render() {
-    const { classes, isLoggedIn } = this.props;
+    const { classes, fixedMenu, isLoggedIn } = this.props;
     return (
       <div className="Header">
         <AppBar className={classes.appBar}>
@@ -55,11 +54,11 @@ class HeaderComponent extends Component {
                 >
                   <PowerSettingsNew />
                 </IconButton>
-                <Hidden lgUp>
+                {!fixedMenu && (
                   <IconButton onClick={this.handleClick} aria-label="Menu">
                     <MenuIcon />
                   </IconButton>
-                </Hidden>
+                )}
               </div>
             )}
           </Toolbar>
@@ -71,8 +70,13 @@ class HeaderComponent extends Component {
 
 HeaderComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
+  fixedMenu: PropTypes.bool,
   isLoggedIn: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
+};
+
+HeaderComponent.defaultProps = {
+  fixedMenu: false,
 };
 
 const HeaderWithStyles = withStyles(styles)(HeaderComponent);
