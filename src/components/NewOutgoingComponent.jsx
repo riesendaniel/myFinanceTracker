@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import SaveIcon from '@material-ui/icons/Save';
 import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import {
   Card, CardContent, CardActions,
   Grid,
   Hidden,
   FormControl,
-  IconButton,
   InputAdornment,
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
+import FormActions from './FormActionsComponent';
 import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import { getCategories } from '../redux/modules/BudgetReducer';
@@ -204,16 +202,10 @@ class NewOutgoingComponent extends Component {
                 </Grid>
               </CardContent>
               <CardActions>
-                <IconButton
-                  type="submit"
-                  variant="contained"
-                  aria-label="add outgoing"
-                >
-                  <SaveIcon />
-                </IconButton>
-                <IconButton onClick={this.handleCancel}>
-                  <CancelIcon />
-                </IconButton>
+                <FormActions
+                  editable
+                  resetFnc={() => this.handleCancel()}
+                />
               </CardActions>
             </ValidatorForm>
           </Card>

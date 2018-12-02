@@ -8,8 +8,7 @@ import {
   SelectValidator,
 } from 'react-material-ui-form-validator';
 import {
-  Button,
-  Card, CardContent, CardActions,
+  Card, CardContent, CardActionArea, CardActions,
   FormControl,
   Grid,
   Hidden,
@@ -22,6 +21,8 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import history from '../helper/history';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -84,6 +85,12 @@ class BudgetItemFormComponent extends Component {
       await doAddBudgetEntry({ ...budgetEntry });
     }
   }
+
+  handleCancel = () => {
+    history.push({
+      pathname: '/budget',
+    });
+  };
 
   render = () => {
     const {
@@ -241,9 +248,14 @@ class BudgetItemFormComponent extends Component {
                     </Grid>
                   </Grid>
                 </CardContent>
-                <CardActions>
-                  <Button variant="contained" type="submit">Hinzufügen</Button>
-                </CardActions>
+                <CardActionArea>
+                  <CardActions>
+                    <FormActions
+                      editable
+                      resetFnc={() => this.handleCancel()}
+                    />
+                  </CardActions>
+                </CardActionArea>
               </ValidatorForm>
             </Card>
           </Grid>
