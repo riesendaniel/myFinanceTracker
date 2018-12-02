@@ -43,7 +43,11 @@ class OutgoingListComponent extends Component {
     isLoadingBudget: PropTypes.bool.isRequired,
     outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
     categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
-    mostFrequentCategory: PropTypes.string.isRequired,
+    mostFrequentCategory: PropTypes.string,
+  };
+
+  static defaultProps = {
+    mostFrequentCategory: undefined,
   };
 
   state = {
@@ -157,7 +161,7 @@ class OutgoingListComponent extends Component {
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
-          <Typography variant="headline" component="h2">Ausgaben</Typography>
+          <Typography variant="h2" component="h2">Ausgaben</Typography>
         </Grid>
         {isLoadingOutgoings || isLoadingBudget ? <Loading /> : (
           <Grid item xs={12} md={10} container>
