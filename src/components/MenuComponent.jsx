@@ -57,9 +57,12 @@ class Menu extends Component {
 
   handleMenuClick = (menuItem) => {
     const {
+      fixed,
       toggleMenu,
     } = this.props;
-    toggleMenu();
+    if (!fixed) {
+      toggleMenu();
+    }
     history.push(menuItem.link);
   }
 
@@ -100,6 +103,7 @@ class Menu extends Component {
 
 Menu.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
+  fixed: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
 };
 
@@ -114,7 +118,7 @@ const MenuConnected = connect(
 )(Menu);
 
 const MenuComponent = (props) => {
-  const { width, userName } = props;
+  const { fixed, userName, width } = props;
 
   const styles = theme => ({
     divider: {
@@ -129,11 +133,16 @@ const MenuComponent = (props) => {
   });
 
   const MenuWithStyles = withStyles(styles)(MenuConnected);
-  return <MenuWithStyles userName={userName}/>;
+  return <MenuWithStyles userName={userName} fixed={fixed} />;
 };
 
 MenuComponent.propTypes = {
-  width: CustomPropTypes.breakpoint.isRequired,
+  fixed: PropTypes.bool,
+  width: PropTypes.string.isRequired,
+};
+
+MenuComponent.defaultProps = {
+  fixed: false,
 };
 
 export default MenuComponent;

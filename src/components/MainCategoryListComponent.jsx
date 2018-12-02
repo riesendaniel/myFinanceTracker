@@ -23,7 +23,7 @@ class MainCategoryListComponent extends Component {
     open: false,
   };
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {
       open,
     } = this.props;

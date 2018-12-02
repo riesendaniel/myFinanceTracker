@@ -99,37 +99,40 @@ class AppComponent extends Component {
     } = this.props;
     const isLoggedIn = !!auth.currentUser;
     const userName = auth.currentUser ? auth.currentUser.displayName : '';
-    if (isWidthUp('lg', width) && menuState !== 'open') {
+    const fixedMenu = isWidthUp('lg', width);
+    if (fixedMenu && menuState !== 'open') {
       toggleMenu();
     }
     return (
       <div>
         <Router history={history}>
-          {loading ? <Loading /> : (
-            <div>
-              <RedirectComponent/>
-              <header>
-                <Header isLoggedIn={isLoggedIn} />
-                { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} userName={userName} /> }
-                <Notifier />
-              </header>
-              <div className={classes.toolbarPlaceholder} />
-              <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
-                <Switch>
-                  <Route path="/budget/edit" component={BudgetItemForm} />
-                  <Route path="/budget" component={Budget} />
-                  <Route path="/income" component={Income} />
-                  <Route path="/outgoings" component={OutgoingListComponent} />
-                  <Route path="/outgoing/edit" component={NewOutgoingComponent} />
-                  <Route path="/maincategories" component={MainCategoryListComponent} />
-                  <Route path="/signin/" component={SignIn} />
-                  <Route path="/logout/" component={Logout} />
-                  <Route path="/" component={Dashboard} exact />
-                  <Route path="*" component={NotFound} />
-                </Switch>
-              </main>
-            </div>
-          )}
+          <div>
+            <header>
+              <Header isLoggedIn={isLoggedIn} fixedMenu={fixedMenu ? true : undefined}/>
+              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} userName={userName} fixed={fixedMenu ? true : undefined} /> }
+              <Notifier />
+            </header>
+            {loading ? <Loading /> : (
+              <div>
+                <RedirectComponent />
+                <div className={classes.toolbarPlaceholder} />
+                <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
+                  <Switch>
+                    <Route path="/budget/edit" component={BudgetItemForm} />
+                    <Route path="/budget" component={Budget} />
+                    <Route path="/income" component={Income} />
+                    <Route path="/outgoings" component={OutgoingListComponent} />
+                    <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+                    <Route path="/maincategories" component={MainCategoryListComponent} />
+                    <Route path="/signin/" component={SignIn} />
+                    <Route path="/logout/" component={Logout} />
+                    <Route path="/" component={Dashboard} exact />
+                    <Route path="*" component={NotFound} />
+                  </Switch>
+                </main>
+              </div>
+            )}
+          </div>
         </Router>
       </div>
     );

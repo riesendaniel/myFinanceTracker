@@ -50,6 +50,12 @@ const CustomPropTypes = {
     color: PropTypes.color,
     amount: PropTypes.number.isRequired,
   }),
+  outgoingsByCategory: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }),
 };
 
 export default CustomPropTypes;

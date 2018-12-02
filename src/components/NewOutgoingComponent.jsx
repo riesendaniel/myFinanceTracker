@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import SaveIcon from '@material-ui/icons/Save';
-import { ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import {
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   Grid,
   Hidden,
   FormControl,
@@ -74,7 +74,7 @@ class NewOutgoingComponent extends Component {
     });
   };
 
-  addOutgoing = (event) => {
+  addOutgoing = async (event) => {
     event.preventDefault();
     const {
       doUpdateOutgoing,
@@ -82,9 +82,9 @@ class NewOutgoingComponent extends Component {
     } = this.props;
     const { outgoing } = this.state;
     if (outgoing.id) {
-      doUpdateOutgoing(outgoing);
+      await doUpdateOutgoing(outgoing);
     } else {
-      doAddOutgoing(outgoing);
+      await doAddOutgoing(outgoing);
     }
   };
 
@@ -97,7 +97,7 @@ class NewOutgoingComponent extends Component {
           <Grid item sm={2} md={3} xl={4} />
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
-          <Typography variant="headline" component="h2">Ausgabe erfassen</Typography>
+          <Typography variant="h2" component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
           <Grid item sm={2} md={3} xl={4} />
@@ -203,20 +203,18 @@ class NewOutgoingComponent extends Component {
                   </Grid>
                 </Grid>
               </CardContent>
-              <CardActionArea>
-                <CardActions>
-                  <IconButton
-                    type="submit"
-                    variant="contained"
-                    aria-label="add outgoing"
-                  >
-                    <SaveIcon />
-                  </IconButton>
-                  <IconButton onClick={this.handleCancel}>
-                    <CancelIcon />
-                  </IconButton>
-                </CardActions>
-              </CardActionArea>
+              <CardActions>
+                <IconButton
+                  type="submit"
+                  variant="contained"
+                  aria-label="add outgoing"
+                >
+                  <SaveIcon />
+                </IconButton>
+                <IconButton onClick={this.handleCancel}>
+                  <CancelIcon />
+                </IconButton>
+              </CardActions>
             </ValidatorForm>
           </Card>
         </Grid>

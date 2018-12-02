@@ -46,7 +46,7 @@ class IncomeGrossPayComponent extends Component {
     this.formRef = React.createRef();
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {
       grossPay,
     } = this.props;
@@ -64,14 +64,14 @@ class IncomeGrossPayComponent extends Component {
     this.formRef.current.resetValidations();
   }
 
-  saveGrossPay = () => {
+  saveGrossPay = async () => {
     const {
       doUpdateGrossPay,
     } = this.props;
     const {
       grossPay,
     } = this.state;
-    doUpdateGrossPay(grossPay);
+    await doUpdateGrossPay(grossPay);
     this.setState({ editGrossPay: false });
   }
 
@@ -140,8 +140,12 @@ IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
-  grossPay: PropTypes.number.isRequired,
+  grossPay: PropTypes.number,
   width: CustomPropTypes.breakpoint.isRequired,
+};
+
+IncomeGrossPayComponent.defaultProps = {
+  grossPay: 0,
 };
 
 const mapStateToProps = state => ({

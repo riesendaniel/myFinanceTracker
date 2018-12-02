@@ -78,23 +78,23 @@ const initializeBudgetWatcher = () => (dispatch) => {
   snapshotWatcher(collection, snapshot => dispatch(doLoadBudget(snapshot)));
 };
 
-const doAddBudgetEntry = entry => (dispatch) => {
+const doAddBudgetEntry = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(collection, entry);
+  await addDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/budget');
 };
 
-const doUpdateBudgetEntry = entry => (dispatch) => {
+const doUpdateBudgetEntry = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(collection, entry);
+  await updateDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/budget');
 };
 
-const doDeleteBudgetEntry = id => (dispatch) => {
+const doDeleteBudgetEntry = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(collection, id);
+  await deleteDocument(collection, id);
   dispatch(isLoading(false));
 };
 
@@ -151,7 +151,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   categories: [],
   budget: [],
   budgetHistory: [],

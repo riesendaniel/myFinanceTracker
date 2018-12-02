@@ -32,9 +32,9 @@ class OutgoingItemComponent extends Component {
     });
   }
 
-  handleDelete = () => {
+  handleDelete = async () => {
     const { doDeleteOutgoing, outgoing } = this.props;
-    doDeleteOutgoing(outgoing.id);
+    await doDeleteOutgoing(outgoing.id);
   }
 
   render() {

@@ -44,7 +44,7 @@ class BudgetListItemComponent extends Component {
     });
   }
 
-  handleDelete = () => {
+  handleDelete = async () => {
     const {
       doUpdateBudgetEntry,
       doDeleteBudgetEntry,
@@ -53,9 +53,9 @@ class BudgetListItemComponent extends Component {
     } = this.props;
     const categoryOutgoings = outgoingsByCategory.find(category => item.id === category.id);
     if ((typeof categoryOutgoings === 'undefined') || (categoryOutgoings.outgoings.length === 0)) {
-      doDeleteBudgetEntry(item.id);
+      await doDeleteBudgetEntry(item.id);
     } else {
-      doUpdateBudgetEntry({ ...item, disabled: true });
+      await doUpdateBudgetEntry({ ...item, disabled: true });
     }
   }
 
@@ -106,7 +106,7 @@ BudgetListItemComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   item: CustomPropTypes.budgetEntry.isRequired,
-  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
+  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoingsByCategory).isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
