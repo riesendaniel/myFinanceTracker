@@ -60,21 +60,21 @@ const initializeMainCategoryWatcher = () => (dispatch) => {
   snapshotWatcher(collection, snapshot => dispatch(doLoadMainCategories(snapshot)));
 };
 
-const doAddMainCategory = entry => (dispatch) => {
+const doAddMainCategory = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(collection, entry);
+  await addDocument(collection, entry);
   dispatch(isLoading(false));
 };
 
-const doUpdateMainCategory = entry => (dispatch) => {
+const doUpdateMainCategory = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(collection, entry);
+  await updateDocument(collection, entry);
   dispatch(isLoading(false));
 };
 
-const doDeleteMainCategory = id => (dispatch) => {
+const doDeleteMainCategory = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(collection, id);
+  await deleteDocument(collection, id);
   dispatch(isLoading(false));
 };
 
