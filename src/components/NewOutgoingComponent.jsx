@@ -92,13 +92,13 @@ class NewOutgoingComponent extends Component {
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4} />
+          <Grid item sm={2} md={3} xl={4}/>
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
           <Typography variant="h2" component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4} />
+          <Grid item sm={2} md={3} xl={4}/>
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
           <Card>
@@ -170,14 +170,14 @@ class NewOutgoingComponent extends Component {
                           id: 'group-select',
                         }}
                       >
-                        { categories.map(category => (
+                        {categories.map(category => (
                           <MenuItem
                             key={category.id}
                             value={category.id}
                           >
                             {category.description}
                           </MenuItem>
-                        )) }
+                        ))}
                       </SelectValidator>
                     </FormControl>
                   </Grid>
