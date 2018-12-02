@@ -103,30 +103,32 @@ class AppComponent extends Component {
     return (
       <div>
         <Router history={history}>
-          {loading ? <Loading /> : (
-            <div>
-              <RedirectComponent/>
-              <header>
-                <Header isLoggedIn={isLoggedIn} />
-                { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
-                <Notifier />
-              </header>
-              <div className={classes.toolbarPlaceholder} />
-              <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
-                <Switch>
-                  <Route path="/budget/edit" component={BudgetItemForm} />
-                  <Route path="/budget" component={Budget} />
-                  <Route path="/income" component={Income} />
-                  <Route path="/outgoings" component={OutgoingListComponent} />
-                  <Route path="/outgoing/edit" component={NewOutgoingComponent} />
-                  <Route path="/maincategories" component={MainCategoryListComponent} />
-                  <Route path="/signin/" component={SignIn} />
-                  <Route path="/" component={Dashboard} exact />
-                  <Route path="*" component={NotFound} />
-                </Switch>
-              </main>
-            </div>
-          )}
+          <div>
+            <header>
+              <Header isLoggedIn={isLoggedIn} />
+              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
+              <Notifier />
+            </header>
+            {loading ? <Loading /> : (
+              <div>
+                <RedirectComponent />
+                <div className={classes.toolbarPlaceholder} />
+                <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
+                  <Switch>
+                    <Route path="/budget/edit" component={BudgetItemForm} />
+                    <Route path="/budget" component={Budget} />
+                    <Route path="/income" component={Income} />
+                    <Route path="/outgoings" component={OutgoingListComponent} />
+                    <Route path="/outgoing/edit" component={NewOutgoingComponent} />
+                    <Route path="/maincategories" component={MainCategoryListComponent} />
+                    <Route path="/signin/" component={SignIn} />
+                    <Route path="/" component={Dashboard} exact />
+                    <Route path="*" component={NotFound} />
+                  </Switch>
+                </main>
+              </div>
+            )}
+          </div>
         </Router>
       </div>
     );

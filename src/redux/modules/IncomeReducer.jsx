@@ -203,7 +203,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   grossPay: {},
   deductions: [],
   totalDeductions: 0,
