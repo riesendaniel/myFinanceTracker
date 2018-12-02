@@ -13,6 +13,16 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 
+const removeCustomProps = (allProps, customKeys) => {
+  const reducecProps = {};
+  Object.keys(allProps).forEach((key) => {
+    if (!customKeys.includes(key)) {
+      reducecProps[key] = allProps[key];
+    }
+  });
+  return reducecProps;
+};
+
 export const ResponsiveTable = (props) => {
   const styles = theme => ({
     [theme.breakpoints.down(props.breakpoint)]: {
@@ -48,7 +58,8 @@ export const ResponsiveTableHead = (props) => {
   const Component = withStyles(styles)(TableHead);
   const { children, breakpoint } = props;
   const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
-  return <Component {...props}>{childrenWithProps}</Component>;
+  const reducedProps = removeCustomProps(props, ['show']);
+  return <Component {...reducedProps}>{childrenWithProps}</Component>;
 };
 
 export const ResponsiveTableBody = (props) => {
@@ -149,8 +160,9 @@ export const ResponsiveTableCell = (props) => {
     },
   });
   const Component = withStyles(styles)(TableCell);
+  const reducedProps = removeCustomProps(props, ['alignRight', 'breakpoint', 'columnHead']);
   return (
-    <Component {...props}>
+    <Component {...reducedProps}>
       { columnHead && (
         <Hidden
           smUp={breakpoint === 'xs'}
