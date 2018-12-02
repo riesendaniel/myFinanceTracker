@@ -140,8 +140,12 @@ IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
-  grossPay: PropTypes.number.isRequired,
+  grossPay: PropTypes.number,
   width: CustomPropTypes.breakpoint.isRequired,
+};
+
+IncomeGrossPayComponent.defaultProps = {
+  grossPay: 0,
 };
 
 const mapStateToProps = state => ({

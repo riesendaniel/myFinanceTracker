@@ -97,7 +97,8 @@ class AppComponent extends Component {
       width,
     } = this.props;
     const isLoggedIn = !!auth.currentUser;
-    if (isWidthUp('lg', width) && menuState !== 'open') {
+    const fixedMenu = isWidthUp('lg', width);
+    if (fixedMenu && menuState !== 'open') {
       toggleMenu();
     }
     return (
@@ -105,8 +106,8 @@ class AppComponent extends Component {
         <Router history={history}>
           <div>
             <header>
-              <Header isLoggedIn={isLoggedIn} />
-              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} /> }
+              <Header isLoggedIn={isLoggedIn} fixedMenu={fixedMenu ? true : undefined}/>
+              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} fixed={fixedMenu ? true : undefined} /> }
               <Notifier />
             </header>
             {loading ? <Loading /> : (

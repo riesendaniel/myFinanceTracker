@@ -10,7 +10,7 @@ import { gridSpacing } from '../theme';
 const SignIn = () => (
   <Grid container spacing={gridSpacing} justify="center">
     <Grid item xs={12} md={10}>
-      <Typography variant="headline" component="h2">Login</Typography>
+      <Typography variant="h2" component="h2">Login</Typography>
     </Grid>
     <Grid item xs={12} md={10}>
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />

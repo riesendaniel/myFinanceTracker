@@ -9,7 +9,7 @@ import {
 } from 'react-material-ui-form-validator';
 import {
   Button,
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   FormControl,
   Grid,
   Hidden,
@@ -104,7 +104,7 @@ class BudgetItemFormComponent extends Component {
             <Grid item sm={2} md={3} xl={4} />
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
-            <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
+            <Typography variant="h2" component="h2">Budgeteintrag erfassen</Typography>
           </Grid>
           <Hidden smDown>
             <Grid item sm={2} md={3} xl={4} />
@@ -210,9 +210,9 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, amount: Number(event.target.value) },
                             });
                           }}
-                          startAdornment={
-                            <InputAdornment position="start">{currency}</InputAdornment>
-                          }
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
+                          }}
                           validators={[
                             'required',
                             'isPositive',
@@ -236,18 +236,14 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, color: event.target.value },
                             });
                           }}
-                          validators={['required']}
-                          errorMessages={['Eine Farbe muss ausgewählt werden.']}
                         />
                       </FormControl>
                     </Grid>
                   </Grid>
                 </CardContent>
-                <CardActionArea>
-                  <CardActions>
-                    <Button variant="contained" type="submit">Hinzufügen</Button>
-                  </CardActions>
-                </CardActionArea>
+                <CardActions>
+                  <Button variant="contained" type="submit">Hinzufügen</Button>
+                </CardActions>
               </ValidatorForm>
             </Card>
           </Grid>

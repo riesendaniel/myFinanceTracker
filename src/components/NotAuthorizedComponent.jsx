@@ -8,7 +8,7 @@ import {
 const NotFound = () => (
   <div>
     <Grid item xs={12}>
-      <Typography variant="headline" component="h2">Dieser Bereich ist leider nicht einsehbar.</Typography>
+      <Typography variant="h2" component="h2">Dieser Bereich ist leider nicht einsehbar.</Typography>
     </Grid>
     <Grid item xs={12}>
       <Card>

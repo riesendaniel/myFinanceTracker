@@ -106,7 +106,7 @@ BudgetListItemComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   item: CustomPropTypes.budgetEntry.isRequired,
-  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
+  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoingsByCategory).isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
