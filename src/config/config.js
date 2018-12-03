@@ -2,10 +2,10 @@
 // Config for firebase
 // ------------------------------------
 export const firebaseConfig = {
-  authDomain: 'myfinancetracker-ch.firebaseapp.com',
-  databaseURL: 'https://myfinancetracker-ch.firebaseio.com/',
-  apiKey: 'AIzaSyCiOr3lhkNp8rueEEgudXYnrPnZwN2bMME',
-  projectId: 'myfinancetracker-ch',
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
 };
 
 export default firebaseConfig;
