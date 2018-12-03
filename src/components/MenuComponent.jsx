@@ -12,6 +12,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
+import LogoutIcon from '@material-ui/icons/PowerSettingsNew';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import {
@@ -19,35 +20,46 @@ import {
 } from '../redux/modules/AppReducer';
 
 class Menu extends Component {
-  menu = [
-    {
-      id: 0,
-      link: '/',
-      text: 'Home',
-      icon: <HomeIcon />,
-    },
-    {
-      id: 1,
-      link: '/budget',
-      text: 'Budget',
-      icon: <CompareIcon />,
-    },
-    {
-      id: 2,
-      link: '/income',
-      text: 'Einkommen',
-      icon: <AttachMoneyIcon />,
-    },
-    {
-      id: 3,
-      link: '/outgoings',
-      text: 'Ausgaben',
-      icon: <MoneyIcon />,
-    },
-  ];
+  menu = [];
+
+  componentWillMount = () => {
+    const { userName } = this.props;
+    this.menu = [
+      {
+        id: 0,
+        link: '/',
+        text: 'Home',
+        icon: <HomeIcon />,
+      },
+      {
+        id: 1,
+        link: '/budget',
+        text: 'Budget',
+        icon: <CompareIcon />,
+      },
+      {
+        id: 2,
+        link: '/income',
+        text: 'Einkommen',
+        icon: <AttachMoneyIcon />,
+      },
+      {
+        id: 3,
+        link: '/outgoings',
+        text: 'Ausgaben',
+        icon: <MoneyIcon />,
+      },
+
+      {
+        id: 4,
+        link: '/logout',
+        text: userName? 'Logout'.concat(' ').concat(userName) : 'Logout',
+        icon: <LogoutIcon />,
+      },
+    ];
+  }
 
   handleMenuClick = (menuItem) => {
-    history.push(menuItem.link);
     const {
       fixed,
       toggleMenu,
@@ -55,6 +67,7 @@ class Menu extends Component {
     if (!fixed) {
       toggleMenu();
     }
+    history.push(menuItem.link);
   }
 
   render = () => {
@@ -109,7 +122,7 @@ const MenuConnected = connect(
 )(Menu);
 
 const MenuComponent = (props) => {
-  const { fixed, width } = props;
+  const { fixed, userName, width } = props;
 
   const styles = theme => ({
     divider: {
@@ -124,7 +137,7 @@ const MenuComponent = (props) => {
   });
 
   const MenuWithStyles = withStyles(styles)(MenuConnected);
-  return <MenuWithStyles fixed={fixed} />;
+  return <MenuWithStyles userName={userName} fixed={fixed} />;
 };
 
 MenuComponent.propTypes = {

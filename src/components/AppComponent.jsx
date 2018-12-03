@@ -32,6 +32,7 @@ import OutgoingListComponent from './OutgoingListComponent';
 import Notifier from './Notifier';
 import SignIn from './SignIn';
 import { auth } from '../config/firebase';
+import Logout from './Logout';
 
 const menuWidth = '300px';
 
@@ -97,6 +98,7 @@ class AppComponent extends Component {
       width,
     } = this.props;
     const isLoggedIn = !!auth.currentUser;
+    const userName = auth.currentUser ? auth.currentUser.displayName : '';
     const fixedMenu = isWidthUp('lg', width);
     if (fixedMenu && menuState !== 'open') {
       toggleMenu();
@@ -107,7 +109,7 @@ class AppComponent extends Component {
           <div>
             <header>
               <Header isLoggedIn={isLoggedIn} fixedMenu={fixedMenu ? true : undefined}/>
-              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} fixed={fixedMenu ? true : undefined} /> }
+              { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} userName={userName} fixed={fixedMenu ? true : undefined} /> }
               <Notifier />
             </header>
             {loading ? <Loading /> : (
@@ -123,6 +125,7 @@ class AppComponent extends Component {
                     <Route path="/outgoing/edit" component={NewOutgoingComponent} />
                     <Route path="/maincategories" component={MainCategoryListComponent} />
                     <Route path="/signin/" component={SignIn} />
+                    <Route path="/logout/" component={Logout} />
                     <Route path="/" component={Dashboard} exact />
                     <Route path="*" component={NotFound} />
                   </Switch>
