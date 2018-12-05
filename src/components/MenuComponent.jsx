@@ -12,7 +12,7 @@ import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
-import LogoutIcon from '@material-ui/icons/PowerSettingsNew';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import {

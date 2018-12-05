@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import LogoutButton from '@material-ui/icons/ExitToApp';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
@@ -52,7 +52,7 @@ class HeaderComponent extends Component {
                 <IconButton
                   onClick={() =>  history.push({pathname: '/logout'})}
                 >
-                  <PowerSettingsNew />
+                  <LogoutButton />
                 </IconButton>
                 {!fixedMenu && (
                   <IconButton onClick={this.handleClick} aria-label="Menu">
