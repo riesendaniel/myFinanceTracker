@@ -8,7 +8,6 @@ import {
 import {
   FormControl,
   Grid,
-  IconButton,
   InputAdornment,
   Typography,
   withStyles,
@@ -16,11 +15,9 @@ import {
 import withWidth, {
   isWidthDown,
 } from '@material-ui/core/withWidth';
-import CancelIcon from '@material-ui/icons/Cancel';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -115,20 +112,12 @@ class IncomeGrossPayComponent extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={12} md={3} lg={2} container justify="flex-end">
-            { editGrossPay ? (
-              <div>
-                <IconButton type="submit">
-                  <SaveIcon />
-                </IconButton>
-                <IconButton type="reset" onClick={this.handleCancel}>
-                  <CancelIcon />
-                </IconButton>
-              </div>
-            ) : (
-              <IconButton onClick={() => this.setState({ editGrossPay: true })}>
-                <EditIcon />
-              </IconButton>
-            )}
+            <FormActions
+              editable={editGrossPay}
+              disableDelete
+              editFnc={() => this.setState({ editGrossPay: true })}
+              resetFnc={() => this.handleCancel()}
+            />
           </Grid>
         </Grid>
       </ValidatorForm>

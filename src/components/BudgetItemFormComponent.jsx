@@ -8,7 +8,6 @@ import {
   SelectValidator,
 } from 'react-material-ui-form-validator';
 import {
-  Button,
   Card, CardContent, CardActions,
   FormControl,
   Grid,
@@ -22,6 +21,8 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import history from '../helper/history';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -65,7 +66,7 @@ class BudgetItemFormComponent extends Component {
         },
       });
     }
-  }
+  };
 
   handleSubmit = async (e) => {
     const { doAddBudgetEntry, doUpdateBudgetEntry } = this.props;
@@ -83,7 +84,13 @@ class BudgetItemFormComponent extends Component {
     } else {
       await doAddBudgetEntry({ ...budgetEntry });
     }
-  }
+  };
+
+  handleCancel = () => {
+    history.push({
+      pathname: '/budget',
+    });
+  };
 
   render = () => {
     const {
@@ -98,23 +105,23 @@ class BudgetItemFormComponent extends Component {
 
     return (
       <div>
-        { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
+        {open && <MainCategoryList open onClose={() => this.setState({ open: false })}/>}
         <Grid container spacing={gridSpacing} justify="center">
           <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4} />
+            <Grid item sm={2} md={3} xl={4}/>
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
             <Typography variant="h2" component="h2">Budgeteintrag erfassen</Typography>
           </Grid>
           <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4} />
+            <Grid item sm={2} md={3} xl={4}/>
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
             <Card>
               <ValidatorForm onSubmit={this.handleSubmit}>
                 <CardContent>
                   <Grid container justify="space-between">
-                    { isLoadingCategories ? <Loading /> : (
+                    {isLoadingCategories ? <Loading/> : (
                       <Grid item xs={12} container justify="space-between">
                         <Grid item xs={8}>
                           <FormControl fullWidth>
@@ -133,11 +140,11 @@ class BudgetItemFormComponent extends Component {
                               validators={['required']}
                               errorMessages={['Eine Hauptkategorie muss ausgewählt werden.']}
                             >
-                              { mainCategories.map(mainCategory => (
+                              {mainCategories.map(mainCategory => (
                                 <MenuItem key={mainCategory.id} value={mainCategory.id}>
                                   {mainCategory.description}
                                 </MenuItem>
-                              )) }
+                              ))}
                             </SelectValidator>
                           </FormControl>
                         </Grid>
@@ -146,7 +153,7 @@ class BudgetItemFormComponent extends Component {
                             aria-label="Gruppe hinzufügen"
                             onClick={() => this.setState({ open: true })}
                           >
-                            <EditIcon />
+                            <EditIcon/>
                           </IconButton>
                         </Grid>
                       </Grid>
@@ -178,7 +185,8 @@ class BudgetItemFormComponent extends Component {
                     </Grid>
                     <Grid item xs={12} container alignItems="center" justify="space-between">
                       <Grid>
-                        <Typography color={budgetEntry.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>jährlich</Typography>
+                        <Typography
+                          color={budgetEntry.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>jährlich</Typography>
                       </Grid>
                       <Grid>
                         <FormControl>
@@ -187,7 +195,10 @@ class BudgetItemFormComponent extends Component {
                             checked={budgetEntry.period === 'monthly'}
                             onChange={(event) => {
                               this.setState({
-                                budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
+                                budgetEntry: {
+                                  ...budgetEntry,
+                                  period: event.target.value === 'monthly' ? 'yearly' : 'monthly'
+                                },
                               });
                             }}
                             color="primary"
@@ -195,7 +206,8 @@ class BudgetItemFormComponent extends Component {
                         </FormControl>
                       </Grid>
                       <Grid>
-                        <Typography color={budgetEntry.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>monatlich</Typography>
+                        <Typography
+                          color={budgetEntry.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>monatlich</Typography>
                       </Grid>
                     </Grid>
                     <Grid item xs={8}>
@@ -242,7 +254,10 @@ class BudgetItemFormComponent extends Component {
                   </Grid>
                 </CardContent>
                 <CardActions>
-                  <Button variant="contained" type="submit">Hinzufügen</Button>
+                  <FormActions
+                    editable
+                    resetFnc={() => this.handleCancel()}
+                  />
                 </CardActions>
               </ValidatorForm>
             </Card>
@@ -250,7 +265,7 @@ class BudgetItemFormComponent extends Component {
         </Grid>
       </div>
     );
-  }
+  };
 }
 
 BudgetItemFormComponent.propTypes = {

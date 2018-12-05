@@ -9,7 +9,6 @@ import {
 import {
   FormControl,
   Grid,
-  IconButton,
   InputAdornment,
   MenuItem,
   withStyles,
@@ -17,16 +16,13 @@ import {
 import withWidth, {
   isWidthUp,
 } from '@material-ui/core/withWidth';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import EditIcon from '@material-ui/icons/Edit';
-import CancelIcon from '@material-ui/icons/Cancel';
-import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
   ResponsiveTableRowFormCell,
 } from './ResponsiveTable';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -93,7 +89,15 @@ class IncomeDeductionsItemComponent extends Component {
     this.setState({ deduction: newDeduction, focus: name });
   }
 
-  saveDeduction = async () => {
+  resetDeduction = () => {
+    this.setState({
+      deduction: { ...this.initialDeduction },
+      editable: this.initialEditable,
+      focus: null,
+    });
+  }
+
+  saveDeduction = () => {
     const {
       doAddDeduction,
       doUpdateDeduction,
@@ -102,15 +106,16 @@ class IncomeDeductionsItemComponent extends Component {
       deduction,
     } = this.state;
     if (deduction.id !== 'new') {
-      await doUpdateDeduction(deduction);
-      this.setState({ editable: this.initialEditable, focus: null });
+      doUpdateDeduction(deduction).then(this.setState({
+        editable: this.initialEditable,
+        focus: null,
+      }));
     } else {
-      await doAddDeduction(deduction);
-      this.setState({
+      doAddDeduction(deduction).then(this.setState({
         deduction: this.initialDeduction,
         editable: this.initialEditable,
         focus: null,
-      });
+      }));
     }
   }
 
@@ -211,40 +216,18 @@ class IncomeDeductionsItemComponent extends Component {
                   )}
                 </FormControl>
               </ResponsiveTableRowFormCell>
-              { editable ? (
-                <ResponsiveTableRowFormCell
-                  breakpoint={breakpoint}
-                  className={breakpointUp ? classes.actions : undefined}
-                  alignRight
-                >
-                  <IconButton type="submit">
-                    <SaveIcon />
-                  </IconButton>
-                  <IconButton
-                    type="reset"
-                    onClick={() => this.setState({
-                      deduction: { ...this.initialDeduction },
-                      editable: this.initialEditable,
-                      focus: null,
-                    })}
-                  >
-                    <CancelIcon />
-                  </IconButton>
-                </ResponsiveTableRowFormCell>
-              ) : (
-                <ResponsiveTableRowFormCell
-                  breakpoint={breakpoint}
-                  className={breakpointUp ? classes.actions : undefined}
-                  alignRight
-                >
-                  <IconButton onClick={() => this.setState({ editable: true })}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => this.deleteDeduction(deduction.id)}>
-                    <DeleteOutlineIcon />
-                  </IconButton>
-                </ResponsiveTableRowFormCell>
-              )}
+              <ResponsiveTableRowFormCell
+                breakpoint={breakpoint}
+                className={breakpointUp ? classes.actions : undefined}
+                alignRight
+              >
+                <FormActions
+                  editable={editable}
+                  deleteFnc={() => this.deleteDeduction(deduction.id)}
+                  editFnc={() => this.setState({ editable: true })}
+                  resetFnc={() => this.resetDeduction()}
+                />
+              </ResponsiveTableRowFormCell>
             </Grid>
           </ValidatorForm>
         </ResponsiveTableCell>

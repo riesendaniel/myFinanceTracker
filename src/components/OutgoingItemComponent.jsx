@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import moment from 'moment/moment';
-import { IconButton } from '@material-ui/core';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
+import FormActions from './FormActionsComponent';
 import history from '../helper/history';
 import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
@@ -47,12 +45,10 @@ class OutgoingItemComponent extends Component {
         <ResponsiveTableCell columnHead="Kategorie">{outgoing.outgoingCategory}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
         <ResponsiveTableCell alignRight>
-          <IconButton onClick={this.handleEdit}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon />
-          </IconButton>
+          <FormActions
+            deleteFnc={this.handleDelete}
+            editFnc={this.handleEdit}
+          />
         </ResponsiveTableCell>
       </ResponsiveTableRow>
     );
