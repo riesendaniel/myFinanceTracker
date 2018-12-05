@@ -26,7 +26,7 @@ theme.overrides = {
       bottom: '32px',
       right: '32px',
       [theme.breakpoints.up('lg')]: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: '32px',
         right: '332px',
       },
