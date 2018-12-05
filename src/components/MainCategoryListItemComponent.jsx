@@ -67,7 +67,7 @@ class MainCategoryListItem extends Component {
     });
   }
 
-  saveMainCategory = async () => {
+  saveMainCategory = () => {
     const {
       doAddMainCategory,
       doUpdateMainCategory,
@@ -76,11 +76,14 @@ class MainCategoryListItem extends Component {
       mainCategory,
     } = this.state;
     if (mainCategory.id !== 'new') {
-      await doUpdateMainCategory(mainCategory);
-      this.setState({ editable: this.initialEditable });
+      doUpdateMainCategory(mainCategory).then(this.setState({
+        editable: this.initialEditable,
+      }));
     } else {
-      await doAddMainCategory(mainCategory);
-      this.setState({ mainCategory: this.initialMainCategory, editable: this.initialEditable });
+      doAddMainCategory(mainCategory).then(this.setState({
+        mainCategory: this.initialMainCategory,
+        editable: this.initialEditable,
+      }));
     }
   }
 

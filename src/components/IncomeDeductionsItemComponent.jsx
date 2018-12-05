@@ -97,7 +97,7 @@ class IncomeDeductionsItemComponent extends Component {
     });
   }
 
-  saveDeduction = async () => {
+  saveDeduction = () => {
     const {
       doAddDeduction,
       doUpdateDeduction,
@@ -106,15 +106,16 @@ class IncomeDeductionsItemComponent extends Component {
       deduction,
     } = this.state;
     if (deduction.id !== 'new') {
-      await doUpdateDeduction(deduction);
-      this.setState({ editable: this.initialEditable, focus: null });
+      doUpdateDeduction(deduction).then(this.setState({
+        editable: this.initialEditable,
+        focus: null,
+      }));
     } else {
-      await doAddDeduction(deduction);
-      this.setState({
+      doAddDeduction(deduction).then(this.setState({
         deduction: this.initialDeduction,
         editable: this.initialEditable,
         focus: null,
-      });
+      }));
     }
   }
 
