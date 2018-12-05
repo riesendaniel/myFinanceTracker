@@ -79,7 +79,7 @@ const IncomeComponent = (props) => {
                     <Typography>{`${Math.round(totalDeductions)} ${currency}`}</Typography>
                   </Grid>
                   <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.netPay}>
-                    <Typography color={smDown ? 'textSecondary' : undefined}>Nettoeinkommen</Typography>
+                    <Typography color={smDown ? 'textSecondary' : undefined}>monatliches Nettoeinkommen</Typography>
                     <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
                   </Grid>
                 </Grid>

@@ -87,7 +87,7 @@ class IncomeGrossPayComponent extends Component {
       <ValidatorForm ref={this.formRef} className={classes.form} onSubmit={this.saveGrossPay}>
         <Grid container>
           <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
-            <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+            <Typography color={smDown ? 'textSecondary' : undefined}>monatliches Bruttoeinkommen</Typography>
             <FormControl>
               <TextValidator
                 ref={this.formRef}
