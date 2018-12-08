@@ -56,6 +56,7 @@ const CustomPropTypes = {
     disabled: PropTypes.bool,
     outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
   }),
+  userRole: PropTypes.oneOf(['', 'standard', 'extended', 'admin']),
 };
 
 export default CustomPropTypes;

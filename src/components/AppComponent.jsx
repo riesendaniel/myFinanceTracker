@@ -16,6 +16,7 @@ import { actions as budgetActions } from '../redux/modules/BudgetReducer';
 import { actions as incomeActions } from '../redux/modules/IncomeReducer';
 import { actions as mainCategoryActions } from '../redux/modules/MainCategoryReducer';
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
+import { actions as usersActions } from '../redux/modules/UserReducer';
 import history from '../helper/history';
 import Budget from './BudgetComponent';
 import RedirectComponent from './RedirectComponent';
@@ -24,11 +25,11 @@ import Dashboard from './DashboardComponent';
 import Header from './HeaderComponent';
 import Income from './IncomeComponent';
 import Loading from './LoadingComponent';
-import MainCategoryListComponent from './MainCategoryListComponent';
 import Menu from './MenuComponent';
 import NotFound from './NotFound';
 import NewOutgoingComponent from './NewOutgoingComponent';
 import OutgoingListComponent from './OutgoingListComponent';
+import UserAdministration from './UserAdministrationComponent';
 import Notifier from './Notifier';
 import SignIn from './SignIn';
 import { auth } from '../config/firebase';
@@ -50,18 +51,68 @@ class AppComponent extends Component {
     loading: true,
   };
 
+  routes = [
+    {
+      id: 1,
+      path: '/budget/edit',
+      component: BudgetItemForm,
+    },
+    {
+      id: 2,
+      path: '/budget',
+      component: Budget,
+    },
+    {
+      id: 3,
+      path: '/income',
+      component: Income,
+    },
+    {
+      id: 4,
+      path: '/outgoings',
+      component: OutgoingListComponent,
+    },
+    {
+      id: 5,
+      path: '/outgoing/edit',
+      component: NewOutgoingComponent,
+    },
+    {
+      id: 6,
+      path: '/admin',
+      component: UserAdministration,
+    },
+    {
+      id: 7,
+      path: '/signin/',
+      component: SignIn,
+    },
+    {
+      id: 8,
+      path: '/logout/',
+      component: Logout,
+    },
+    {
+      id: 9,
+      path: '/',
+      component: Dashboard,
+      exact: true,
+    },
+    {
+      id: 10,
+      path: '*',
+      component: NotFound,
+    },
+  ];
+
   componentDidMount() {
     this.unregisterAuthObserver = auth.onAuthStateChanged((user) => {
       if (user) {
-        this.setState({
-          loading: false,
-        });
         this.initializeSnapshotWatcher();
-      } else {
-        this.setState({
-          loading: false,
-        });
       }
+      this.setState({
+        loading: false,
+      });
     });
   }
 
@@ -72,19 +123,19 @@ class AppComponent extends Component {
 
   initializeSnapshotWatcher = () => {
     const {
-      initializeAppWatcher,
       initializeMainCategoryWatcher,
       initializeBudgetWatcher,
       initializeGrossPayWatcher,
       initializeDeductionsWatcher,
       initializeOutgoingWatcher,
+      initializeUsersWatcher,
     } = this.props;
-    initializeAppWatcher();
     initializeMainCategoryWatcher();
     initializeBudgetWatcher();
     initializeGrossPayWatcher();
     initializeDeductionsWatcher();
     initializeOutgoingWatcher();
+    initializeUsersWatcher();
   }
 
   render = () => {
@@ -108,7 +159,7 @@ class AppComponent extends Component {
         <Router history={history}>
           <div>
             <header>
-              <Header isLoggedIn={isLoggedIn} fixedMenu={fixedMenu ? true : undefined}/>
+              <Header isLoggedIn={isLoggedIn} fixedMenu={fixedMenu ? true : undefined} />
               { (isLoggedIn && menuState === 'open') && <Menu width={menuWidth} userName={userName} fixed={fixedMenu ? true : undefined} /> }
               <Notifier />
             </header>
@@ -118,16 +169,14 @@ class AppComponent extends Component {
                 <div className={classes.toolbarPlaceholder} />
                 <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
                   <Switch>
-                    <Route path="/budget/edit" component={BudgetItemForm} />
-                    <Route path="/budget" component={Budget} />
-                    <Route path="/income" component={Income} />
-                    <Route path="/outgoings" component={OutgoingListComponent} />
-                    <Route path="/outgoing/edit" component={NewOutgoingComponent} />
-                    <Route path="/maincategories" component={MainCategoryListComponent} />
-                    <Route path="/signin/" component={SignIn} />
-                    <Route path="/logout/" component={Logout} />
-                    <Route path="/" component={Dashboard} exact />
-                    <Route path="*" component={NotFound} />
+                    {this.routes.map(route => (
+                      <Route
+                        key={route.id}
+                        path={route.path}
+                        component={route.component}
+                        exact={route.exact ? route.exact : undefined}
+                      />
+                    ))}
                   </Switch>
                 </main>
               </div>
@@ -141,11 +190,11 @@ class AppComponent extends Component {
 
 AppComponent.propTypes = {
   initializeBudgetWatcher: PropTypes.func.isRequired,
-  initializeAppWatcher: PropTypes.func.isRequired,
   initializeDeductionsWatcher: PropTypes.func.isRequired,
   initializeGrossPayWatcher: PropTypes.func.isRequired,
   initializeMainCategoryWatcher: PropTypes.func.isRequired,
   initializeOutgoingWatcher: PropTypes.func.isRequired,
+  initializeUsersWatcher: PropTypes.func.isRequired,
   toggleMenu: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   menuState: CustomPropTypes.menuState.isRequired,
@@ -164,6 +213,7 @@ const actions = {
   ...incomeActions,
   ...mainCategoryActions,
   ...outgoingActions,
+  ...usersActions,
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

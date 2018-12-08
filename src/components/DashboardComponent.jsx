@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/de';
-import NotAuthorizedComponent from './NotAuthorizedComponent'
 import {
-Grid,
-Typography,
+  Grid,
+  Typography,
 } from '@material-ui/core';
 import withWidth, {
-isWidthDown,
+  isWidthDown,
 } from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -34,8 +33,6 @@ import {
 } from './ResponsiveTable';
 import {
   getCurrency,
-  getUserRole,
-  getIsLoading as getUserRightsIsLoading,
 } from '../redux/modules/AppReducer';
 import {
   getIsLoading as getBudgetIsLoading,
@@ -51,10 +48,15 @@ import {
   getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
+import {
+  getUserRole,
+  getIsLoading as getUserIsLoading,
+} from '../redux/modules/UserReducer';
 import Loading from './LoadingComponent';
 import history from '../helper/history';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
+import NotAuthorizedComponent from './NotAuthorizedComponent';
 import RedirectComponent from './RedirectComponent';
 import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
@@ -86,7 +88,7 @@ class DashboardComponent extends Component {
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
-      isLoadingUserRights,
+      isLoadingUser,
       budget,
       userRole,
       currency,
@@ -105,16 +107,18 @@ class DashboardComponent extends Component {
     const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
-    const isAdmin = 'admin' === userRole;
+    const isAdmin = userRole === 'admin';
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" component="h2">{`Übersicht von ${ name || 'anonym'}`}</Typography>
+          <Typography variant="h2" component="h2">{`Übersicht von ${name || 'anonym'}`}</Typography>
         </Grid>
-        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing || isLoadingUserRights ? <Loading /> : (
-
+        { isLoadingBudget
+        || isLoadingIncome
+        || isLoadingOutgoing
+        || isLoadingUser ? <Loading /> : (
           <Grid item xs={12} xl={10} container spacing={gridSpacing}>
             <Grid container spacing={gridSpacing} item>
               <DashboardInfoComponent
@@ -147,165 +151,165 @@ class DashboardComponent extends Component {
               />
             </Grid>
             { !isAdmin ? <NotAuthorizedComponent /> : (
-            <Grid container spacing={gridSpacing} item>
-              <DashboardChartComponent
-                title={`Ausgaben im ${currentMonth} pro Kategorie`}
-                content={(
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <Pie
-                        innerRadius={xsDown ? 55 : 100}
-                        outerRadius={xsDown ? 80 : 140}
-                        paddingAngle={4}
-                        data={currentMonthsOutgoingsByCategory}
-                        dataKey="amount"
-                        nameKey="category"
+              <Grid container spacing={gridSpacing} item>
+                <DashboardChartComponent
+                  title={`Ausgaben im ${currentMonth} pro Kategorie`}
+                  content={(
+                    <ResponsiveContainer>
+                      <PieChart>
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Pie
+                          innerRadius={xsDown ? 55 : 100}
+                          outerRadius={xsDown ? 80 : 140}
+                          paddingAngle={4}
+                          data={currentMonthsOutgoingsByCategory}
+                          dataKey="amount"
+                          nameKey="category"
+                        >
+                          {currentMonthsOutgoingsByCategory.map(entry => (
+                            <Cell key={entry.id} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Legend
+                          layout="vertical"
+                          align={xsDown ? 'center' : 'right'}
+                          verticalAlign={xsDown ? 'bottom' : 'middle'}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  )}
+                />
+                <DashboardChartComponent
+                  title={`Bilanz des Monats ${currentMonth}`}
+                  content={(
+                    <ResponsiveContainer>
+                      <BarChart
+                        data={currentMonthsBalance}
                       >
-                        {currentMonthsOutgoingsByCategory.map(entry => (
-                          <Cell key={entry.id} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Legend
-                        layout="vertical"
-                        align={xsDown ? 'center' : 'right'}
-                        verticalAlign={xsDown ? 'bottom' : 'middle'}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                )}
-              />
-              <DashboardChartComponent
-                title={`Bilanz des Monats ${currentMonth}`}
-                content={(
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={currentMonthsBalance}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
-                      <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
-                      <XAxis
-                        dataKey="category"
-                        interval={0}
-                        textAnchor="start"
-                        height={1}
-                        angle={-90}
-                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
-                        tickLine={false}
-                        tickMargin={-15}
-                        dx={-7}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
+                        <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
+                        <XAxis
+                          dataKey="category"
+                          interval={0}
+                          textAnchor="start"
+                          height={1}
                           angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
+                          tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                          tickLine={false}
+                          tickMargin={-15}
+                          dx={-7}
                         />
-                      </YAxis>
-                    </BarChart>
-                  </ResponsiveContainer>
-                )}
-              />
-              <DashboardChartComponent
-                title="Ausgaben des vergangenen Jahres"
-                content={(
-                  <ResponsiveContainer>
-                    <LineChart
-                      data={lastTwelveMonthsOutgoingSum}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Line name="Betrag" dataKey="amount" stroke="#A10702" />
-                      <XAxis
-                        dataKey="month"
-                        textAnchor="end"
-                        angle={-45}
-                        height={55}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                />
+                <DashboardChartComponent
+                  title="Ausgaben des vergangenen Jahres"
+                  content={(
+                    <ResponsiveContainer>
+                      <LineChart
+                        data={lastTwelveMonthsOutgoingSum}
+                      >
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <Line name="Betrag" dataKey="amount" stroke="#A10702" />
+                        <XAxis
+                          dataKey="month"
+                          textAnchor="end"
+                          angle={-45}
+                          height={55}
+                        />
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </LineChart>
+                    </ResponsiveContainer>
+                  )}
+                />
+                <DashboardChartComponent
+                  title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
+                  content={(
+                    <ResponsiveTable breakpoint="xs">
+                      <ResponsiveTableHead>
+                        <ResponsiveTableRow>
+                          <ResponsiveTableCell>Datum</ResponsiveTableCell>
+                          <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
+                          <ResponsiveTableCell>Betrag</ResponsiveTableCell>
+                        </ResponsiveTableRow>
+                      </ResponsiveTableHead>
+                      <ResponsiveTableBody>
+                        {outgoings.filter((value, index) => index < lastOutgoingsCount)
+                          .map(outgoing => (
+                            <ResponsiveTableRow key={outgoing.id}>
+                              <ResponsiveTableCell columnHead="Datum">
+                                <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                              </ResponsiveTableCell>
+                              <ResponsiveTableCell columnHead="Beschreibung">
+                                <Typography>{outgoing.outgoingTitle}</Typography>
+                              </ResponsiveTableCell>
+                              <ResponsiveTableCell columnHead="Betrag">
+                                <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                              </ResponsiveTableCell>
+                            </ResponsiveTableRow>
+                          ))
+                        }
+                      </ResponsiveTableBody>
+                    </ResponsiveTable>
+                  )}
+                />
+                <DashboardChartComponent
+                  title="Budget (monatlich)"
+                  content={(
+                    <ResponsiveContainer>
+                      <BarChart
+                        data={budget}
+                      >
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Bar name="Budget" dataKey="monthly">
+                          {budget.map(entry => (
+                            <Cell key={entry.id} fill={entry.color} />
+                          ))}
+                        </Bar>
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="category"
+                          interval={0}
+                          textAnchor="start"
+                          height={1}
                           angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
+                          tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                          tickLine={false}
+                          tickMargin={-15}
+                          dx={-7}
                         />
-                      </YAxis>
-                    </LineChart>
-                  </ResponsiveContainer>
-                )}
-              />
-              <DashboardChartComponent
-                title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
-                content={(
-                  <ResponsiveTable breakpoint="xs">
-                    <ResponsiveTableHead>
-                      <ResponsiveTableRow>
-                        <ResponsiveTableCell>Datum</ResponsiveTableCell>
-                        <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
-                        <ResponsiveTableCell>Betrag</ResponsiveTableCell>
-                      </ResponsiveTableRow>
-                    </ResponsiveTableHead>
-                    <ResponsiveTableBody>
-                      {outgoings.filter((value, index) => index < lastOutgoingsCount)
-                        .map(outgoing => (
-                          <ResponsiveTableRow key={outgoing.id}>
-                            <ResponsiveTableCell columnHead="Datum">
-                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Beschreibung">
-                              <Typography>{outgoing.outgoingTitle}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Betrag">
-                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                            </ResponsiveTableCell>
-                          </ResponsiveTableRow>
-                        ))
-                      }
-                    </ResponsiveTableBody>
-                  </ResponsiveTable>
-                )}
-              />
-              <DashboardChartComponent
-                title="Budget (monatlich)"
-                content={(
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={budget}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <Bar name="Budget" dataKey="monthly">
-                        {budget.map(entry => (
-                          <Cell key={entry.id} fill={entry.color} />
-                        ))}
-                      </Bar>
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="category"
-                        interval={0}
-                        textAnchor="start"
-                        height={1}
-                        angle={-90}
-                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
-                        tickLine={false}
-                        tickMargin={-15}
-                        dx={-7}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
-                        />
-                      </YAxis>
-                    </BarChart>
-                  </ResponsiveContainer>
-                )}
-              />
-            </Grid>
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                />
+              </Grid>
             )}
           </Grid>
         ) }
@@ -318,7 +322,7 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
-  isLoadingUserRights: PropTypes.bool.isRequired,
+  isLoadingUser: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
@@ -331,6 +335,7 @@ DashboardComponent.propTypes = {
     month: PropTypes.string.isRequired,
     amount: PropTypes.number.isRequired,
   })).isRequired,
+  userRole: CustomPropTypes.userRole,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
@@ -338,13 +343,14 @@ DashboardComponent.defaultProps = {
   monthlyBudgetSum: 0,
   netPay: 0,
   currentMonthsOutgoingSum: 0,
+  userRole: 'standard',
 };
 
 const mapStateToProps = state => ({
   isLoadingBudget: getBudgetIsLoading(state),
   isLoadingIncome: getIncomeIsLoading(state),
   isLoadingOutgoing: getOutgoingIsLoading(state),
-  isLoadingUserRights: getUserRightsIsLoading(state),
+  isLoadingUser: getUserIsLoading(state),
   budget: getBudget(state),
   userRole: getUserRole(state),
   currency: getCurrency(state),
