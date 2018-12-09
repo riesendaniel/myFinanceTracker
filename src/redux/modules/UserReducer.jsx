@@ -98,7 +98,13 @@ const ACTION_HANDLERS = {
   },
   [SET_USER_ROLE]: (state, action) => {
     const { users } = action;
-    const { userRole } = users.find(user => user.userId === auth.currentUser.uid);
+    const currentUser = users.find(user => user.userId === auth.currentUser.uid);
+    let userRole;
+    if (typeof currentUser !== 'undefined') {
+      userRole = currentUser.userRole;
+    } else {
+      userRole = '';
+    }
     return { ...state, userRole };
   },
 };
