@@ -9,8 +9,6 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
-import ErrorLogger from '../helper/ErrorLogger';
-import { firebaseAdmin } from '../config/firebase';
 import {
   actions,
   getIsLoading,
@@ -19,24 +17,7 @@ import {
 import Loading from './LoadingComponent';
 import { gridSpacing } from '../theme';
 
-const authUserList = [];
-
-const listUsersFromFirebase = async (nextPageToken) => {
-  try {
-    const result = await firebaseAdmin.listUsers(1000, nextPageToken);
-    result.users.forEach(user => authUserList.push(user.toJSON()));
-    if (result.pageToken) {
-      // there are more users to fetch
-      listUsersFromFirebase(result.pageToken);
-    }
-  } catch (error) {
-    ErrorLogger.log(error, 'Fehler beim Laden der Benutzerliste.');
-  }
-};
-
 const UserAdministrationComponent = async (props) => {
-  await listUsersFromFirebase();
-  console.log(authUserList);
   const {
     isLoading,
     users,
