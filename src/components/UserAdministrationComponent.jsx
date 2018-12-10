@@ -1,23 +1,45 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import PropTypes from 'prop-types';
 import {
   Card, CardContent,
   Grid,
   Hidden,
   Typography,
 } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import CustomPropTypes from '../helper/CustomPropTypes';
+import ErrorLogger from '../helper/ErrorLogger';
+import { firebaseAdmin } from '../config/firebase';
 import {
   actions,
   getIsLoading,
+  getUsers,
 } from '../redux/modules/UserReducer';
 import Loading from './LoadingComponent';
 import { gridSpacing } from '../theme';
 
-const UserAdministrationComponent = (props) => {
+const authUserList = [];
+
+const listUsersFromFirebase = async (nextPageToken) => {
+  try {
+    const result = await firebaseAdmin.listUsers(1000, nextPageToken);
+    result.users.forEach(user => authUserList.push(user.toJSON()));
+    if (result.pageToken) {
+      // there are more users to fetch
+      listUsersFromFirebase(result.pageToken);
+    }
+  } catch (error) {
+    ErrorLogger.log(error, 'Fehler beim Laden der Benutzerliste.');
+  }
+};
+
+const UserAdministrationComponent = async (props) => {
+  await listUsersFromFirebase();
+  console.log(authUserList);
   const {
     isLoading,
+    users,
   } = props;
   return (
     <Grid container spacing={gridSpacing} justify="center">
@@ -35,7 +57,7 @@ const UserAdministrationComponent = (props) => {
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                Test                
+                {users.map}
               </CardContent>
             </Card>
           </Grid>
@@ -47,10 +69,12 @@ const UserAdministrationComponent = (props) => {
 
 UserAdministrationComponent.propTypes = {
   isLoading: PropTypes.bool.isRequired,
+  users: PropTypes.arrayOf(CustomPropTypes.user).isRequired,
 };
 
 const mapStateToProps = state => ({
   isLoading: getIsLoading(state),
+  users: getUsers(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions);

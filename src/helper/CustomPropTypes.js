@@ -56,6 +56,11 @@ const CustomPropTypes = {
     disabled: PropTypes.bool,
     outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
   }),
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    state: PropTypes.oneOf(['pending', 'approved', 'rejected']).isRequired,
+    userRole: PropTypes.oneOf(['', 'standard', 'extended', 'admin']).isRequired,
+  }),
   userRole: PropTypes.oneOf(['', 'standard', 'extended', 'admin']),
 };
 
