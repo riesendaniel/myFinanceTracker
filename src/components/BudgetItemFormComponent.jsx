@@ -15,9 +15,11 @@ import {
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
-  Switch,
   Typography,
 } from '@material-ui/core';
+import {
+  ToggleButtonGroup, ToggleButton,
+} from '@material-ui/lab';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
@@ -108,20 +110,20 @@ class BudgetItemFormComponent extends Component {
         {open && <MainCategoryList open onClose={() => this.setState({ open: false })}/>}
         <Grid container spacing={gridSpacing} justify="center">
           <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4}/>
+            <Grid item sm={2} md={3} xl={4} />
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
             <Typography variant="h2" component="h2">Budgeteintrag erfassen</Typography>
           </Grid>
           <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4}/>
+            <Grid item sm={2} md={3} xl={4} />
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
             <Card>
               <ValidatorForm onSubmit={this.handleSubmit}>
                 <CardContent>
                   <Grid container justify="space-between">
-                    {isLoadingCategories ? <Loading/> : (
+                    {isLoadingCategories ? <Loading /> : (
                       <Grid item xs={12} container justify="space-between">
                         <Grid item xs={8}>
                           <FormControl fullWidth>
@@ -153,7 +155,7 @@ class BudgetItemFormComponent extends Component {
                             aria-label="Gruppe hinzufügen"
                             onClick={() => this.setState({ open: true })}
                           >
-                            <EditIcon/>
+                            <EditIcon />
                           </IconButton>
                         </Grid>
                       </Grid>
@@ -183,32 +185,24 @@ class BudgetItemFormComponent extends Component {
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} container alignItems="center" justify="space-between">
-                      <Grid>
-                        <Typography
-                          color={budgetEntry.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>jährlich</Typography>
-                      </Grid>
-                      <Grid>
-                        <FormControl>
-                          <Switch
-                            value={budgetEntry.period}
-                            checked={budgetEntry.period === 'monthly'}
-                            onChange={(event) => {
-                              this.setState({
-                                budgetEntry: {
-                                  ...budgetEntry,
-                                  period: event.target.value === 'monthly' ? 'yearly' : 'monthly'
-                                },
-                              });
-                            }}
-                            color="primary"
-                          />
-                        </FormControl>
-                      </Grid>
-                      <Grid>
-                        <Typography
-                          color={budgetEntry.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>monatlich</Typography>
-                      </Grid>
+                    <Grid item xs={12}>
+                      <FormControl>
+                        <ToggleButtonGroup
+                          value={budgetEntry.period}
+                          exclusive
+                          onChange={(event, period) => {
+                            this.setState({
+                              budgetEntry: {
+                                ...budgetEntry,
+                                period,
+                              },
+                            });
+                          }}
+                        >
+                          <ToggleButton value="monthly">monatlich</ToggleButton>
+                          <ToggleButton value="yearly">jährlich</ToggleButton>
+                        </ToggleButtonGroup>
+                      </FormControl>
                     </Grid>
                     <Grid item xs={8}>
                       <FormControl fullWidth>
