@@ -58,10 +58,10 @@ const CustomPropTypes = {
   }),
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    state: PropTypes.oneOf(['pending', 'approved', 'rejected']).isRequired,
-    userRole: PropTypes.oneOf(['', 'standard', 'extended', 'admin']).isRequired,
+    name: PropTypes.string.isRequired,
+    state: PropTypes.oneOf(['unrequested', 'pending', 'approved', 'rejected']).isRequired,
+    role: PropTypes.oneOf(['standard', 'extended', 'admin']).isRequired,
   }),
-  userRole: PropTypes.oneOf(['', 'standard', 'extended', 'admin']),
 };
 
 export default CustomPropTypes;

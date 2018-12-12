@@ -11,7 +11,7 @@ const collection = 'users';
 // Selectors
 // ------------------------------------
 export const getIsLoading = state => state.users.isLoading;
-export const getUserRole = state => state.users.userRole;
+export const getCurrentUser = state => state.users.currentUser;
 export const getUsers = state => state.users.users;
 
 
@@ -20,7 +20,7 @@ export const getUsers = state => state.users.users;
 // ------------------------------------
 const USER_ADMINISTRATION_IS_LOADING = 'USER_ADMINISTRATION_IS_LOADING';
 const RECEIVE_USERS = 'RECEIVE_USERS';
-const SET_USER_ROLE = 'SET_USER_ROLE';
+const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 
 // ------------------------------------
@@ -36,8 +36,8 @@ const receiveUsers = users => ({
   users,
 });
 
-const setUserRole = users => ({
-  type: SET_USER_ROLE,
+const setCurrentUser = users => ({
+  type: SET_CURRENT_USER,
   users,
 });
 
@@ -53,7 +53,7 @@ const doLoadUsers = snapshot => (dispatch) => {
       ...doc.data(),
     }));
     dispatch(receiveUsers(users));
-    dispatch(setUserRole(users));
+    dispatch(setCurrentUser(users));
   }
   dispatch(isLoading(false));
 };
@@ -96,16 +96,18 @@ const ACTION_HANDLERS = {
     const { users } = action;
     return { ...state, users };
   },
-  [SET_USER_ROLE]: (state, action) => {
+  [SET_CURRENT_USER]: (state, action) => {
     const { users } = action;
-    const currentUser = users.find(user => user.userId === auth.currentUser.uid);
-    let userRole;
-    if (typeof currentUser !== 'undefined') {
-      userRole = currentUser.userRole;
-    } else {
-      userRole = '';
+    let currentUser = users.find(user => user.userId === auth.currentUser.uid);
+    if (typeof currentUser === 'undefined') {
+      currentUser = {
+        id: auth.currentUser.uid,
+        name: auth.currentUser.displayName || auth.currentUser.email,
+        state: 'unrequested',
+        role: 'standard',
+      };
     }
-    return { ...state, userRole };
+    return { ...state, currentUser };
   },
 };
 
@@ -115,7 +117,12 @@ const ACTION_HANDLERS = {
 const initialState = {
   isLoading: true,
   users: [],
-  userRole: '',
+  currentUser: {
+    id: 'anonymous',
+    name: 'anonymous',
+    state: 'unrequested',
+    role: 'standard',
+  },
 };
 
 export default function reducer(state = initialState, action) {

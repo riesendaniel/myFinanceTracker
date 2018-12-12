@@ -49,8 +49,8 @@ import {
   getNetPay,
 } from '../redux/modules/IncomeReducer';
 import {
-  getUserRole,
   getIsLoading as getUserIsLoading,
+  getCurrentUser,
 } from '../redux/modules/UserReducer';
 import Loading from './LoadingComponent';
 import history from '../helper/history';
@@ -58,7 +58,6 @@ import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
 import NotAuthorizedComponent from './NotAuthorizedComponent';
 import RedirectComponent from './RedirectComponent';
-import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 moment.locale('de');
@@ -90,8 +89,8 @@ class DashboardComponent extends Component {
       isLoadingOutgoing,
       isLoadingUser,
       budget,
-      userRole,
       currency,
+      currentUser,
       monthlyBudgetSum,
       netPay,
       outgoings,
@@ -104,16 +103,15 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
-    const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
-    const isAdmin = userRole === 'admin';
+    const hasPermissions = (currentUser.role !== 'standard') && (currentUser.state === 'approved');
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" component="h2">{`Übersicht von ${name || 'anonym'}`}</Typography>
+          <Typography variant="h2" component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
         </Grid>
         { isLoadingBudget
         || isLoadingIncome
@@ -150,7 +148,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            { !isAdmin ? <NotAuthorizedComponent /> : (
+            { hasPermissions ? (
               <Grid container spacing={gridSpacing} item>
                 <DashboardChartComponent
                   title={`Ausgaben im ${currentMonth} pro Kategorie`}
@@ -310,7 +308,7 @@ class DashboardComponent extends Component {
                   )}
                 />
               </Grid>
-            )}
+            ) : <NotAuthorizedComponent />}
           </Grid>
         ) }
       </Grid>
@@ -335,7 +333,7 @@ DashboardComponent.propTypes = {
     month: PropTypes.string.isRequired,
     amount: PropTypes.number.isRequired,
   })).isRequired,
-  userRole: CustomPropTypes.userRole,
+  currentUser: CustomPropTypes.user.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
@@ -343,7 +341,6 @@ DashboardComponent.defaultProps = {
   monthlyBudgetSum: 0,
   netPay: 0,
   currentMonthsOutgoingSum: 0,
-  userRole: 'standard',
 };
 
 const mapStateToProps = state => ({
@@ -352,7 +349,7 @@ const mapStateToProps = state => ({
   isLoadingOutgoing: getOutgoingIsLoading(state),
   isLoadingUser: getUserIsLoading(state),
   budget: getBudget(state),
-  userRole: getUserRole(state),
+  currentUser: getCurrentUser(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),
   netPay: getNetPay(state),
