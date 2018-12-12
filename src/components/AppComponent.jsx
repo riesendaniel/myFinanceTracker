@@ -16,7 +16,10 @@ import { actions as budgetActions } from '../redux/modules/BudgetReducer';
 import { actions as incomeActions } from '../redux/modules/IncomeReducer';
 import { actions as mainCategoryActions } from '../redux/modules/MainCategoryReducer';
 import { actions as outgoingActions } from '../redux/modules/OutgoingReducer';
-import { actions as usersActions } from '../redux/modules/UserReducer';
+import {
+  actions as usersActions,
+  getCurrentUser,
+} from '../redux/modules/UserReducer';
 import history from '../helper/history';
 import Budget from './BudgetComponent';
 import RedirectComponent from './RedirectComponent';
@@ -81,6 +84,7 @@ class AppComponent extends Component {
       id: 6,
       path: '/admin',
       component: UserAdministration,
+      role: 'admin',
     },
     {
       id: 7,
@@ -145,12 +149,16 @@ class AppComponent extends Component {
     const {
       toggleMenu,
       classes,
+      currentUser,
       menuState,
       width,
     } = this.props;
-    const isLoggedIn = !!auth.currentUser;
-    const userName = auth.currentUser ? auth.currentUser.displayName : '';
+    const isLoggedIn = currentUser.id !== 'anonymous';
+    const userName = currentUser.name;
     const fixedMenu = isWidthUp('lg', width);
+    const authorizedRoutes = this.routes.filter(
+      route => !route.role || route.role === currentUser.role
+    );
     if (fixedMenu && menuState !== 'open') {
       toggleMenu();
     }
@@ -169,7 +177,7 @@ class AppComponent extends Component {
                 <div className={classes.toolbarPlaceholder} />
                 <main className={(isLoggedIn && menuState === 'open') ? classes.main : undefined}>
                   <Switch>
-                    {this.routes.map(route => (
+                    {authorizedRoutes.map(route => (
                       <Route
                         key={route.id}
                         path={route.path}
@@ -197,6 +205,7 @@ AppComponent.propTypes = {
   initializeUsersWatcher: PropTypes.func.isRequired,
   toggleMenu: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
+  currentUser: CustomPropTypes.user.isRequired,
   menuState: CustomPropTypes.menuState.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
@@ -205,6 +214,7 @@ const AppWithStyles = withStyles(styles)(AppComponent);
 
 const mapStateToProps = state => ({
   menuState: getMenuState(state),
+  currentUser: getCurrentUser(state),
 });
 
 const actions = {

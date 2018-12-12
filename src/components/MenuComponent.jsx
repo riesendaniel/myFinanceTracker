@@ -19,12 +19,15 @@ import history from '../helper/history';
 import {
   actions,
 } from '../redux/modules/AppReducer';
+import {
+  getCurrentUser,
+} from '../redux/modules/UserReducer';
 
 class Menu extends Component {
   menu = [];
 
   componentWillMount = () => {
-    const { userName } = this.props;
+    const { currentUser } = this.props;
     this.menu = [
       {
         id: 0,
@@ -53,13 +56,14 @@ class Menu extends Component {
       {
         id: 4,
         link: '/admin',
+        role: 'admin',
         text: 'Benutzerverwaltung',
         icon: <AccountBalanceIcon />,
       },
       {
         id: 5,
         link: '/logout',
-        text: userName ? 'Logout'.concat(' ').concat(userName) : 'Logout',
+        text: `Logout ${currentUser.name}`,
         icon: <LogoutIcon />,
       },
     ];
@@ -77,8 +81,14 @@ class Menu extends Component {
   }
 
   render = () => {
-    const { classes } = this.props;
+    const {
+      classes,
+      currentUser,
+    } = this.props;
     const { location } = history;
+    const authorizedMenus = this.menu.filter(
+      menuItem => !menuItem.role || menuItem.role === currentUser.role
+    );
     return (
       <div className="Menu">
         <Drawer
@@ -90,7 +100,7 @@ class Menu extends Component {
         >
           <div className={classes.toolbarPlaceholder} />
           <List>
-            {this.menu.map(menuItem => (
+            {authorizedMenus.map(menuItem => (
               <ListItem
                 key={menuItem.id}
                 button
@@ -115,10 +125,11 @@ Menu.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
   fixed: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
-  userName: PropTypes.string.isRequired,
+  currentUser: CustomPropTypes.user.isRequired,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  currentUser: getCurrentUser(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);

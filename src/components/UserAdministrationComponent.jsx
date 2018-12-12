@@ -11,6 +11,10 @@ import {
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
+  ResponsiveTable,
+  ResponsiveTableBody,
+} from './ResponsiveTable';
+import {
   actions,
   getIsLoading,
   getCurrentUser,
@@ -26,9 +30,7 @@ const UserAdministrationComponent = (props) => {
     currentUser,
     users,
   } = props;
-  if (currentUser.role !== 'admin') {
-    return <Redirect to="/notfound" />;
-  }
+  const breakpoint = 'xs';
   return (
     <Grid container spacing={gridSpacing} justify="center">
       <Hidden smDown>
@@ -45,9 +47,14 @@ const UserAdministrationComponent = (props) => {
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                {users.map(user => (
-                  <UserAdministrationItem user={user} />
-                ))}
+                {currentUser.role !== 'admin' && <Redirect to="/notfound" />}
+                <ResponsiveTable breakpoint={breakpoint}>
+                  <ResponsiveTableBody>
+                    {users.map(user => (
+                      <UserAdministrationItem key={user.id} user={user} breakpoint={breakpoint} />
+                    ))}
+                  </ResponsiveTableBody>
+                </ResponsiveTable>
               </CardContent>
             </Card>
           </Grid>
