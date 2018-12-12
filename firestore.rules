@@ -1,94 +1,28 @@
-// weitere Infos/Tests/ToDo unter https://angularfirebase.com/lessons/firestore-security-rules-guide/
 service cloud.firestore {
   match /databases/{database}/documents {
-    function existingData() {
-      return resource.data;
-    }
-
-    function incomingData() {
-      return request.resource.data;
-    }
-
-    function currentUser() {
-      return request.auth;
-    }
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isOwnerSet() {
-      return currentUser().uid == incomingData().userId;
-    }
-
-    function isOwner() {
-      return currentUser().uid == existingData().userId;
-    }
-
-    function getUserData() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
-    }
-
-    function isAdmin() {
-      return getUserData().userRole == 'admin';
-    }
-
-    function isValidRef(collection, id) {
-      return exists(/databases/$(database)/documents/$(collection)/$(id))
-    }
-
-    function isColor(color) {
-      return color[0] == '#' &&
-             color.size() == 7;
-    }
-    
-    function isValidBudget() {
-      return isOwner() &&
-             (incomingData().category.size() > 3) &&
-             isValidRef('categories', incomingData().mainCategoryId) &&
-             (incomingData().period in ['monthly', 'yearly']) &&
-             (incomingData().monthly > 0) &&
-             (incomingData().yearly > 0) &&
-             isColor(incomingData().color);
-    }
-    
     match /budget/{document=**} {
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner();
-      allow update: if isOwner() && isOwnerSet();
-      allow delete: if isOwner();
+      allow read, update, delete: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth.uid != null;
     }
     match /categories/{document=**} {
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner();
-      allow update: if isOwner() && isOwnerSet();
-      allow delete: if isOwner();
+      allow read, update, delete: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth.uid != null;
     }
     match /deductions/{document=**} {
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner();
-      allow update: if isOwner() && isOwnerSet();
-      allow delete: if isOwner();
+      allow read, update, delete: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth.uid != null;
     }
     match /income/{document=**} {
-      // only one income per user
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner();
-      allow update: if isOwner() && isOwnerSet();
-      allow delete: if false;
+      allow read, update, delete: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth.uid != null;
     }
     match /outgoing/{document=**} {
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner();
-      allow update: if isOwner() && isOwnerSet();
-      allow delete: if isOwner();
+      allow read, update, delete: if request.auth.uid == resource.data.userId;
+      allow create: if request.auth.uid != null;
     }
     match /users/{document=**} {
-      // only one income per user
-      allow create: if isSignedIn() && isOwnerSet();
-      allow read: if isOwner() || isAdmin();
-      allow update: if (isOwner() && isOwnerSet()) || isAdmin();
-      allow delete: if false;
+      allow read, update, delete: if request.auth != null;
+      allow create: if request.auth.uid != null;
     }
   }
 }
