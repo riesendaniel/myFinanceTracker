@@ -72,6 +72,7 @@ const IncomeComponent = (props) => {
                     <IncomeGrossPay />
                   </Grid>
                   <Grid item xs={12}>
+                    <Typography color={smDown ? 'textSecondary' : undefined}>Abzüge</Typography>
                     <IncomeDeductions />
                   </Grid>
                   <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" className={classes.totalDeductions}>
