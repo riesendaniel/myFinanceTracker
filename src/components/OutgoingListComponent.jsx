@@ -11,9 +11,11 @@ import {
   Select,
   MenuItem, InputLabel,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
+import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
@@ -37,10 +39,21 @@ import {
 } from '../redux/modules/OutgoingReducer';
 import { gridSpacing } from '../theme';
 
+const styles = () => ({
+  blankIcon: {
+    fontSize: '10rem',
+    opacity: 0.25,
+  },
+  blankText: {
+    width: '75%',
+  },
+});
+
 class OutgoingListComponent extends Component {
   static propTypes = {
     isLoadingOutgoings: PropTypes.bool.isRequired,
     isLoadingBudget: PropTypes.bool.isRequired,
+    classes: CustomPropTypes.classes.isRequired,
     outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
     categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
     mostFrequentCategory: PropTypes.string,
@@ -145,8 +158,6 @@ class OutgoingListComponent extends Component {
   render() {
     const {
       outgoings,
-      isLoadingOutgoings,
-      isLoadingBudget,
       categories,
       mostFrequentCategory,
     } = this.props;
@@ -158,12 +169,41 @@ class OutgoingListComponent extends Component {
       rowsPerPage,
       searchValue,
     } = this.state;
+
+    const isDataReadyToRender = () => {
+      const {
+        isLoadingBudget,
+        isLoadingOutgoings,
+        classes,
+      } = this.props;
+      if (isLoadingBudget || isLoadingOutgoings) {
+        return <Loading />;
+      }
+      if (outgoings.length === 0) {
+        return (
+          <Card>
+            <CardContent>
+              <Grid container justify="center">
+                <MoneyIcon className={classes.blankIcon} />
+                <Typography className={classes.blankText} align="center">
+                  {`Damit an dieser Stelle die vergangenen Ausgaben aufgelistet 
+                  werden, muss mindestens ein Budgeteintrag erfasst werden.
+                  Dazu kann die Schaltfläche unten rechts verwendet werden.`}
+                </Typography>
+              </Grid>
+            </CardContent>
+          </Card>
+        );
+      }
+      return false;
+    };
+
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
           <Typography variant="h2" component="h2">Ausgaben</Typography>
         </Grid>
-        {isLoadingOutgoings || isLoadingBudget ? <Loading /> : (
+        {isDataReadyToRender() || (
           <Grid item xs={12} md={10} container>
             <Grid item xs={12}>
               <Card>
@@ -247,29 +287,28 @@ class OutgoingListComponent extends Component {
                 </CardContent>
               </Card>
             </Grid>
-            <Route render={({ history }) => (
-              <Button
-                variant="fab"
-                color="primary"
-                type="button"
-                onClick={() => {
-                  history.push({
-                    pathname: '/outgoing/edit',
-                    state: { mostFrequentCategory },
-                  });
-                }}
-              >
-                <AddIcon />
-              </Button>
-            )}
-            />
           </Grid>
         )}
+        <Route render={({ history }) => (
+          <Button
+            variant="fab"
+            color="primary"
+            type="button"
+            onClick={() => {
+              history.push({
+                pathname: '/outgoing/edit',
+                state: { mostFrequentCategory },
+              });
+            }}
+          >
+            <AddIcon />
+          </Button>
+        )}
+        />
       </Grid>
     );
   }
 }
-
 
 const mapStateToProps = state => ({
   isLoadingOutgoings: getOutgoingIsLoading(state),
@@ -281,7 +320,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const ComponentWithStyles = withStyles(styles)(OutgoingListComponent);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingListComponent);
+)(ComponentWithStyles);
