@@ -140,7 +140,7 @@ class BudgetItemFormComponent extends Component {
                                 });
                               }}
                               validators={['required']}
-                              errorMessages={['Eine Hauptkategorie muss ausgewählt werden.']}
+                              errorMessages={['Der Budgeteintrag muss einer Hauptkategorie zugewiesen werden. Ggf. muss vorgängig eine neue erfasst werden.']}
                             >
                               {mainCategories.map(mainCategory => (
                                 <MenuItem key={mainCategory.id} value={mainCategory.id}>
@@ -176,11 +176,15 @@ class BudgetItemFormComponent extends Component {
                           }}
                           validators={[
                             'required',
+                            'isString',
                             'minStringLength:3',
+                            'maxStringLength:100',
                           ]}
                           errorMessages={[
                             'Die Bezeichnung muss ausgefüllt werden.',
+                            'Die Bezeichnung muss in Form eines Textes erfasst werden.',
                             'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                            'Die Bezeichnung darf maximal 100 Zeichen beinhalten.',
                           ]}
                         />
                       </FormControl>
@@ -222,10 +226,12 @@ class BudgetItemFormComponent extends Component {
                           validators={[
                             'required',
                             'isPositive',
+                            'maxNumber:999999',
                           ]}
                           errorMessages={[
                             'Ein Betrag muss eingegeben werden.',
                             'Nur positive Beträge sind erlaubt.',
+                            `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
                           ]}
                         />
                       </FormControl>

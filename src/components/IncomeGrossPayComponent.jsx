@@ -103,10 +103,12 @@ class IncomeGrossPayComponent extends Component {
                 validators={[
                   'required',
                   'isPositive',
+                  'maxNumber:999999',
                 ]}
                 errorMessages={[
                   'Ein Betrag muss eingegeben werden.',
                   'Nur positive Beträge sind erlaubt.',
+                  `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
                 ]}
               />
             </FormControl>

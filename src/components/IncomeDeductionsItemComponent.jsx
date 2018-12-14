@@ -162,11 +162,15 @@ class IncomeDeductionsItemComponent extends Component {
                     }}
                     validators={[
                       'required',
+                      'isString',
                       'minStringLength:3',
+                      'maxStringLength:100',
                     ]}
                     errorMessages={[
                       'Die Bezeichnung muss ausgefüllt werden.',
+                      'Die Bezeichnung muss in Form eines Textes erfasst werden.',
                       'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                      'Die Bezeichnung darf maximal 100 Zeichen beinhalten.',
                     ]}
                   />
                 </FormControl>
@@ -191,14 +195,32 @@ class IncomeDeductionsItemComponent extends Component {
                       disableUnderline: !editable,
                       readOnly: !editable,
                     }}
-                    validators={[
-                      'required',
-                      'isPositive',
-                    ]}
-                    errorMessages={[
-                      'Ein Betrag muss eingegeben werden.',
-                      'Nur positive Beträge sind erlaubt.',
-                    ]}
+                    validators={deduction.type === 'percentaged' ? (
+                      [
+                        'required',
+                        'isPositive',
+                        'maxNumber:100',
+                      ]
+                    ) : (
+                      [
+                        'required',
+                        'isPositive',
+                        'maxNumber:999999',
+                      ]
+                    )}
+                    errorMessages={deduction.type === 'percentaged' ? (
+                      [
+                        'Ein Betrag muss eingegeben werden.',
+                        'Nur positive Beträge sind erlaubt.',
+                        'Der eingegebene Betrag darf 100% nicht überschreiten.',
+                      ]
+                    ) : (
+                      [
+                        'Ein Betrag muss eingegeben werden.',
+                        'Nur positive Beträge sind erlaubt.',
+                        `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
+                      ]
+                    )}
                   />
                   { editable && (
                     <SelectValidator

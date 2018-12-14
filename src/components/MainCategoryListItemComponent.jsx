@@ -135,11 +135,15 @@ class MainCategoryListItem extends Component {
                   }}
                   validators={[
                     'required',
+                    'isString',
                     'minStringLength:3',
+                    'maxStringLength:100',
                   ]}
                   errorMessages={[
                     'Die Bezeichnung muss ausgefüllt werden.',
+                    'Die Bezeichnung muss in Form eines Textes erfasst werden.',
                     'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                    'Die Bezeichnung darf maximal 100 Zeichen beinhalten.',
                   ]}
                 />
               </FormControl>
