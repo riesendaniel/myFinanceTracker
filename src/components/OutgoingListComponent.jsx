@@ -162,7 +162,7 @@ class OutgoingListComponent extends Component {
       searchValue,
     } = this.state;
 
-    const isDataReadyToRender = () => {
+    const noDataToRender = () => {
       const {
         isLoadingBudget,
         isLoadingOutgoings,
@@ -197,7 +197,7 @@ class OutgoingListComponent extends Component {
         </Grid>
         <Grid item xs={12} md={10} container>
           <Grid item xs={12}>
-            {isDataReadyToRender() || (
+            {noDataToRender() || (
               <Card>
                 <CardContent>
                   <Grid item xs={12} container spacing={gridSpacing}>

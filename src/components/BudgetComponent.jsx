@@ -45,7 +45,7 @@ export class BudgetComponent extends Component {
       mainCategories,
     } = this.props;
 
-    const isDataReadyToRender = () => {
+    const noDataToRender = () => {
       const {
         isLoadingBudget,
         isLoadingMainCategory,
@@ -80,7 +80,7 @@ export class BudgetComponent extends Component {
             <Typography variant="h2" component="h2">Budget</Typography>
           </Grid>
           <Grid item xs={12} md={10}>
-            { isDataReadyToRender() || (
+            { noDataToRender() || (
               <div>
                 <Grid container spacing={gridSpacing}>
                   { mainCategories.map((mainCategory) => {
