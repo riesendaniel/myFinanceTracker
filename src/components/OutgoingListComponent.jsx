@@ -194,9 +194,9 @@ class OutgoingListComponent extends Component {
         <Grid item xs={12} md={10}>
           <Typography variant="h2" component="h2">Ausgaben</Typography>
         </Grid>
-        {isDataReadyToRender() || (
-          <Grid item xs={12} md={10} container>
-            <Grid item xs={12}>
+        <Grid item xs={12} md={10} container>
+          <Grid item xs={12}>
+            {isDataReadyToRender() || (
               <Card>
                 <CardContent>
                   <Grid item xs={12} container spacing={gridSpacing}>
@@ -278,9 +278,9 @@ class OutgoingListComponent extends Component {
                   </Grid>
                 </CardContent>
               </Card>
-            </Grid>
+            )}
           </Grid>
-        )}
+        </Grid>
         <Route render={({ history }) => (
           <Button
             variant="fab"
