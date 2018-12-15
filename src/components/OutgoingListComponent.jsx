@@ -118,11 +118,25 @@ class OutgoingListComponent extends Component {
   };
 
   getFilterCategories = (outgoings) => {
-    const list = [];
+    const { categories } = this.props;
+    let idList = [];
     outgoings.forEach((outgoing) => {
-      list.push(outgoing.outgoingCategoryId);
+      idList.push(outgoing.outgoingCategoryId);
     });
-    return [...new Set(list)];
+    idList = new Set(idList);
+    let list = [];
+    idList.forEach((id) => {
+      list.push({
+        id,
+        description: this.getCategoryById(categories, id),
+      });
+    });
+    list = stableSort(
+      list,
+      'description',
+      'asc',
+    );
+    return [...list];
   }
 
   getCategoryById = (categories, id) => {
@@ -205,9 +219,9 @@ class OutgoingListComponent extends Component {
                           id: 'category-select',
                         }}
                       >
-                        {this.getFilterCategories(outgoings).map(id => (
-                          <MenuItem key={id} value={id}>
-                            {this.getCategoryById(categories, id)}
+                        {this.getFilterCategories(outgoings).map(category => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.description}
                           </MenuItem>
                         ))}
                       </Select>
