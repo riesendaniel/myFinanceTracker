@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {
+  withStyles,
+} from '@material-ui/core';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import moment from 'moment/moment';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
@@ -12,12 +18,20 @@ import history from '../helper/history';
 import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 
+const styles = () => ({
+  actions: {
+    width: '100px',
+  },
+});
+
 class OutgoingItemComponent extends Component {
   static propTypes = {
     doDeleteOutgoing: PropTypes.func.isRequired,
     breakpoint: CustomPropTypes.breakpoint.isRequired,
+    classes: CustomPropTypes.classes.isRequired,
     currency: CustomPropTypes.currency.isRequired,
     outgoing: CustomPropTypes.outgoing.isRequired,
+    width: CustomPropTypes.breakpoint.isRequired,
   };
 
   handleEdit = () => {
@@ -36,7 +50,13 @@ class OutgoingItemComponent extends Component {
   }
 
   render() {
-    const { breakpoint, currency, outgoing } = this.props;
+    const {
+      breakpoint,
+      classes,
+      currency,
+      outgoing,
+      width,
+    } = this.props;
 
     return (
       <ResponsiveTableRow key={outgoing.id} breakpoint={breakpoint}>
@@ -44,7 +64,10 @@ class OutgoingItemComponent extends Component {
         <ResponsiveTableCell columnHead="Datum">{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Kategorie">{outgoing.outgoingCategory}</ResponsiveTableCell>
         <ResponsiveTableCell numeric columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
-        <ResponsiveTableCell alignRight>
+        <ResponsiveTableCell
+          className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+          alignRight
+        >
           <FormActions
             deleteFnc={this.handleDelete}
             editFnc={this.handleEdit}
@@ -61,7 +84,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(OutgoingItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingItemComponent);
+)(componentWithStyles);
