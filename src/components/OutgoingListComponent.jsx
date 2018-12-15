@@ -18,6 +18,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import stableSort from '../helper/sorting';
 import {
   ResponsiveTable,
   ResponsiveTableBody,
@@ -72,10 +73,6 @@ class OutgoingListComponent extends Component {
     filterValue: null,
   };
 
-  getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => this.desc(a, b, orderBy) : (a, b) => -this.desc(a, b, orderBy);
-  }
-
   filterTable = (array) => {
     const {
       filterValue,
@@ -88,26 +85,6 @@ class OutgoingListComponent extends Component {
         .format('DD.MM.YYYY').includes(searchValue.toLowerCase()));
     }
     return newArray;
-  }
-
-  stableSort = (array, cmp) => {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = cmp(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-  }
-
-  desc = (a, b, orderBy) => {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
   }
 
   handleSearch = (event) => {
@@ -253,9 +230,10 @@ class OutgoingListComponent extends Component {
                         onRequestSort={this.handleRequestSort}
                       />
                       <ResponsiveTableBody>
-                        {this.filterTable(this.stableSort(
+                        {this.filterTable(stableSort(
                           outgoings,
-                          this.getSorting(order, orderBy),
+                          orderBy,
+                          order,
                         ))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
