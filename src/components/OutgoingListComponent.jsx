@@ -65,7 +65,7 @@ class OutgoingListComponent extends Component {
   };
 
   state = {
-    rowsPerPage: 5,
+    rowsPerPage: 10,
     page: 0,
     order: 'desc',
     searchValue: '',
