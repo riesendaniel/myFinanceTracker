@@ -44,6 +44,7 @@ const styles = () => ({
   blankIcon: {
     fontSize: '10rem',
     opacity: 0.25,
+    width: '100%',
   },
   blankText: {
     width: '75%',
