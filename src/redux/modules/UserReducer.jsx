@@ -1,6 +1,6 @@
 import {
   snapshotWatcherAdmin,
-  addDocument,
+  addUser,
   updateDocument,
 } from '../database';
 import { auth } from '../../config/firebase';
@@ -64,7 +64,7 @@ const initializeUsersWatcher = () => (dispatch) => {
 
 const doAddUser = user => async (dispatch) => {
   dispatch(isLoading(true));
-  await addDocument(collection, user);
+  await addUser(user);
   dispatch(isLoading(false));
 };
 
