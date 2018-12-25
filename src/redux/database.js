@@ -5,6 +5,15 @@ const handleError = (error) => {
   ErrorLogger.log(error, 'Fehler beim Laden der Daten aus der Datenbank.');
 };
 
+export const snapshotWatcherAdmin = (collection, handleNext) => {
+  try {
+    database.collection(collection)
+      .onSnapshot(handleNext, handleError);
+  } catch (error) {
+    ErrorLogger.log(error, `Fehler beim Laden der Sammlung ${collection} von der Datenbank.`);
+  }
+};
+
 export const snapshotWatcher = (collection, handleNext) => {
   try {
     database.collection(collection).where('userId', '==', auth.currentUser.uid)

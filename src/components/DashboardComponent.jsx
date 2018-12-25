@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/de';
-import NotAuthorizedComponent from './NotAuthorizedComponent'
 import {
-Grid,
-Typography,
+  Grid,
+  Typography,
 } from '@material-ui/core';
 import withWidth, {
-isWidthDown,
+  isWidthDown,
 } from '@material-ui/core/withWidth';
 import AddIcon from '@material-ui/icons/Add';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
@@ -35,8 +34,6 @@ import {
 } from './ResponsiveTable';
 import {
   getCurrency,
-  getUserRole,
-  getIsLoading as getUserRightsIsLoading,
 } from '../redux/modules/AppReducer';
 import {
   getIsLoading as getBudgetIsLoading,
@@ -52,12 +49,16 @@ import {
   getIsLoading as getIncomeIsLoading,
   getNetPay,
 } from '../redux/modules/IncomeReducer';
+import {
+  getIsLoading as getUserIsLoading,
+  getCurrentUser,
+} from '../redux/modules/UserReducer';
 import Loading from './LoadingComponent';
 import history from '../helper/history';
 import DashboardInfoComponent from './DashboardInfoComponent';
 import DashboardChartComponent from './DashboardChartComponent';
+import NotAuthorizedComponent from './NotAuthorizedComponent';
 import RedirectComponent from './RedirectComponent';
-import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
 moment.locale('de');
@@ -87,10 +88,10 @@ class DashboardComponent extends Component {
       isLoadingBudget,
       isLoadingIncome,
       isLoadingOutgoing,
-      isLoadingUserRights,
+      isLoadingUser,
       budget,
-      userRole,
       currency,
+      currentUser,
       monthlyBudgetSum,
       netPay,
       outgoings,
@@ -103,19 +104,20 @@ class DashboardComponent extends Component {
       budget, currentMonthsOutgoingsByCategory,
     );
     const currentMonth = moment().format('MMMM');
-    const name = auth.currentUser ? auth.currentUser.displayName : '';
     const xsDown = isWidthDown('xs', width);
     const lastOutgoingsCount = xsDown ? 3 : 5;
-    const isAdmin = 'admin' === userRole;
+    const hasPermissions = (currentUser.role !== 'standard') && (currentUser.state === 'approved');
 
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" component="h2">{`Übersicht von ${ name || 'anonym'}`}</Typography>
+          <Typography variant="h2" component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
         </Grid>
-        { isLoadingBudget || isLoadingIncome || isLoadingOutgoing || isLoadingUserRights ? <Loading /> : (
-
+        { isLoadingBudget
+        || isLoadingIncome
+        || isLoadingOutgoing
+        || isLoadingUser ? <Loading /> : (
           <Grid item xs={12} xl={10} container spacing={gridSpacing}>
             <Grid container spacing={gridSpacing} item>
               <DashboardInfoComponent
@@ -147,7 +149,7 @@ class DashboardComponent extends Component {
                 clickFn={this.handleAddOutgoing}
               />
             </Grid>
-            { !isAdmin ? <NotAuthorizedComponent /> : (
+            { hasPermissions ? (
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
@@ -255,18 +257,18 @@ class DashboardComponent extends Component {
                         'outgoingDate',
                         'desc',
                       ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
-                        <ResponsiveTableRow key={outgoing.id}>
-                          <ResponsiveTableCell columnHead="Datum">
-                            <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                          </ResponsiveTableCell>
-                          <ResponsiveTableCell columnHead="Beschreibung">
-                            <Typography>{outgoing.outgoingTitle}</Typography>
-                          </ResponsiveTableCell>
-                          <ResponsiveTableCell columnHead="Betrag">
-                            <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                          </ResponsiveTableCell>
-                        </ResponsiveTableRow>
-                      ))
+                          <ResponsiveTableRow key={outgoing.id}>
+                            <ResponsiveTableCell columnHead="Datum">
+                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Beschreibung">
+                              <Typography>{outgoing.outgoingTitle}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Betrag">
+                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                            </ResponsiveTableCell>
+                          </ResponsiveTableRow>
+                        ))
                       }
                     </ResponsiveTableBody>
                   </ResponsiveTable>
@@ -310,7 +312,7 @@ class DashboardComponent extends Component {
                 )}
               />
             </Grid>
-            )}
+            ) : <NotAuthorizedComponent />}
           </Grid>
         ) }
       </Grid>
@@ -322,7 +324,7 @@ DashboardComponent.propTypes = {
   isLoadingBudget: PropTypes.bool.isRequired,
   isLoadingIncome: PropTypes.bool.isRequired,
   isLoadingOutgoing: PropTypes.bool.isRequired,
-  isLoadingUserRights: PropTypes.bool.isRequired,
+  isLoadingUser: PropTypes.bool.isRequired,
   budget: PropTypes.arrayOf(CustomPropTypes.budgetEntry).isRequired,
   currency: CustomPropTypes.currency.isRequired,
   monthlyBudgetSum: PropTypes.number,
@@ -335,6 +337,7 @@ DashboardComponent.propTypes = {
     month: PropTypes.string.isRequired,
     amount: PropTypes.number.isRequired,
   })).isRequired,
+  currentUser: CustomPropTypes.user.isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 
@@ -348,9 +351,9 @@ const mapStateToProps = state => ({
   isLoadingBudget: getBudgetIsLoading(state),
   isLoadingIncome: getIncomeIsLoading(state),
   isLoadingOutgoing: getOutgoingIsLoading(state),
-  isLoadingUserRights: getUserRightsIsLoading(state),
+  isLoadingUser: getUserIsLoading(state),
   budget: getBudget(state),
-  userRole: getUserRole(state),
+  currentUser: getCurrentUser(state),
   currency: getCurrency(state),
   monthlyBudgetSum: getMonthlyBudgetSum(state),
   netPay: getNetPay(state),
