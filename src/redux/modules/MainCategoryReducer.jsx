@@ -4,6 +4,7 @@ import {
   updateDocument,
   deleteDocument,
 } from '../database';
+import stableSort from '../../helper/sorting';
 
 const collection = 'categories';
 
@@ -99,7 +100,12 @@ const ACTION_HANDLERS = {
     { ...state, isLoading: action.status }
   ),
   [RECEIVE_MAIN_CATEGORIES]: (state, action) => {
-    const { mainCategories } = action;
+    let { mainCategories } = action;
+    mainCategories = stableSort(
+      mainCategories,
+      'description',
+      'asc',
+    );
     return { ...state, mainCategories };
   },
   [GET_MAIN_CATEGORY_BY_ID]: (state, action) => (

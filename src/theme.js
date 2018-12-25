@@ -32,6 +32,12 @@ theme.overrides = {
       },
     },
   },
+  MuiToggleButtonGroup: {
+    root: {
+      marginTop: '1rem',
+      marginBottom: '1rem',
+    },
+  },
   MuiCard: {
     root: {
       backgroundColor: '#FFFFFF',

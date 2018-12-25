@@ -115,8 +115,18 @@ class NewOutgoingComponent extends Component {
                       name="outgoingTitle"
                       type="text"
                       placeholder="Titel eingeben"
-                      validators={['required']}
-                      errorMessages={['Das ist ein Pflichtfeld']}
+                      validators={[
+                        'required',
+                        'isString',
+                        'minStringLength:3',
+                        'maxStringLength:100',
+                      ]}
+                      errorMessages={[
+                        'Der Titel muss ausgefüllt werden.',
+                        'Der Titel muss in Form eines Textes erfasst werden.',
+                        'Der Titel muss aus mindestens drei Zeichen bestehen.',
+                        'Der Titel darf maximal 100 Zeichen beinhalten.',
+                      ]}
                       autoComplete="on"
                       value={outgoing.outgoingTitle}
                       onChange={(event) => {
@@ -132,8 +142,16 @@ class NewOutgoingComponent extends Component {
                         id="amount"
                         name="amount"
                         placeholder="Betrag eingeben"
-                        validators={['required']}
-                        errorMessages={['Das ist ein Pflichtfeld']}
+                        validators={[
+                          'required',
+                          'minNumber:-999999',
+                          'maxNumber:999999',
+                        ]}
+                        errorMessages={[
+                          'Ein Betrag muss eingegeben werden.',
+                          `Der eingegebene Betrag darf -999'999 ${currency} nicht unterschreiten.`,
+                          `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
+                        ]}
                         type="number"
                         value={outgoing.outgoingAmount || ''}
                         onChange={(event) => {
@@ -158,7 +176,7 @@ class NewOutgoingComponent extends Component {
                         id="category"
                         name="category"
                         validators={['required']}
-                        errorMessages={['Das ist ein Pflichtfeld']}
+                        errorMessages={['Die Ausgabe muss einer Kategorie zugewiesen werden. Ggf. muss vorgängig ein Budgeteintrag erfasst werden.']}
                         helperText="Kategorie auswählen"
                         onChange={(event) => {
                           this.setState({
@@ -187,7 +205,7 @@ class NewOutgoingComponent extends Component {
                       id="outgoing-date"
                       name="outgoingDate"
                       validators={['required']}
-                      errorMessages={['Das ist ein Pflichtfeld']}
+                      errorMessages={['Ein Datum muss ausgewählt werden.']}
                       placeholder="Datum auswählen"
                       autoComplete="on"
                       type="date"

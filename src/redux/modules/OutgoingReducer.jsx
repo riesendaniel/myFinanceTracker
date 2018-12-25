@@ -6,6 +6,7 @@ import {
   deleteDocument,
 } from '../database';
 import history from '../../helper/history';
+import stableSort from '../../helper/sorting';
 
 const collection = 'outgoing';
 
@@ -163,9 +164,14 @@ const ACTION_HANDLERS = {
   [OUTGOING_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
-  [LOADED_OUTGOINGS]: (state, action) => (
-    { ...state, outgoings: action.payload }
-  ),
+  [LOADED_OUTGOINGS]: (state, action) => {
+    const outgoings = stableSort(
+      action.payload,
+      'outgoingTitle',
+      'asc',
+    );
+    return { ...state, outgoings };
+  },
   [FILTER_OUTGOINGS_BY_CATEGORY]: (state, action) => {
     const outgoingsByCategory = [];
     if (typeof action.categories !== 'undefined') {

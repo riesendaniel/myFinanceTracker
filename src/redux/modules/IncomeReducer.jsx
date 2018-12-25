@@ -4,6 +4,7 @@ import {
   updateDocument,
   deleteDocument,
 } from '../database';
+import stableSort from '../../helper/sorting';
 
 const incomeCollection = 'income';
 const deductionsCollection = 'deductions';
@@ -183,7 +184,12 @@ const ACTION_HANDLERS = {
     return { ...state, grossPay };
   },
   [RECEIVE_DEDUCTIONS]: (state, action) => {
-    const { deductions } = action;
+    let { deductions } = action;
+    deductions = stableSort(
+      deductions,
+      'description',
+      'asc',
+    );
     return { ...state, deductions };
   },
   [CALC_TOTAL_DEDUCTIONS]: (state, action) => {
