@@ -11,11 +11,14 @@ import {
   Select,
   MenuItem, InputLabel,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
+import MoneyIcon from '@material-ui/icons/Money';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import stableSort from '../helper/sorting';
 import {
   ResponsiveTable,
   ResponsiveTableBody,
@@ -37,10 +40,22 @@ import {
 } from '../redux/modules/OutgoingReducer';
 import { gridSpacing } from '../theme';
 
+const styles = () => ({
+  blankIcon: {
+    fontSize: '10rem',
+    opacity: 0.25,
+    width: '100%',
+  },
+  blankText: {
+    width: '75%',
+  },
+});
+
 class OutgoingListComponent extends Component {
   static propTypes = {
     isLoadingOutgoings: PropTypes.bool.isRequired,
     isLoadingBudget: PropTypes.bool.isRequired,
+    classes: CustomPropTypes.classes.isRequired,
     outgoings: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
     categories: PropTypes.arrayOf(CustomPropTypes.category).isRequired,
     mostFrequentCategory: PropTypes.string,
@@ -51,17 +66,13 @@ class OutgoingListComponent extends Component {
   };
 
   state = {
-    rowsPerPage: 5,
+    rowsPerPage: 10,
     page: 0,
     order: 'desc',
     searchValue: '',
     orderBy: 'outgoingDate',
     filterValue: null,
   };
-
-  getSorting(order, orderBy) {
-    return order === 'desc' ? (a, b) => this.desc(a, b, orderBy) : (a, b) => -this.desc(a, b, orderBy);
-  }
 
   filterTable = (array) => {
     const {
@@ -75,26 +86,6 @@ class OutgoingListComponent extends Component {
         .format('DD.MM.YYYY').includes(searchValue.toLowerCase()));
     }
     return newArray;
-  }
-
-  stableSort = (array, cmp) => {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = cmp(a[0], b[0]);
-      if (order !== 0) return order;
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map(el => el[0]);
-  }
-
-  desc = (a, b, orderBy) => {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
   }
 
   handleSearch = (event) => {
@@ -128,11 +119,25 @@ class OutgoingListComponent extends Component {
   };
 
   getFilterCategories = (outgoings) => {
-    const list = [];
+    const { categories } = this.props;
+    let idList = [];
     outgoings.forEach((outgoing) => {
-      list.push(outgoing.outgoingCategoryId);
+      idList.push(outgoing.outgoingCategoryId);
     });
-    return [...new Set(list)];
+    idList = new Set(idList);
+    let list = [];
+    idList.forEach((id) => {
+      list.push({
+        id,
+        description: this.getCategoryById(categories, id),
+      });
+    });
+    list = stableSort(
+      list,
+      'description',
+      'asc',
+    );
+    return [...list];
   }
 
   getCategoryById = (categories, id) => {
@@ -145,8 +150,6 @@ class OutgoingListComponent extends Component {
   render() {
     const {
       outgoings,
-      isLoadingOutgoings,
-      isLoadingBudget,
       categories,
       mostFrequentCategory,
     } = this.props;
@@ -158,14 +161,43 @@ class OutgoingListComponent extends Component {
       rowsPerPage,
       searchValue,
     } = this.state;
+
+    const noDataToRender = () => {
+      const {
+        isLoadingBudget,
+        isLoadingOutgoings,
+        classes,
+      } = this.props;
+      if (isLoadingBudget || isLoadingOutgoings) {
+        return <Loading />;
+      }
+      if (outgoings.length === 0) {
+        return (
+          <Card>
+            <CardContent>
+              <Grid container justify="center">
+                <MoneyIcon className={classes.blankIcon} />
+                <Typography className={classes.blankText} align="center">
+                  {`Damit an dieser Stelle die vergangenen Ausgaben aufgelistet 
+                  werden, muss mindestens ein Budgeteintrag erfasst werden.
+                  Dazu kann die Schaltfläche unten rechts verwendet werden.`}
+                </Typography>
+              </Grid>
+            </CardContent>
+          </Card>
+        );
+      }
+      return false;
+    };
+
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
           <Typography variant="h2" component="h2">Ausgaben</Typography>
         </Grid>
-        {isLoadingOutgoings || isLoadingBudget ? <Loading /> : (
-          <Grid item xs={12} md={10} container>
-            <Grid item xs={12}>
+        <Grid item xs={12} md={10} container>
+          <Grid item xs={12}>
+            {noDataToRender() || (
               <Card>
                 <CardContent>
                   <Grid item xs={12} container spacing={gridSpacing}>
@@ -188,9 +220,9 @@ class OutgoingListComponent extends Component {
                           id: 'category-select',
                         }}
                       >
-                        {this.getFilterCategories(outgoings).map(id => (
-                          <MenuItem key={id} value={id}>
-                            {this.getCategoryById(categories, id)}
+                        {this.getFilterCategories(outgoings).map(category => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.description}
                           </MenuItem>
                         ))}
                       </Select>
@@ -213,9 +245,10 @@ class OutgoingListComponent extends Component {
                         onRequestSort={this.handleRequestSort}
                       />
                       <ResponsiveTableBody>
-                        {this.filterTable(this.stableSort(
+                        {this.filterTable(stableSort(
                           outgoings,
-                          this.getSorting(order, orderBy),
+                          orderBy,
+                          order,
                         ))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
@@ -246,30 +279,29 @@ class OutgoingListComponent extends Component {
                   </Grid>
                 </CardContent>
               </Card>
-            </Grid>
-            <Route render={({ history }) => (
-              <Button
-                variant="fab"
-                color="primary"
-                type="button"
-                onClick={() => {
-                  history.push({
-                    pathname: '/outgoing/edit',
-                    state: { mostFrequentCategory },
-                  });
-                }}
-              >
-                <AddIcon />
-              </Button>
             )}
-            />
           </Grid>
+        </Grid>
+        <Route render={({ history }) => (
+          <Button
+            variant="fab"
+            color="primary"
+            type="button"
+            onClick={() => {
+              history.push({
+                pathname: '/outgoing/edit',
+                state: { mostFrequentCategory },
+              });
+            }}
+          >
+            <AddIcon />
+          </Button>
         )}
+        />
       </Grid>
     );
   }
 }
-
 
 const mapStateToProps = state => ({
   isLoadingOutgoings: getOutgoingIsLoading(state),
@@ -281,7 +313,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const ComponentWithStyles = withStyles(styles)(OutgoingListComponent);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingListComponent);
+)(ComponentWithStyles);

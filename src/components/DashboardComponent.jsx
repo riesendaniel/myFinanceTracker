@@ -27,6 +27,7 @@ import {
 } from 'recharts';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import stableSort from '../helper/sorting';
 import {
   ResponsiveTable,
   ResponsiveTableHead, ResponsiveTableBody,
@@ -249,20 +250,23 @@ class DashboardComponent extends Component {
                       </ResponsiveTableRow>
                     </ResponsiveTableHead>
                     <ResponsiveTableBody>
-                      {outgoings.filter((value, index) => index < lastOutgoingsCount)
-                        .map(outgoing => (
-                          <ResponsiveTableRow key={outgoing.id}>
-                            <ResponsiveTableCell columnHead="Datum">
-                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Beschreibung">
-                              <Typography>{outgoing.outgoingTitle}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Betrag">
-                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                            </ResponsiveTableCell>
-                          </ResponsiveTableRow>
-                        ))
+                      {stableSort(
+                        outgoings,
+                        'outgoingDate',
+                        'desc',
+                      ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
+                        <ResponsiveTableRow key={outgoing.id}>
+                          <ResponsiveTableCell columnHead="Datum">
+                            <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Beschreibung">
+                            <Typography>{outgoing.outgoingTitle}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Betrag">
+                            <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                          </ResponsiveTableCell>
+                        </ResponsiveTableRow>
+                      ))
                       }
                     </ResponsiveTableBody>
                   </ResponsiveTable>

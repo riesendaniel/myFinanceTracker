@@ -5,6 +5,7 @@ import {
   updateDocument,
   deleteDocument,
 } from '../database';
+import stableSort from '../../helper/sorting';
 
 const collection = 'budget';
 
@@ -122,12 +123,20 @@ const ACTION_HANDLERS = {
     { ...state, isLoading: action.status }
   ),
   [RECEIVE_BUDGET]: (state, action) => {
-    const budget = action.budget.filter(budgetEntry => !budgetEntry.disabled);
-    const budgetHistory = [...action.budget];
+    const budget = stableSort(
+      action.budget.filter(budgetEntry => !budgetEntry.disabled),
+      'category',
+      'asc',
+    );
+    const budgetHistory = stableSort(
+      [...action.budget],
+      'category',
+      'asc',
+    );
     return { ...state, budget, budgetHistory };
   },
   [LOAD_CATEGORIES]: (state) => {
-    const categories = [];
+    let categories = [];
     for (let i = 0; i < state.budgetHistory.length; i += 1) {
       const budgetEntry = state.budgetHistory[i];
       categories.push({
@@ -137,6 +146,11 @@ const ACTION_HANDLERS = {
         disabled: budgetEntry.disabled,
       });
     }
+    categories = stableSort(
+      categories,
+      'description',
+      'asc',
+    );
     return { ...state, categories };
   },
   [CALC_MONTHLY_BUDGET_SUM]: (state, action) => {
