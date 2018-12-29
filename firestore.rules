@@ -113,7 +113,7 @@ service cloud.firestore {
       allow create: if isSignedIn() && isValidOutgoing();
     }
     match /users/{document=**} {
-      allow read: if true;
+      allow read: if isSignedIn();
       allow update: if isAdmin() && isValidUser();
       allow delete: if false;
       allow create: if isSignedIn() && hasCorrectOwner() && isValidUser();
