@@ -20,8 +20,8 @@ const theme = createMuiTheme({
 });
 
 theme.overrides = {
-  MuiButton: {
-    fab: {
+  MuiFab: {
+    root: {
       position: 'fixed',
       bottom: '32px',
       right: '32px',

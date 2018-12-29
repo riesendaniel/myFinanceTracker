@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  Button,
   Card, CardContent,
+  Fab,
   Grid,
   Typography,
   withStyles,
@@ -101,14 +101,13 @@ export class BudgetComponent extends Component {
                 </Grid>
               </div>
             ) }
-            <Button
-              type="button"
-              variant="fab"
+            <Fab
+              aria-label="Budgeteintrag hinzufügen"
               color="primary"
               onClick={this.handleAdd}
             >
               <AddIcon />
-            </Button>
+            </Fab>
           </Grid>
         </Grid>
       </div>

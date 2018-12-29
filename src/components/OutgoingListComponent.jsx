@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router-dom';
 import moment from 'moment';
 import {
-  Button, IconButton,
+  IconButton,
   Card, CardContent,
+  Fab,
   Grid,
   TextField,
   Select,
@@ -283,10 +284,9 @@ class OutgoingListComponent extends Component {
           </Grid>
         </Grid>
         <Route render={({ history }) => (
-          <Button
-            variant="fab"
+          <Fab
+            aria-label="Ausgabe hinzufügen"
             color="primary"
-            type="button"
             onClick={() => {
               history.push({
                 pathname: '/outgoing/edit',
@@ -295,7 +295,7 @@ class OutgoingListComponent extends Component {
             }}
           >
             <AddIcon />
-          </Button>
+          </Fab>
         )}
         />
       </Grid>
