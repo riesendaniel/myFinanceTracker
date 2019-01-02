@@ -35,13 +35,18 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.11.1"
+    "eslint-plugin-react": "^7.11.1",
+    "testcafe": "^0.23.3",
+    "testcafe-react-selectors": "^3.0.2",
+    "testcafe-browser-provider-saucelabs": "^1.6.0",
+    "chai": "^4.2.0"
   },
   "scripts": {
     "lint": "eslint . --ext jsx --ext js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "e2e-test": "testcafe chrome tests/test.js",
     "eject": "react-scripts eject"
   }
 }
