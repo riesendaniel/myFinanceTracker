@@ -70,19 +70,19 @@ class BudgetListItemComponent extends Component {
         <ResponsiveTableCell component="th" columnHead="Kategorie">
           <Typography>{item.category}</Typography>
         </ResponsiveTableCell>
-        <ResponsiveTableCell numeric columnHead="monatlich">
+        <ResponsiveTableCell align="right" columnHead="monatlich">
           <Typography color={item.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.monthly)} ${currency}`}
           </Typography>
         </ResponsiveTableCell>
-        <ResponsiveTableCell numeric columnHead="jährlich">
+        <ResponsiveTableCell align="right" columnHead="jährlich">
           <Typography color={item.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>
             {`${Math.round(item.yearly)} ${currency}`}
           </Typography>
         </ResponsiveTableCell>
         <ResponsiveTableCell
           className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
-          alignRight
+          actions
         >
           <FormActions
             deleteFnc={this.handleDelete}

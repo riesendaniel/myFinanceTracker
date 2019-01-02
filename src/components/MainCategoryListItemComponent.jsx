@@ -151,7 +151,7 @@ class MainCategoryListItem extends Component {
             <ResponsiveTableRowFormCell
               breakpoint={breakpoint}
               className={breakpointUp ? classes.actions : undefined}
-              alignRight
+              actions
             >
               <FormActions
                 editable={editable}

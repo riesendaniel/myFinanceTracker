@@ -61,7 +61,7 @@ class OutgoingTableHead extends Component {
           {this.rows.map(row => (
             <ResponsiveTableCell
               key={row.id}
-              numeric={row.numeric}
+              align={row.numeric ? 'right' : undefined}
               padding={row.disablePadding ? 'none' : 'default'}
               sortDirection={orderBy === row.id ? order : false}
             >

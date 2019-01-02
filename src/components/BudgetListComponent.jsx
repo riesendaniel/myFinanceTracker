@@ -30,10 +30,10 @@ const BudgetListComponent = (props) => {
                 <ResponsiveTableCell>
                   <Typography>Kategorie</Typography>
                 </ResponsiveTableCell>
-                <ResponsiveTableCell numeric>
+                <ResponsiveTableCell align="right">
                   <Typography>monatlich</Typography>
                 </ResponsiveTableCell>
-                <ResponsiveTableCell numeric>
+                <ResponsiveTableCell align="right">
                   <Typography>jährlich</Typography>
                 </ResponsiveTableCell>
                 <ResponsiveTableCell />
