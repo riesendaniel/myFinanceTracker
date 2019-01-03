@@ -2,20 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-  IconButton,
   Typography,
   withStyles,
 } from '@material-ui/core';
 import withWidth, {
-  isWidthUp, isWidthDown,
+  isWidthUp,
 } from '@material-ui/core/withWidth';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
+import FormActions from './FormActionsComponent';
 import history from '../helper/history';
 import {
   getCurrency,
@@ -44,7 +42,7 @@ class BudgetListItemComponent extends Component {
     });
   }
 
-  handleDelete = () => {
+  handleDelete = async () => {
     const {
       doUpdateBudgetEntry,
       doDeleteBudgetEntry,
@@ -53,9 +51,9 @@ class BudgetListItemComponent extends Component {
     } = this.props;
     const categoryOutgoings = outgoingsByCategory.find(category => item.id === category.id);
     if ((typeof categoryOutgoings === 'undefined') || (categoryOutgoings.outgoings.length === 0)) {
-      doDeleteBudgetEntry(item.id);
+      await doDeleteBudgetEntry(item.id);
     } else {
-      doUpdateBudgetEntry({ ...item, disabled: true });
+      await doUpdateBudgetEntry({ ...item, disabled: true });
     }
   }
 
@@ -67,7 +65,6 @@ class BudgetListItemComponent extends Component {
       item,
       width,
     } = this.props;
-    const smDown = isWidthDown('sm', width);
     return (
       <ResponsiveTableRow key={item.id} breakpoint={breakpoint}>
         <ResponsiveTableCell component="th" columnHead="Kategorie">
@@ -87,12 +84,10 @@ class BudgetListItemComponent extends Component {
           className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
           alignRight
         >
-          <IconButton onClick={this.handleEdit}>
-            <EditIcon fontSize={smDown ? 'small' : 'default'} />
-          </IconButton>
-          <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon fontSize={smDown ? 'small' : 'default'} />
-          </IconButton>
+          <FormActions
+            deleteFnc={this.handleDelete}
+            editFnc={this.handleEdit}
+          />
         </ResponsiveTableCell>
       </ResponsiveTableRow>
     );
@@ -106,7 +101,7 @@ BudgetListItemComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
   item: CustomPropTypes.budgetEntry.isRequired,
-  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoing).isRequired,
+  outgoingsByCategory: PropTypes.arrayOf(CustomPropTypes.outgoingsByCategory).isRequired,
   width: CustomPropTypes.breakpoint.isRequired,
 };
 

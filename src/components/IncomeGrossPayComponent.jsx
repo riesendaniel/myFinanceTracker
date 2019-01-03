@@ -8,7 +8,6 @@ import {
 import {
   FormControl,
   Grid,
-  IconButton,
   InputAdornment,
   Typography,
   withStyles,
@@ -16,11 +15,9 @@ import {
 import withWidth, {
   isWidthDown,
 } from '@material-ui/core/withWidth';
-import CancelIcon from '@material-ui/icons/Cancel';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -46,7 +43,7 @@ class IncomeGrossPayComponent extends Component {
     this.formRef = React.createRef();
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {
       grossPay,
     } = this.props;
@@ -64,14 +61,14 @@ class IncomeGrossPayComponent extends Component {
     this.formRef.current.resetValidations();
   }
 
-  saveGrossPay = () => {
+  saveGrossPay = async () => {
     const {
       doUpdateGrossPay,
     } = this.props;
     const {
       grossPay,
     } = this.state;
-    doUpdateGrossPay(grossPay);
+    await doUpdateGrossPay(grossPay);
     this.setState({ editGrossPay: false });
   }
 
@@ -90,7 +87,7 @@ class IncomeGrossPayComponent extends Component {
       <ValidatorForm ref={this.formRef} className={classes.form} onSubmit={this.saveGrossPay}>
         <Grid container>
           <Grid item xs={12} md={9} lg={10} container justify="space-between" alignItems="center" wrap="nowrap">
-            <Typography color={smDown ? 'textSecondary' : undefined}>Bruttoeinkommen</Typography>
+            <Typography color={smDown ? 'textSecondary' : undefined}>monatliches Bruttoeinkommen</Typography>
             <FormControl>
               <TextValidator
                 ref={this.formRef}
@@ -106,29 +103,23 @@ class IncomeGrossPayComponent extends Component {
                 validators={[
                   'required',
                   'isPositive',
+                  'maxNumber:999999',
                 ]}
                 errorMessages={[
                   'Ein Betrag muss eingegeben werden.',
                   'Nur positive Beträge sind erlaubt.',
+                  `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
                 ]}
               />
             </FormControl>
           </Grid>
           <Grid item xs={12} md={3} lg={2} container justify="flex-end">
-            { editGrossPay ? (
-              <div>
-                <IconButton type="submit">
-                  <SaveIcon />
-                </IconButton>
-                <IconButton type="reset" onClick={this.handleCancel}>
-                  <CancelIcon />
-                </IconButton>
-              </div>
-            ) : (
-              <IconButton onClick={() => this.setState({ editGrossPay: true })}>
-                <EditIcon />
-              </IconButton>
-            )}
+            <FormActions
+              editable={editGrossPay}
+              disableDelete
+              editFnc={() => this.setState({ editGrossPay: true })}
+              resetFnc={() => this.handleCancel()}
+            />
           </Grid>
         </Grid>
       </ValidatorForm>
@@ -140,8 +131,12 @@ IncomeGrossPayComponent.propTypes = {
   doUpdateGrossPay: PropTypes.func.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   currency: CustomPropTypes.currency.isRequired,
-  grossPay: PropTypes.number.isRequired,
+  grossPay: PropTypes.number,
   width: CustomPropTypes.breakpoint.isRequired,
+};
+
+IncomeGrossPayComponent.defaultProps = {
+  grossPay: 0,
 };
 
 const mapStateToProps = state => ({

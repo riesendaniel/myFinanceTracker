@@ -1,0 +1,70 @@
+Usability-Testing
+------------------
+
+
+Lies die Aufgabenstellung laut vor und kommentiere deine anschliessenden Überlegungen.
+Du bist im Internet auf die Applikation myFinanceTracker gestossen und hast dich für die Applikation registriert.
+Voller Vorfreude startest du von der Startseite mit der Nutzung des FinanceTrackers und
+möchtest das gestrige Mittagessen über 25.- CHF als auswärtige Verpflegung eintragen.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Problem: Vor dem ersten Erfassen von Ausgaben müssen verschiedene abhängige Formulare ausgefüllt werden.
+Startpunkt: Der Nutzer ist auf der Startseite und ist eingeloggt.
+Effekt: Der Nutzer ist planlos, welche Schritte er vorgängig machen muss, um die Ausgabe eintragen zu können.
+Ziel: Du sitzt vor dem Computer und möchtest das gestrige Mittagsessen über 25.- CHF im FinanceTracker eintragen.
+
+
+
+Problem: Die Lohnabzüge werden nicht speziell ausgewiesen.
+Startpunkt: Der Nutzer ist auf der Startseite und ist eingeloggt.
+Effekt: Der Nutzer bewegt sich ziellos in der Applikation, kommt aber schlussendlich zum Ziel.
+Ziel: Gratuliere, du hast dein 25. Lebensjahr erreicht und darfst nun Beiträge von 10% des Nettolohns an die Pensionskasse zahlen.
+      Du willst deinen FincanceTracker aktuell halten und trägst die Lohnreduktion ein.
+
+
+Problem: Es gibt verschiedene Ansätze, wie das monatliche Budget angeschaut werden kann.
+Startpunkt: Der Nutzer ist auf der Startseite und ist eingeloggt.
+Effekt: Der Nutzer findet einen Weg, sich die Information zu beschaffen.
+Ziel: Du möchtest wissen welchen Einfluss die jährlich zu zahlenden Steuern von 4000.- CHF auf deine monatlichen Ersparnisse haben.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Standardkategorien (bei Userregistration) oder Hilfetext bei Ausgaben (Kategoriefehler)

@@ -1,25 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {
+  withStyles,
+} from '@material-ui/core';
+import withWidth, {
+  isWidthUp,
+} from '@material-ui/core/withWidth';
 import moment from 'moment/moment';
-import { IconButton } from '@material-ui/core';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
 } from './ResponsiveTable';
+import FormActions from './FormActionsComponent';
 import history from '../helper/history';
 import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
+
+const styles = () => ({
+  actions: {
+    width: '100px',
+  },
+});
 
 class OutgoingItemComponent extends Component {
   static propTypes = {
     doDeleteOutgoing: PropTypes.func.isRequired,
     breakpoint: CustomPropTypes.breakpoint.isRequired,
+    classes: CustomPropTypes.classes.isRequired,
     currency: CustomPropTypes.currency.isRequired,
     outgoing: CustomPropTypes.outgoing.isRequired,
+    width: CustomPropTypes.breakpoint.isRequired,
   };
 
   handleEdit = () => {
@@ -32,27 +44,34 @@ class OutgoingItemComponent extends Component {
     });
   }
 
-  handleDelete = () => {
+  handleDelete = async () => {
     const { doDeleteOutgoing, outgoing } = this.props;
-    doDeleteOutgoing(outgoing.id);
+    await doDeleteOutgoing(outgoing.id);
   }
 
   render() {
-    const { breakpoint, currency, outgoing } = this.props;
+    const {
+      breakpoint,
+      classes,
+      currency,
+      outgoing,
+      width,
+    } = this.props;
 
     return (
       <ResponsiveTableRow key={outgoing.id} breakpoint={breakpoint}>
         <ResponsiveTableCell columnHead="Titel">{outgoing.outgoingTitle}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Datum">{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Kategorie">{outgoing.outgoingCategory}</ResponsiveTableCell>
-        <ResponsiveTableCell columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
-        <ResponsiveTableCell alignRight>
-          <IconButton onClick={this.handleEdit}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={this.handleDelete}>
-            <DeleteOutlineIcon />
-          </IconButton>
+        <ResponsiveTableCell numeric columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
+        <ResponsiveTableCell
+          className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
+          alignRight
+        >
+          <FormActions
+            deleteFnc={this.handleDelete}
+            editFnc={this.handleEdit}
+          />
         </ResponsiveTableCell>
       </ResponsiveTableRow>
     );
@@ -65,7 +84,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
 
+const componentWithWidth = withWidth()(OutgoingItemComponent);
+const componentWithStyles = withStyles(styles)(componentWithWidth);
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OutgoingItemComponent);
+)(componentWithStyles);

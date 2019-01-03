@@ -4,6 +4,7 @@ import {
   updateDocument,
   deleteDocument,
 } from '../database';
+import stableSort from '../../helper/sorting';
 
 const incomeCollection = 'income';
 const deductionsCollection = 'deductions';
@@ -112,34 +113,34 @@ const initializeDeductionsWatcher = () => (dispatch) => {
   snapshotWatcher(deductionsCollection, snapshot => dispatch(doLoadDeductions(snapshot)));
 };
 
-const doUpdateGrossPay = amount => (dispatch, getState) => {
+const doUpdateGrossPay = amount => async (dispatch, getState) => {
   dispatch(isLoading(true));
   const {
     grossPay,
   } = getState().income;
   if (grossPay.id) {
-    updateDocument(incomeCollection, { id: grossPay.id, amount });
+    await updateDocument(incomeCollection, { id: grossPay.id, amount });
   } else {
-    addDocument(incomeCollection, { id: grossPay.id, amount });
+    await addDocument(incomeCollection, { id: grossPay.id, amount });
   }
   dispatch(isLoading(false));
 };
 
-const doAddDeduction = deduction => (dispatch) => {
+const doAddDeduction = deduction => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(deductionsCollection, deduction);
+  await addDocument(deductionsCollection, deduction);
   dispatch(isLoading(false));
 };
 
-const doUpdateDeduction = deduction => (dispatch) => {
+const doUpdateDeduction = deduction => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(deductionsCollection, deduction);
+  await updateDocument(deductionsCollection, deduction);
   dispatch(isLoading(false));
 };
 
-const doDeleteDeduction = id => (dispatch) => {
+const doDeleteDeduction = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(deductionsCollection, id);
+  await deleteDocument(deductionsCollection, id);
   dispatch(isLoading(false));
 };
 
@@ -183,7 +184,12 @@ const ACTION_HANDLERS = {
     return { ...state, grossPay };
   },
   [RECEIVE_DEDUCTIONS]: (state, action) => {
-    const { deductions } = action;
+    let { deductions } = action;
+    deductions = stableSort(
+      deductions,
+      'description',
+      'asc',
+    );
     return { ...state, deductions };
   },
   [CALC_TOTAL_DEDUCTIONS]: (state, action) => {
@@ -203,7 +209,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   grossPay: {},
   deductions: [],
   totalDeductions: 0,

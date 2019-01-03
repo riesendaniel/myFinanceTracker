@@ -8,20 +8,23 @@ import {
   SelectValidator,
 } from 'react-material-ui-form-validator';
 import {
-  Button,
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   FormControl,
   Grid,
   Hidden,
   IconButton,
   Input, InputLabel, InputAdornment,
   MenuItem,
-  Switch,
   Typography,
 } from '@material-ui/core';
+import {
+  ToggleButtonGroup, ToggleButton,
+} from '@material-ui/lab';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
+import history from '../helper/history';
+import FormActions from './FormActionsComponent';
 import {
   getCurrency,
 } from '../redux/modules/AppReducer';
@@ -65,7 +68,7 @@ class BudgetItemFormComponent extends Component {
         },
       });
     }
-  }
+  };
 
   handleSubmit = async (e) => {
     const { doAddBudgetEntry, doUpdateBudgetEntry } = this.props;
@@ -83,7 +86,13 @@ class BudgetItemFormComponent extends Component {
     } else {
       await doAddBudgetEntry({ ...budgetEntry });
     }
-  }
+  };
+
+  handleCancel = () => {
+    history.push({
+      pathname: '/budget',
+    });
+  };
 
   render = () => {
     const {
@@ -98,13 +107,13 @@ class BudgetItemFormComponent extends Component {
 
     return (
       <div>
-        { open && <MainCategoryList open onClose={() => this.setState({ open: false })} /> }
+        {open && <MainCategoryList open onClose={() => this.setState({ open: false })}/>}
         <Grid container spacing={gridSpacing} justify="center">
           <Hidden smDown>
             <Grid item sm={2} md={3} xl={4} />
           </Hidden>
           <Grid item xs={12} sm={8} md={6} xl={4}>
-            <Typography variant="headline" component="h2">Budgeteintrag erfassen</Typography>
+            <Typography variant="h2" component="h2">Budgeteintrag erfassen</Typography>
           </Grid>
           <Hidden smDown>
             <Grid item sm={2} md={3} xl={4} />
@@ -114,7 +123,7 @@ class BudgetItemFormComponent extends Component {
               <ValidatorForm onSubmit={this.handleSubmit}>
                 <CardContent>
                   <Grid container justify="space-between">
-                    { isLoadingCategories ? <Loading /> : (
+                    {isLoadingCategories ? <Loading /> : (
                       <Grid item xs={12} container justify="space-between">
                         <Grid item xs={8}>
                           <FormControl fullWidth>
@@ -131,13 +140,13 @@ class BudgetItemFormComponent extends Component {
                                 });
                               }}
                               validators={['required']}
-                              errorMessages={['Eine Hauptkategorie muss ausgewählt werden.']}
+                              errorMessages={['Der Budgeteintrag muss einer Hauptkategorie zugewiesen werden. Ggf. muss vorgängig eine neue erfasst werden.']}
                             >
-                              { mainCategories.map(mainCategory => (
+                              {mainCategories.map(mainCategory => (
                                 <MenuItem key={mainCategory.id} value={mainCategory.id}>
                                   {mainCategory.description}
                                 </MenuItem>
-                              )) }
+                              ))}
                             </SelectValidator>
                           </FormControl>
                         </Grid>
@@ -167,36 +176,37 @@ class BudgetItemFormComponent extends Component {
                           }}
                           validators={[
                             'required',
+                            'isString',
                             'minStringLength:3',
+                            'maxStringLength:100',
                           ]}
                           errorMessages={[
                             'Die Bezeichnung muss ausgefüllt werden.',
+                            'Die Bezeichnung muss in Form eines Textes erfasst werden.',
                             'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                            'Die Bezeichnung darf maximal 100 Zeichen beinhalten.',
                           ]}
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} container alignItems="center" justify="space-between">
-                      <Grid>
-                        <Typography color={budgetEntry.period === 'yearly' ? 'textPrimary' : 'textSecondary'}>jährlich</Typography>
-                      </Grid>
-                      <Grid>
-                        <FormControl>
-                          <Switch
-                            value={budgetEntry.period}
-                            checked={budgetEntry.period === 'monthly'}
-                            onChange={(event) => {
-                              this.setState({
-                                budgetEntry: { ...budgetEntry, period: event.target.value === 'monthly' ? 'yearly' : 'monthly' },
-                              });
-                            }}
-                            color="primary"
-                          />
-                        </FormControl>
-                      </Grid>
-                      <Grid>
-                        <Typography color={budgetEntry.period === 'monthly' ? 'textPrimary' : 'textSecondary'}>monatlich</Typography>
-                      </Grid>
+                    <Grid item xs={12}>
+                      <FormControl>
+                        <ToggleButtonGroup
+                          value={budgetEntry.period}
+                          exclusive
+                          onChange={(event, period) => {
+                            this.setState({
+                              budgetEntry: {
+                                ...budgetEntry,
+                                period,
+                              },
+                            });
+                          }}
+                        >
+                          <ToggleButton value="monthly">monatlich</ToggleButton>
+                          <ToggleButton value="yearly">jährlich</ToggleButton>
+                        </ToggleButtonGroup>
+                      </FormControl>
                     </Grid>
                     <Grid item xs={8}>
                       <FormControl fullWidth>
@@ -210,16 +220,18 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, amount: Number(event.target.value) },
                             });
                           }}
-                          startAdornment={
-                            <InputAdornment position="start">{currency}</InputAdornment>
-                          }
+                          InputProps={{
+                            endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
+                          }}
                           validators={[
                             'required',
                             'isPositive',
+                            'maxNumber:999999',
                           ]}
                           errorMessages={[
                             'Ein Betrag muss eingegeben werden.',
                             'Nur positive Beträge sind erlaubt.',
+                            `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
                           ]}
                         />
                       </FormControl>
@@ -236,25 +248,24 @@ class BudgetItemFormComponent extends Component {
                               budgetEntry: { ...budgetEntry, color: event.target.value },
                             });
                           }}
-                          validators={['required']}
-                          errorMessages={['Eine Farbe muss ausgewählt werden.']}
                         />
                       </FormControl>
                     </Grid>
                   </Grid>
                 </CardContent>
-                <CardActionArea>
-                  <CardActions>
-                    <Button variant="contained" type="submit">Hinzufügen</Button>
-                  </CardActions>
-                </CardActionArea>
+                <CardActions>
+                  <FormActions
+                    editable
+                    resetFnc={() => this.handleCancel()}
+                  />
+                </CardActions>
               </ValidatorForm>
             </Card>
           </Grid>
         </Grid>
       </div>
     );
-  }
+  };
 }
 
 BudgetItemFormComponent.propTypes = {

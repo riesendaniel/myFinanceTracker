@@ -5,6 +5,7 @@ import {
   updateDocument,
   deleteDocument,
 } from '../database';
+import stableSort from '../../helper/sorting';
 
 const collection = 'budget';
 
@@ -78,23 +79,23 @@ const initializeBudgetWatcher = () => (dispatch) => {
   snapshotWatcher(collection, snapshot => dispatch(doLoadBudget(snapshot)));
 };
 
-const doAddBudgetEntry = entry => (dispatch) => {
+const doAddBudgetEntry = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(collection, entry);
+  await addDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/budget');
 };
 
-const doUpdateBudgetEntry = entry => (dispatch) => {
+const doUpdateBudgetEntry = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(collection, entry);
+  await updateDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/budget');
 };
 
-const doDeleteBudgetEntry = id => (dispatch) => {
+const doDeleteBudgetEntry = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(collection, id);
+  await deleteDocument(collection, id);
   dispatch(isLoading(false));
 };
 
@@ -122,12 +123,20 @@ const ACTION_HANDLERS = {
     { ...state, isLoading: action.status }
   ),
   [RECEIVE_BUDGET]: (state, action) => {
-    const budget = action.budget.filter(budgetEntry => !budgetEntry.disabled);
-    const budgetHistory = [...action.budget];
+    const budget = stableSort(
+      action.budget.filter(budgetEntry => !budgetEntry.disabled),
+      'category',
+      'asc',
+    );
+    const budgetHistory = stableSort(
+      [...action.budget],
+      'category',
+      'asc',
+    );
     return { ...state, budget, budgetHistory };
   },
   [LOAD_CATEGORIES]: (state) => {
-    const categories = [];
+    let categories = [];
     for (let i = 0; i < state.budgetHistory.length; i += 1) {
       const budgetEntry = state.budgetHistory[i];
       categories.push({
@@ -137,6 +146,11 @@ const ACTION_HANDLERS = {
         disabled: budgetEntry.disabled,
       });
     }
+    categories = stableSort(
+      categories,
+      'description',
+      'asc',
+    );
     return { ...state, categories };
   },
   [CALC_MONTHLY_BUDGET_SUM]: (state, action) => {
@@ -151,7 +165,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   categories: [],
   budget: [],
   budgetHistory: [],

@@ -7,22 +7,18 @@ import {
 } from 'react-material-ui-form-validator';
 import {
   FormControl,
-  IconButton,
   withStyles,
 } from '@material-ui/core';
 import withWidth, {
   isWidthUp,
 } from '@material-ui/core/withWidth';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import EditIcon from '@material-ui/icons/Edit';
-import CancelIcon from '@material-ui/icons/Cancel';
-import SaveIcon from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   ResponsiveTableRow, ResponsiveTableCell,
   ResponsiveTableRowFormCell,
 } from './ResponsiveTable';
+import FormActions from './FormActionsComponent';
 import {
   actions,
 } from '../redux/modules/MainCategoryReducer';
@@ -64,6 +60,13 @@ class MainCategoryListItem extends Component {
     this.setState({ mainCategory });
   }
 
+  resetMainCategory = () => {
+    this.setState({
+      mainCategory: { ...this.initialMainCategory },
+      editable: this.initialEditable,
+    });
+  }
+
   saveMainCategory = () => {
     const {
       doAddMainCategory,
@@ -73,15 +76,18 @@ class MainCategoryListItem extends Component {
       mainCategory,
     } = this.state;
     if (mainCategory.id !== 'new') {
-      doUpdateMainCategory(mainCategory);
-      this.setState({ editable: this.initialEditable });
+      doUpdateMainCategory(mainCategory).then(this.setState({
+        editable: this.initialEditable,
+      }));
     } else {
-      doAddMainCategory(mainCategory);
-      this.setState({ mainCategory: this.initialMainCategory, editable: this.initialEditable });
+      doAddMainCategory(mainCategory).then(this.setState({
+        mainCategory: this.initialMainCategory,
+        editable: this.initialEditable,
+      }));
     }
   }
 
-  deleteMainCategory = (id) => {
+  deleteMainCategory = async (id) => {
     const {
       mainCategory,
     } = this.state;
@@ -93,7 +99,7 @@ class MainCategoryListItem extends Component {
       item.mainCategoryId === mainCategory.id
     ));
     if (budgetEntryInMainCategory.length === 0) {
-      doDeleteMainCategory(id);
+      await doDeleteMainCategory(id);
     } else {
       ErrorLogger.log(undefined, 'Diese Hauptkategorie darf nicht gelöscht werden, da ihr noch Budgeteinträge zugeordnet sind.');
     }
@@ -129,48 +135,31 @@ class MainCategoryListItem extends Component {
                   }}
                   validators={[
                     'required',
+                    'isString',
                     'minStringLength:3',
+                    'maxStringLength:100',
                   ]}
                   errorMessages={[
                     'Die Bezeichnung muss ausgefüllt werden.',
+                    'Die Bezeichnung muss in Form eines Textes erfasst werden.',
                     'Die Bezeichnung muss aus mindestens drei Zeichen bestehen.',
+                    'Die Bezeichnung darf maximal 100 Zeichen beinhalten.',
                   ]}
                 />
               </FormControl>
             </ResponsiveTableRowFormCell>
-            { editable ? (
-              <ResponsiveTableRowFormCell
-                breakpoint={breakpoint}
-                className={breakpointUp ? classes.actions : undefined}
-                alignRight
-              >
-                <IconButton type="submit">
-                  <SaveIcon />
-                </IconButton>
-                <IconButton
-                  type="reset"
-                  onClick={() => this.setState({
-                    mainCategory: { ...this.initialMainCategory },
-                    editable: this.initialEditable,
-                  })}
-                >
-                  <CancelIcon />
-                </IconButton>
-              </ResponsiveTableRowFormCell>
-            ) : (
-              <ResponsiveTableRowFormCell
-                breakpoint={breakpoint}
-                className={breakpointUp ? classes.actions : undefined}
-                alignRight
-              >
-                <IconButton onClick={() => this.setState({ editable: true })}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => this.deleteMainCategory(mainCategory.id)}>
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </ResponsiveTableRowFormCell>
-            )}
+            <ResponsiveTableRowFormCell
+              breakpoint={breakpoint}
+              className={breakpointUp ? classes.actions : undefined}
+              alignRight
+            >
+              <FormActions
+                editable={editable}
+                deleteFnc={() => this.deleteMainCategory(mainCategory.id)}
+                editFnc={() => this.setState({ editable: true })}
+                resetFnc={() => this.resetMainCategory()}
+              />
+            </ResponsiveTableRowFormCell>
           </ValidatorForm>
         </ResponsiveTableCell>
       </ResponsiveTableRow>

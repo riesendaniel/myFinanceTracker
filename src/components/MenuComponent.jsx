@@ -11,52 +11,84 @@ import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import CompareIcon from '@material-ui/icons/Compare';
 import HomeIcon from '@material-ui/icons/Home';
 import MoneyIcon from '@material-ui/icons/Money';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import PropTypes from 'prop-types';
+import LogoutIcon from '@material-ui/icons/ExitToApp';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
 import {
   actions,
 } from '../redux/modules/AppReducer';
+import {
+  getCurrentUser,
+} from '../redux/modules/UserReducer';
 
 class Menu extends Component {
-  menu = [
-    {
-      id: 0,
-      link: '/',
-      text: 'Home',
-      icon: <HomeIcon />,
-    },
-    {
-      id: 1,
-      link: '/budget',
-      text: 'Budget',
-      icon: <CompareIcon />,
-    },
-    {
-      id: 2,
-      link: '/income',
-      text: 'Einkommen',
-      icon: <AttachMoneyIcon />,
-    },
-    {
-      id: 3,
-      link: '/outgoings',
-      text: 'Ausgaben',
-      icon: <MoneyIcon />,
-    },
-  ];
+  menu = [];
+
+  componentWillMount = () => {
+    const { currentUser } = this.props;
+    this.menu = [
+      {
+        id: 0,
+        link: '/',
+        text: 'Home',
+        icon: <HomeIcon />,
+      },
+      {
+        id: 1,
+        link: '/budget',
+        text: 'Budget',
+        icon: <CompareIcon />,
+      },
+      {
+        id: 2,
+        link: '/income',
+        text: 'Einkommen',
+        icon: <AttachMoneyIcon />,
+      },
+      {
+        id: 3,
+        link: '/outgoings',
+        text: 'Ausgaben',
+        icon: <MoneyIcon />,
+      },
+      {
+        id: 4,
+        link: '/admin',
+        role: 'admin',
+        text: 'Benutzerverwaltung',
+        icon: <AccountBalanceIcon />,
+      },
+      {
+        id: 5,
+        link: '/logout',
+        text: `Logout ${currentUser.name}`,
+        icon: <LogoutIcon />,
+      },
+    ];
+  }
 
   handleMenuClick = (menuItem) => {
-    history.push(menuItem.link);
     const {
+      fixed,
       toggleMenu,
     } = this.props;
-    toggleMenu();
+    if (!fixed) {
+      toggleMenu();
+    }
+    history.push(menuItem.link);
   }
 
   render = () => {
-    const { classes } = this.props;
+    const {
+      classes,
+      currentUser,
+    } = this.props;
     const { location } = history;
+    const authorizedMenus = this.menu.filter(
+      menuItem => !menuItem.role || menuItem.role === currentUser.role
+    );
     return (
       <div className="Menu">
         <Drawer
@@ -68,7 +100,7 @@ class Menu extends Component {
         >
           <div className={classes.toolbarPlaceholder} />
           <List>
-            {this.menu.map(menuItem => (
+            {authorizedMenus.map(menuItem => (
               <ListItem
                 key={menuItem.id}
                 button
@@ -91,10 +123,13 @@ class Menu extends Component {
 
 Menu.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
+  fixed: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
+  currentUser: CustomPropTypes.user.isRequired,
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = state => ({
+  currentUser: getCurrentUser(state),
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(actions, dispatch);
@@ -105,7 +140,7 @@ const MenuConnected = connect(
 )(Menu);
 
 const MenuComponent = (props) => {
-  const { width } = props;
+  const { fixed, userName, width } = props;
 
   const styles = theme => ({
     divider: {
@@ -120,11 +155,18 @@ const MenuComponent = (props) => {
   });
 
   const MenuWithStyles = withStyles(styles)(MenuConnected);
-  return <MenuWithStyles />;
+  return <MenuWithStyles userName={userName} fixed={fixed} />;
 };
 
 MenuComponent.propTypes = {
-  width: CustomPropTypes.breakpoint.isRequired,
+  fixed: PropTypes.bool,
+  userName: PropTypes.string,
+  width: PropTypes.string.isRequired,
+};
+
+MenuComponent.defaultProps = {
+  fixed: false,
+  userName: 'anonym',
 };
 
 export default MenuComponent;

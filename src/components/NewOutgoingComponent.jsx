@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import SaveIcon from '@material-ui/icons/Save';
-import { ValidatorForm, TextValidator, SelectValidator} from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import {
-  Card, CardContent, CardActionArea, CardActions,
+  Card, CardContent, CardActions,
   Grid,
   Hidden,
   FormControl,
-  IconButton,
   InputAdornment,
   MenuItem,
   Typography,
 } from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import history from '../helper/history';
+import FormActions from './FormActionsComponent';
 import { actions } from '../redux/modules/OutgoingReducer';
 import { getCurrency } from '../redux/modules/AppReducer';
 import { getCategories } from '../redux/modules/BudgetReducer';
@@ -74,7 +72,7 @@ class NewOutgoingComponent extends Component {
     });
   };
 
-  addOutgoing = (event) => {
+  addOutgoing = async (event) => {
     event.preventDefault();
     const {
       doUpdateOutgoing,
@@ -82,9 +80,9 @@ class NewOutgoingComponent extends Component {
     } = this.props;
     const { outgoing } = this.state;
     if (outgoing.id) {
-      doUpdateOutgoing(outgoing);
+      await doUpdateOutgoing(outgoing);
     } else {
-      doAddOutgoing(outgoing);
+      await doAddOutgoing(outgoing);
     }
   };
 
@@ -94,13 +92,13 @@ class NewOutgoingComponent extends Component {
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4} />
+          <Grid item sm={2} md={3} xl={4}/>
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
-          <Typography variant="headline" component="h2">Ausgabe erfassen</Typography>
+          <Typography variant="h2" component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4} />
+          <Grid item sm={2} md={3} xl={4}/>
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
           <Card>
@@ -117,8 +115,18 @@ class NewOutgoingComponent extends Component {
                       name="outgoingTitle"
                       type="text"
                       placeholder="Titel eingeben"
-                      validators={['required']}
-                      errorMessages={['Das ist ein Pflichtfeld']}
+                      validators={[
+                        'required',
+                        'isString',
+                        'minStringLength:3',
+                        'maxStringLength:100',
+                      ]}
+                      errorMessages={[
+                        'Der Titel muss ausgefüllt werden.',
+                        'Der Titel muss in Form eines Textes erfasst werden.',
+                        'Der Titel muss aus mindestens drei Zeichen bestehen.',
+                        'Der Titel darf maximal 100 Zeichen beinhalten.',
+                      ]}
                       autoComplete="on"
                       value={outgoing.outgoingTitle}
                       onChange={(event) => {
@@ -134,8 +142,16 @@ class NewOutgoingComponent extends Component {
                         id="amount"
                         name="amount"
                         placeholder="Betrag eingeben"
-                        validators={['required']}
-                        errorMessages={['Das ist ein Pflichtfeld']}
+                        validators={[
+                          'required',
+                          'minNumber:-999999',
+                          'maxNumber:999999',
+                        ]}
+                        errorMessages={[
+                          'Ein Betrag muss eingegeben werden.',
+                          `Der eingegebene Betrag darf -999'999 ${currency} nicht unterschreiten.`,
+                          `Der eingegebene Betrag darf 999'999 ${currency} nicht überschreiten.`,
+                        ]}
                         type="number"
                         value={outgoing.outgoingAmount || ''}
                         onChange={(event) => {
@@ -160,7 +176,7 @@ class NewOutgoingComponent extends Component {
                         id="category"
                         name="category"
                         validators={['required']}
-                        errorMessages={['Das ist ein Pflichtfeld']}
+                        errorMessages={['Die Ausgabe muss einer Kategorie zugewiesen werden. Ggf. muss vorgängig ein Budgeteintrag erfasst werden.']}
                         helperText="Kategorie auswählen"
                         onChange={(event) => {
                           this.setState({
@@ -172,14 +188,14 @@ class NewOutgoingComponent extends Component {
                           id: 'group-select',
                         }}
                       >
-                        { categories.map(category => (
+                        {categories.map(category => (
                           <MenuItem
                             key={category.id}
                             value={category.id}
                           >
                             {category.description}
                           </MenuItem>
-                        )) }
+                        ))}
                       </SelectValidator>
                     </FormControl>
                   </Grid>
@@ -189,7 +205,7 @@ class NewOutgoingComponent extends Component {
                       id="outgoing-date"
                       name="outgoingDate"
                       validators={['required']}
-                      errorMessages={['Das ist ein Pflichtfeld']}
+                      errorMessages={['Ein Datum muss ausgewählt werden.']}
                       placeholder="Datum auswählen"
                       autoComplete="on"
                       type="date"
@@ -203,20 +219,12 @@ class NewOutgoingComponent extends Component {
                   </Grid>
                 </Grid>
               </CardContent>
-              <CardActionArea>
-                <CardActions>
-                  <IconButton
-                    type="submit"
-                    variant="contained"
-                    aria-label="add outgoing"
-                  >
-                    <SaveIcon />
-                  </IconButton>
-                  <IconButton onClick={this.handleCancel}>
-                    <CancelIcon />
-                  </IconButton>
-                </CardActions>
-              </CardActionArea>
+              <CardActions>
+                <FormActions
+                  editable
+                  resetFnc={() => this.handleCancel()}
+                />
+              </CardActions>
             </ValidatorForm>
           </Card>
         </Grid>

@@ -50,6 +50,18 @@ const CustomPropTypes = {
     color: PropTypes.color,
     amount: PropTypes.number.isRequired,
   }),
+  outgoingsByCategory: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    disabled: PropTypes.bool,
+    outgoings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  }),
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    state: PropTypes.oneOf(['unrequested', 'pending', 'approved', 'rejected']).isRequired,
+    role: PropTypes.oneOf(['standard', 'extended', 'admin']).isRequired,
+  }),
 };
 
 export default CustomPropTypes;

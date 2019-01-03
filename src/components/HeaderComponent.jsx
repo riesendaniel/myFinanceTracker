@@ -5,18 +5,17 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar,
-  Hidden,
   IconButton,
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import LogoutButton from '@material-ui/icons/ExitToApp';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   actions,
 } from '../redux/modules/AppReducer';
-import { auth } from '../config/firebase';
+import history from '../helper/history';
 
 const styles = theme => ({
   link: {
@@ -40,26 +39,26 @@ class HeaderComponent extends Component {
   }
 
   render() {
-    const { classes, isLoggedIn } = this.props;
+    const { classes, fixedMenu, isLoggedIn } = this.props;
     return (
       <div className="Header">
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <Link to="/" className={classes.link}>
-              <Typography variant="title">myFinanceTracker</Typography>
+              <Typography variant="h1">myFinanceTracker</Typography>
             </Link>
             {isLoggedIn && (
               <div>
                 <IconButton
-                  onClick={() => auth.signOut()}
+                  onClick={() =>  history.push({pathname: '/logout'})}
                 >
-                  <PowerSettingsNew />
+                  <LogoutButton />
                 </IconButton>
-                <Hidden lgUp>
+                {!fixedMenu && (
                   <IconButton onClick={this.handleClick} aria-label="Menu">
                     <MenuIcon />
                   </IconButton>
-                </Hidden>
+                )}
               </div>
             )}
           </Toolbar>
@@ -71,8 +70,13 @@ class HeaderComponent extends Component {
 
 HeaderComponent.propTypes = {
   classes: CustomPropTypes.classes.isRequired,
+  fixedMenu: PropTypes.bool,
   isLoggedIn: PropTypes.bool.isRequired,
   toggleMenu: PropTypes.func.isRequired,
+};
+
+HeaderComponent.defaultProps = {
+  fixedMenu: false,
 };
 
 const HeaderWithStyles = withStyles(styles)(HeaderComponent);

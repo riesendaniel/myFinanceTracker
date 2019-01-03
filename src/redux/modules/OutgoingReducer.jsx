@@ -6,6 +6,7 @@ import {
   deleteDocument,
 } from '../database';
 import history from '../../helper/history';
+import stableSort from '../../helper/sorting';
 
 const collection = 'outgoing';
 
@@ -123,23 +124,23 @@ const initializeOutgoingWatcher = () => (dispatch) => {
   snapshotWatcher(collection, snapshot => dispatch(doLoadOutgoings(snapshot)));
 };
 
-const doAddOutgoing = entry => (dispatch) => {
+const doAddOutgoing = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  addDocument(collection, entry);
+  await addDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/outgoings');
 };
 
-const doUpdateOutgoing = entry => (dispatch) => {
+const doUpdateOutgoing = entry => async (dispatch) => {
   dispatch(isLoading(true));
-  updateDocument(collection, entry);
+  await updateDocument(collection, entry);
   dispatch(isLoading(false));
   history.push('/outgoings');
 };
 
-const doDeleteOutgoing = id => (dispatch) => {
+const doDeleteOutgoing = id => async (dispatch) => {
   dispatch(isLoading(true));
-  deleteDocument(collection, id);
+  await deleteDocument(collection, id);
   dispatch(isLoading(false));
 };
 
@@ -163,9 +164,14 @@ const ACTION_HANDLERS = {
   [OUTGOING_IS_LOADING]: (state, action) => (
     { ...state, isLoading: action.status }
   ),
-  [LOADED_OUTGOINGS]: (state, action) => (
-    { ...state, outgoings: action.payload }
-  ),
+  [LOADED_OUTGOINGS]: (state, action) => {
+    const outgoings = stableSort(
+      action.payload,
+      'outgoingTitle',
+      'asc',
+    );
+    return { ...state, outgoings };
+  },
   [FILTER_OUTGOINGS_BY_CATEGORY]: (state, action) => {
     const outgoingsByCategory = [];
     if (typeof action.categories !== 'undefined') {
@@ -261,7 +267,7 @@ const ACTION_HANDLERS = {
 // Reducer
 // ------------------------------------
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   outgoings: [],
   outgoingsByCategory: [],
   mostFrequentCategory: null,
