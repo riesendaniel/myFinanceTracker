@@ -118,6 +118,11 @@ class AppComponent extends Component {
         loading: false,
       });
     });
+    const {menuState, width} = this.props;
+    const fixedMenu = isWidthUp('lg', width);
+    if (fixedMenu && menuState !== 'open') {
+      this.props.toggleMenu();
+    }
   }
 
   componentWillUnmount() {
@@ -147,7 +152,6 @@ class AppComponent extends Component {
       loading,
     } = this.state;
     const {
-      toggleMenu,
       classes,
       currentUser,
       menuState,
@@ -159,9 +163,6 @@ class AppComponent extends Component {
     const authorizedRoutes = this.routes.filter(
       route => !route.role || route.role === currentUser.role
     );
-    if (fixedMenu && menuState !== 'open') {
-      toggleMenu();
-    }
     return (
       <div>
         <Router history={history}>
