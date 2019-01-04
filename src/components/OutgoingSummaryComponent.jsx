@@ -22,7 +22,7 @@ const OutgoingSummaryComponent = (props) => {
         </ResponsiveTableCell>
         <ResponsiveTableCell />
         <ResponsiveTableCell />
-        <ResponsiveTableCell numeric>
+        <ResponsiveTableCell align="right">
           <Typography>{`${Math.round(outgoings.reduce((total, item) => total + item.outgoingAmount, 0))} ${currency}`}</Typography>
         </ResponsiveTableCell>
       </ResponsiveTableRow>

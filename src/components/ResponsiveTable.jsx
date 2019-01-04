@@ -140,7 +140,7 @@ export const ResponsiveTableRow = (props) => {
 
 export const ResponsiveTableCell = (props) => {
   const {
-    alignRight,
+    actions,
     breakpoint,
     children,
     columnHead,
@@ -149,18 +149,18 @@ export const ResponsiveTableCell = (props) => {
     [theme.breakpoints.down(props.breakpoint)]: {
       root: {
         display: 'flex',
-        justifyContent: alignRight ? 'flex-end' : 'space-between',
+        justifyContent: actions ? 'flex-end' : 'space-between',
         alignItems: 'center',
         paddingRight: '24px',
         borderBottom: 'none',
       },
-      numeric: {
+      alignRight: {
         flexDirection: 'row',
       },
     },
   });
   const Component = withStyles(styles)(TableCell);
-  const reducedProps = removeCustomProps(props, ['alignRight', 'breakpoint', 'columnHead']);
+  const reducedProps = removeCustomProps(props, ['actions', 'breakpoint', 'columnHead']);
   return (
     <Component {...reducedProps}>
       { columnHead && (
@@ -180,7 +180,7 @@ export const ResponsiveTableCell = (props) => {
 
 const ResponsiveTableRowFormCellComponent = (props) => {
   const {
-    alignRight,
+    actions,
     breakpoint,
     children,
     classes,
@@ -192,7 +192,7 @@ const ResponsiveTableRowFormCellComponent = (props) => {
       className={classNames({
         [classes.cell]: !isWidthDown(breakpoint, width),
         [classes.responsiveCell]: isWidthDown(breakpoint, width),
-        [classes.alignRight]: alignRight,
+        [classes.actions]: actions,
       })}
     >
       { columnHead && (
@@ -211,7 +211,7 @@ const ResponsiveTableRowFormCellComponent = (props) => {
 };
 
 ResponsiveTableRowFormCellComponent.propTypes = {
-  alignRight: PropTypes.bool,
+  actions: PropTypes.bool,
   breakpoint: CustomPropTypes.breakpoint.isRequired,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -223,7 +223,7 @@ ResponsiveTableRowFormCellComponent.propTypes = {
 };
 
 ResponsiveTableRowFormCellComponent.defaultProps = {
-  alignRight: false,
+  actions: false,
   columnHead: undefined,
 };
 
@@ -238,10 +238,7 @@ const formCellStyles = () => ({
     alignItems: 'center',
     borderBottom: 'none',
   },
-  responsiveNumeric: {
-    flexDirection: 'row',
-  },
-  alignRight: {
+  actions: {
     justifyContent: 'flex-end',
   },
 });
