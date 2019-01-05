@@ -10,8 +10,17 @@ describe('e2e Test myFinanceTracker', function() {
     browser.executeScript("sauce:context=Enter Emailadress");
     element(by.name('email')).sendKeys('riesen@yahoo.de');
 
-    browser.executeScript("sauce:context=Asserting 'riesen007@yahoo!' text is present");
-    var email = element(by.name('email'));
-    expect(email.getText()).toEqual('');
+    browser.executeScript("sauce:context=Click next");
+    element(by.css('.firebaseui-id-submit')).click();
+
+    browser.executeScript("sauce:context=Enter password");
+    element(by.name('password')).sendKeys('Riesen');
+
+    browser.executeScript("sauce:context=Click next");
+    element(by.css('.firebaseui-id-submit')).click();
+
+    browser.executeScript("sauce:context=Asserting 'Übersicht von riesen@yahoo.de' welcome text is present");
+    var title = element(by.id('dashboard-title'));
+    expect(title.getText()).toEqual('Übersicht von riesen@yahoo.de');
   });
 });
