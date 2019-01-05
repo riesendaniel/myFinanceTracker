@@ -153,7 +153,7 @@ class DashboardComponent extends Component {
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
-                content={(
+                content={currentMonthsOutgoingsByCategory.length > 0 ? (
                   <ResponsiveContainer>
                     <PieChart>
                       <Tooltip formatter={value => `${value} ${currency}`} />
@@ -176,6 +176,10 @@ class DashboardComponent extends Component {
                       />
                     </PieChart>
                   </ResponsiveContainer>
+                ) : (
+                  <Typography>
+                    {'Mit der Erfassung von Ausgaben zum aktuellen Monat werden diese hier grafisch dargestellt.'}
+                  </Typography>
                 )}
               />
               <DashboardChartComponent
