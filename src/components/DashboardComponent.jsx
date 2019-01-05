@@ -257,18 +257,18 @@ class DashboardComponent extends Component {
                         'outgoingDate',
                         'desc',
                       ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
-                          <ResponsiveTableRow key={outgoing.id}>
-                            <ResponsiveTableCell columnHead="Datum">
-                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Beschreibung">
-                              <Typography>{outgoing.outgoingTitle}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Betrag">
-                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                            </ResponsiveTableCell>
-                          </ResponsiveTableRow>
-                        ))
+                        <ResponsiveTableRow key={outgoing.id}>
+                          <ResponsiveTableCell columnHead="Datum">
+                            <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Beschreibung">
+                            <Typography>{outgoing.outgoingTitle}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Betrag" align="right">
+                            <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                          </ResponsiveTableCell>
+                        </ResponsiveTableRow>
+                      ))
                       }
                     </ResponsiveTableBody>
                   </ResponsiveTable>
