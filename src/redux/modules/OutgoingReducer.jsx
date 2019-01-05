@@ -120,9 +120,14 @@ const doLoadOutgoings = snapshot => (dispatch, getState) => {
   dispatch(isLoading(false));
 };
 
+let unregisterSnapshotWatcher;
 const initializeOutgoingWatcher = () => (dispatch) => {
-  snapshotWatcher(collection, snapshot => dispatch(doLoadOutgoings(snapshot)));
+  unregisterSnapshotWatcher = snapshotWatcher(
+    collection,
+    snapshot => dispatch(doLoadOutgoings(snapshot)),
+  );
 };
+export const unregisterOutgoingWatcher = () => unregisterSnapshotWatcher();
 
 const doAddOutgoing = entry => async (dispatch) => {
   dispatch(isLoading(true));

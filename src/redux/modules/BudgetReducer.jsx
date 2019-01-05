@@ -75,9 +75,14 @@ const doLoadBudget = snapshot => (dispatch, getState) => {
   dispatch(isLoading(false));
 };
 
+let unregisterSnapshotWatcher;
 const initializeBudgetWatcher = () => (dispatch) => {
-  snapshotWatcher(collection, snapshot => dispatch(doLoadBudget(snapshot)));
+  unregisterSnapshotWatcher = snapshotWatcher(
+    collection,
+    snapshot => dispatch(doLoadBudget(snapshot)),
+  );
 };
+export const unregisterBudgetWatcher = () => unregisterSnapshotWatcher();
 
 const doAddBudgetEntry = entry => async (dispatch) => {
   dispatch(isLoading(true));
