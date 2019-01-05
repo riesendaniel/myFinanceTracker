@@ -108,7 +108,7 @@ class UserAdministrationItemComponent extends Component {
             <Grid item xs={12} container justify="flex-end">
               <ResponsiveTableRowFormCell
                 breakpoint={breakpoint}
-                alignRight
+                actions
               >
                 {(role === 'standard' && state === 'pending') && (
                   <div>

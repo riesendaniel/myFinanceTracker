@@ -63,10 +63,10 @@ class OutgoingItemComponent extends Component {
         <ResponsiveTableCell columnHead="Titel">{outgoing.outgoingTitle}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Datum">{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</ResponsiveTableCell>
         <ResponsiveTableCell columnHead="Kategorie">{outgoing.outgoingCategory}</ResponsiveTableCell>
-        <ResponsiveTableCell numeric columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
+        <ResponsiveTableCell align="right" columnHead="Betrag">{`${outgoing.outgoingAmount} ${currency}`}</ResponsiveTableCell>
         <ResponsiveTableCell
           className={isWidthUp(breakpoint, width, false) ? classes.actions : undefined}
-          alignRight
+          actions
         >
           <FormActions
             deleteFnc={this.handleDelete}

@@ -27,10 +27,10 @@ const BudgetListSummaryComponent = (props) => {
       <ResponsiveTableCell>
         <Typography>Total</Typography>
       </ResponsiveTableCell>
-      <ResponsiveTableCell numeric columnHead="monatlich">
+      <ResponsiveTableCell align="right" columnHead="monatlich">
         <Typography>{`${Math.round(list.reduce((total, item) => total + item.monthly, 0))} ${currency}`}</Typography>
       </ResponsiveTableCell>
-      <ResponsiveTableCell numeric columnHead="jährlich">
+      <ResponsiveTableCell align="right" columnHead="jährlich">
         <Typography>{`${Math.round(list.reduce((total, item) => total + item.yearly, 0))} ${currency}`}</Typography>
       </ResponsiveTableCell>
       <ResponsiveTableCell />

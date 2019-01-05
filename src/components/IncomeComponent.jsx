@@ -90,7 +90,7 @@ const IncomeComponent = (props) => {
                       </Typography>
                     </Grid>
                   ) : (
-                    <div>
+                    <Grid container>
                       <Grid item xs={12}>
                         <Typography color={smDown ? 'textSecondary' : undefined}>Abzüge</Typography>
                         <IncomeDeductions />
@@ -103,7 +103,7 @@ const IncomeComponent = (props) => {
                         <Typography color={smDown ? 'textSecondary' : undefined}>monatliches Nettoeinkommen</Typography>
                         <Typography>{`${Math.round(netPay)} ${currency}`}</Typography>
                       </Grid>
-                    </div>
+                    </Grid>
                   ) }
                 </Grid>
               </CardContent>
