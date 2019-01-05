@@ -112,7 +112,7 @@ class DashboardComponent extends Component {
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" data-testid='dashboard-title' component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
+          <Typography variant="h2" data-test-id='dashboard-title' id='dashboard-title' component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
         </Grid>
         { isLoadingBudget
         || isLoadingIncome
