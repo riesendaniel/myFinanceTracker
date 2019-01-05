@@ -23,6 +23,17 @@ export const snapshotWatcher = (collection, handleNext) => {
   }
 };
 
+export const addUser = async (data) => {
+  try {
+    await database.collection('users').doc(data.id)
+      .set({ ...data, userId: auth.currentUser.uid });
+    return true;
+  } catch (error) {
+    ErrorLogger.log(error, 'Fehler beim Speichern des Dokuments in der Sammlung users.');
+    return false;
+  }
+};
+
 export const addDocument = async (collection, data) => {
   try {
     const tmpData = data;
