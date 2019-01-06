@@ -110,7 +110,7 @@ class Menu extends Component {
                 <ListItemIcon>
                   {menuItem.icon}
                 </ListItemIcon>
-                <ListItemText data-automation-id={'click-menu-'+menuItem.text} primary={menuItem.text} />
+                <ListItemText data-test-id={'click-menu-'+menuItem.text} primary={menuItem.text} />
               </ListItem>
             ))}
           </List>
