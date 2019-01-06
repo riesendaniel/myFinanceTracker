@@ -1,16 +1,9 @@
 // conf.js
-// var HTTPSProxyAgent = require('https-proxy-agent');
-// var sauceRestAgent = new HTTPSProxyAgent("http://<proxy>:<port>")
 
 exports.config = {
   sauceUser: 'riesen007',
   sauceKey: 'f4be4c64-a565-4acf-9335-edb3ad2e7a15',
-  // sauceAgent: sauceRestAgent,
-  // webDriverProxy: 'http://<proxy>:<port>',
-  //seleniumAddress: 'http://ondemand.saucelabs.com:80/wd/hub',
   specs: ['e2e-tests/*test.js'],
-
-  // restartBrowserBetweenTests: true,
 
   onPrepare: function () {
     browser.ignoreSynchronization = true;

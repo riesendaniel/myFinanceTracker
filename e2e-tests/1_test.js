@@ -19,6 +19,7 @@ describe('e2e Test myFinanceTracker', function() {
     browser.executeScript("sauce:context=Click next");
     element(by.css('.firebaseui-id-submit')).click();
 
+    browser.sleep(1000);
     browser.executeScript("sauce:context=Asserting 'Übersicht von riesen@yahoo.de' welcome text is present");
     var title = element(by.id('dashboard-title'));
     expect(title.getText()).toEqual('Übersicht von riesen@yahoo.de');
