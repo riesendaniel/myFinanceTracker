@@ -194,7 +194,7 @@ class OutgoingListComponent extends Component {
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
-          <Typography variant="h2" component="h2">Ausgaben</Typography>
+          <Typography variant="h2" data-test-id={'title-outgoing'} component="h2">Ausgaben</Typography>
         </Grid>
         <Grid item xs={12} md={10} container>
           <Grid item xs={12}>
@@ -287,6 +287,7 @@ class OutgoingListComponent extends Component {
           <Fab
             aria-label="Ausgabe hinzufügen"
             color="primary"
+            data-test-id={'add-outgoing'}
             onClick={() => {
               history.push({
                 pathname: '/outgoing/edit',

@@ -12,10 +12,8 @@ exports.config = {
 
   multiCapabilities: [{
     browserName: 'chrome',
+    screenResolution: '1280x1024',
     version: '71',
-    chromeOptions: {
-      args: ['--window-size=1381,1045', '-window-position=0,0']
-    },
     platform: 'Windows 10',
     name: "chrome-tests",
     shardTestFiles: true,

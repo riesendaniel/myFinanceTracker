@@ -19,11 +19,13 @@ const FormActionsComponent = (props) => {
       <div>
         <IconButton
           type="submit"
+          data-test-id={'submit-button'}
         >
           <SaveIcon />
         </IconButton>
         <IconButton
           type="reset"
+          data-test-id={'reset-button'}
           onClick={resetFnc}
         >
           <CancelIcon />
@@ -33,12 +35,14 @@ const FormActionsComponent = (props) => {
       <div>
         <IconButton
           onClick={editFnc}
+          data-test-id={'edit-button'}
         >
           <EditIcon />
         </IconButton>
         {disableDelete || (
           <IconButton
             onClick={deleteFnc}
+            data-test-id={'delete-button'}
           >
             <DeleteOutlineIcon />
           </IconButton>
