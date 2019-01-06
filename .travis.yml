@@ -9,7 +9,7 @@ before_install:
 install:
   - npm install
 script:
-  - npm run test
+#  - npm run test
   - npm run build
 after_success:
   - firebase deploy --project myfinancetracker-ch --token "$FIREBASE_TOKEN"
