@@ -92,9 +92,14 @@ const doLoadGrossPay = snapshot => (dispatch, getState) => {
   dispatch(isLoading(false));
 };
 
+let unregisterGrossPaySnapshotWatcher;
 const initializeGrossPayWatcher = () => (dispatch) => {
-  snapshotWatcher(incomeCollection, snapshot => dispatch(doLoadGrossPay(snapshot)));
+  unregisterGrossPaySnapshotWatcher = snapshotWatcher(
+    incomeCollection,
+    snapshot => dispatch(doLoadGrossPay(snapshot)),
+  );
 };
+export const unregisterGrossPayWatcher = () => unregisterGrossPaySnapshotWatcher();
 
 const doLoadDeductions = snapshot => (dispatch, getState) => {
   dispatch(isLoading(true));
@@ -109,9 +114,14 @@ const doLoadDeductions = snapshot => (dispatch, getState) => {
   dispatch(isLoading(false));
 };
 
+let unregisterDeductionsSnapshotWatcher;
 const initializeDeductionsWatcher = () => (dispatch) => {
-  snapshotWatcher(deductionsCollection, snapshot => dispatch(doLoadDeductions(snapshot)));
+  unregisterDeductionsSnapshotWatcher = snapshotWatcher(
+    deductionsCollection,
+    snapshot => dispatch(doLoadDeductions(snapshot)),
+  );
 };
+export const unregisterDeductionsWatcher = () => unregisterDeductionsSnapshotWatcher();
 
 const doUpdateGrossPay = amount => async (dispatch, getState) => {
   dispatch(isLoading(true));

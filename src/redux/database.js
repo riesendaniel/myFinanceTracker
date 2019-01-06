@@ -6,21 +6,25 @@ const handleError = (error) => {
 };
 
 export const snapshotWatcherAdmin = (collection, handleNext) => {
+  let unregisterSnapshotWatcher;
   try {
-    database.collection(collection)
+    unregisterSnapshotWatcher = database.collection(collection)
       .onSnapshot(handleNext, handleError);
   } catch (error) {
     ErrorLogger.log(error, `Fehler beim Laden der Sammlung ${collection} von der Datenbank.`);
   }
+  return unregisterSnapshotWatcher;
 };
 
 export const snapshotWatcher = (collection, handleNext) => {
+  let unregisterSnapshotWatcher;
   try {
-    database.collection(collection).where('userId', '==', auth.currentUser.uid)
+    unregisterSnapshotWatcher = database.collection(collection).where('userId', '==', auth.currentUser.uid)
       .onSnapshot(handleNext, handleError);
   } catch (error) {
     ErrorLogger.log(error, `Fehler beim Laden der Sammlung ${collection} von der Datenbank.`);
   }
+  return unregisterSnapshotWatcher;
 };
 
 export const addUser = async (data) => {

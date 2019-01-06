@@ -58,9 +58,14 @@ const doLoadUsers = snapshot => (dispatch) => {
   dispatch(isLoading(false));
 };
 
+let unregisterSnapshotWatcherAdmin;
 const initializeUsersWatcher = () => (dispatch) => {
-  snapshotWatcherAdmin(collection, snapshot => dispatch(doLoadUsers(snapshot)));
+  unregisterSnapshotWatcherAdmin = snapshotWatcherAdmin(
+    collection,
+    snapshot => dispatch(doLoadUsers(snapshot)),
+  );
 };
+export const unregisterUsersWatcher = () => unregisterSnapshotWatcherAdmin();
 
 const doAddUser = user => async (dispatch) => {
   dispatch(isLoading(true));

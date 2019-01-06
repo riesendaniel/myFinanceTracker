@@ -57,9 +57,14 @@ const doLoadMainCategories = snapshot => (dispatch) => {
   dispatch(isLoading(false));
 };
 
+let unregisterSnapshotWatcher;
 const initializeMainCategoryWatcher = () => (dispatch) => {
-  snapshotWatcher(collection, snapshot => dispatch(doLoadMainCategories(snapshot)));
+  unregisterSnapshotWatcher = snapshotWatcher(
+    collection,
+    snapshot => dispatch(doLoadMainCategories(snapshot)),
+  );
 };
+export const unregisterMainCategoryWatcher = () => unregisterSnapshotWatcher();
 
 const doAddMainCategory = entry => async (dispatch) => {
   dispatch(isLoading(true));
