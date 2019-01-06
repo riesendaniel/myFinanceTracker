@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Grid,
   Card,
+  CardActions,
   CardContent,
   Hidden,
   InputLabel,
@@ -9,15 +10,15 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import {
   ValidatorForm
 } from 'react-material-ui-form-validator';
+import FormActions from './FormActionsComponent';
 import { auth } from '../config/firebase';
 import { gridSpacing } from '../theme';
 import history from '../helper/history';
 
-export default class SignIn extends Component {
+export default class Register extends Component {
   state = { email: '', password: '', errorMessage: null, user: null };
 
   handleSignUp = () => {
@@ -50,7 +51,7 @@ export default class SignIn extends Component {
                 <CardContent>
                   <Grid item xs={12} container spacing={gridSpacing} justify="space-between">
                     <Grid item xs={12}>
-                      <TextField
+                      <TextField fullWidth
                         label="Email"
                         autoCapitalize="none"
                         onChange={(event) => {
@@ -62,7 +63,7 @@ export default class SignIn extends Component {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <TextField
+                      <TextField fullWidth
                         placeholder="Password"
                         type="password"
                         label="Password"
@@ -76,22 +77,16 @@ export default class SignIn extends Component {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Button
-                        color="primary"
-                        onClick={this.handleSignUp}
-                      > Registrieren
-                      </Button>
-                      <Button
-                        color="primary"
-                        onClick={() =>  history.push({pathname: '/signin/'})}
-                      > Zurück
-                      </Button>
-                    </Grid>
-                    <Grid item xs={12}>
                       <InputLabel style={{ color: 'red' }}>{this.state.errorMessage}</InputLabel>
                     </Grid>
                   </Grid>
                 </CardContent>
+                <CardActions>
+                  <FormActions
+                    editable
+                    resetFnc={() => history.push({pathname: '/signin/'})}
+                  />
+                </CardActions>
               </ValidatorForm>
             </Card>
           </Grid>

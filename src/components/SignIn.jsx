@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   Grid,
   Hidden,
+  withStyles,
   Typography,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { auth, uiConfig } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
@@ -16,33 +17,28 @@ const styles = () => ({
   },
 });
 
-class SignIn extends Component {
-  render() {
-    return (
-        <Grid container spacing={gridSpacing} justify="center">
-          <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4}/>
-          </Hidden>
-          <Grid item xs={12} sm={8} md={6} xl={4}>
-            <Typography variant="h2" component="h2">Login mit bestehender Adresse</Typography>
-          </Grid>
-          <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4}/>
-          </Hidden>
-          <Grid item xs={12} sm={8} md={6} xl={4}>
-            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
-          </Grid>
-          <Hidden smDown>
-            <Grid item sm={2} md={3} xl={4}/>
-          </Hidden>
-          <Grid item xs={12} sm={8} md={6} xl={4}>
-            <Link to="/register/" className="test">
-              <Typography variant="body1">Hier als neuer User registrieren</Typography>
-            </Link>
-          </Grid>
-        </Grid>
-    );
-  }
-}
+const SignIn = (props) => {
+  const { classes } = props;
+
+  return (
+    <Grid container spacing={gridSpacing} justify="center" alignItems="center" direction="column">
+      <Grid item>
+        <Typography variant="h2" component="h2">Login</Typography>
+      </Grid>
+      <Grid item>
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
+      </Grid>
+      <Grid item>
+        <Link to="/register/" className={classes.link}>
+          <Typography variant="body1">Hier als neuer User registrieren</Typography>
+        </Link>
+      </Grid>
+    </Grid>
+  );
+};
+
+SignIn.propTypes = {
+  classes: CustomPropTypes.classes.isRequired,
+};
 
 export default withStyles(styles)(SignIn);
