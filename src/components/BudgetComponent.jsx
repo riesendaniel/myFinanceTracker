@@ -77,7 +77,7 @@ export class BudgetComponent extends Component {
       <div>
         <Grid container spacing={gridSpacing} justify="center">
           <Grid item xs={12} md={10}>
-            <Typography variant="h2" component="h2">Budget</Typography>
+            <Typography variant="h2" component="h2" data-automation-id={'title-budget'}>Budget</Typography>
           </Grid>
           <Grid item xs={12} md={10}>
             { noDataToRender() || (

@@ -24,6 +24,8 @@ describe('e2e Test myFinanceTracker', function() {
     var title = element(by.id('dashboard-title'));
     expect(title.getText().toString().includes('Übersicht von'));
 
+    //browser.executeScript("sauce:context=Click Budget");
+    //element(by.xpath('xpath=//*[@data-automation-id=\'click-menu-Budget\']')).click();
 
   });
 });
