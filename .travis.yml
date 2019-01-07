@@ -8,12 +8,16 @@ before_install:
   - npm install -g firebase-tools
 install:
   - npm install
-script:
-  - npm run test
-  - npm run build
-after_success:
-  - firebase deploy --project myfinancetracker-ch --token "$FIREBASE_TOKEN"
-addons:
-  sauce_connect: true
-script:
-  - npm run e2e-test
+jobs:
+  include:
+    - stage: deploy
+      script:
+        - npm run test
+        - npm run build
+      after_success:
+        - firebase deploy --project myfinancetracker-ch --token "$FIREBASE_TOKEN"
+    - stage: e2e-test
+      addons:
+        sauce_connect: true
+      script:
+          - npm run e2e-test
