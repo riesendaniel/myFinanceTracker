@@ -37,6 +37,7 @@ import Notifier from './Notifier';
 import SignIn from './SignIn';
 import { auth } from '../config/firebase';
 import Logout from './Logout';
+import Register from './Register';
 
 const menuWidth = '300px';
 
@@ -93,17 +94,22 @@ class AppComponent extends Component {
     },
     {
       id: 8,
+      path: '/register/',
+      component: Register,
+    },
+    {
+      id: 9,
       path: '/logout/',
       component: Logout,
     },
     {
-      id: 9,
+      id: 10,
       path: '/',
       component: Dashboard,
       exact: true,
     },
     {
-      id: 10,
+      id: 11,
       path: '*',
       component: NotFound,
     },
