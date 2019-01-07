@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   Grid,
-  Hidden,
   withStyles,
   Typography,
 } from '@material-ui/core';
