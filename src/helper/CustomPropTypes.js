@@ -23,7 +23,7 @@ const CustomPropTypes = {
   deduction: PropTypes.shape({
     id: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['percentaged', 'fixed']).isRequired,
     value: PropTypes.number.isRequired,
   }),
   history: PropTypes.shape({

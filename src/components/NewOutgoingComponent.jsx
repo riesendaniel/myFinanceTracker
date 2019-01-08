@@ -95,7 +95,7 @@ class NewOutgoingComponent extends Component {
           <Grid item sm={2} md={3} xl={4}/>
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
-          <Typography variant="h2" component="h2">Ausgabe erfassen</Typography>
+          <Typography variant="h2" data-test-id={'title-new-outgoing'} component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
           <Grid item sm={2} md={3} xl={4}/>
@@ -112,6 +112,7 @@ class NewOutgoingComponent extends Component {
                     <TextValidator
                       fullWidth
                       id="outgoing-title"
+                      data-test-id={'outgoing-title'}
                       name="outgoingTitle"
                       type="text"
                       placeholder="Titel eingeben"
@@ -140,6 +141,7 @@ class NewOutgoingComponent extends Component {
                     <FormControl fullWidth>
                       <TextValidator
                         id="amount"
+                        data-test-id={'outgoing-amount'}
                         name="amount"
                         placeholder="Betrag eingeben"
                         validators={[
@@ -174,6 +176,7 @@ class NewOutgoingComponent extends Component {
                       <SelectValidator
                         value={outgoing.outgoingCategoryId || ''}
                         id="category"
+                        data-test-id={'outgoing-category'}
                         name="category"
                         validators={['required']}
                         errorMessages={['Die Ausgabe muss einer Kategorie zugewiesen werden. Ggf. muss vorgängig ein Budgeteintrag erfasst werden.']}
@@ -204,6 +207,7 @@ class NewOutgoingComponent extends Component {
                       fullWidth
                       id="outgoing-date"
                       name="outgoingDate"
+                      data-test-id={'outgoing-date'}
                       validators={['required']}
                       errorMessages={['Ein Datum muss ausgewählt werden.']}
                       placeholder="Datum auswählen"

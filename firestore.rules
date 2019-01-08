@@ -1,28 +1,122 @@
 service cloud.firestore {
   match /databases/{database}/documents {
+  	function existingData() {
+      return resource.data;
+    }
+
+    function incomingData() {
+      return request.resource.data;
+    }
+    
+  	function currentUser() {
+      return request.auth;
+    }
+    
+  	function isSignedIn() {
+      return currentUser().uid != null;
+    }
+    
+    function isOwner() {
+      return isSignedIn() && currentUser().uid == existingData().userId;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isOwnUserData() {
+    	return currentUser().uid == getUserData().userId;
+    }
+    
+    function isAdmin() {
+      return getUserData().role == 'admin';
+    }
+    
+    function hasCorrectOwner() {
+      return currentUser().uid == incomingData().userId;
+    }
+    
+    function isValidRef(collection, id) {
+      return exists(/databases/$(database)/documents/$(collection)/$(id))
+    }
+    
+    function isColor(color) {
+      return color[0] == '#' &&
+             color.size() == 7;
+    }
+    
+    function isValidBudget() {
+      return hasCorrectOwner() &&
+      			 (incomingData().category.size() >= 3) &&
+             isValidRef('categories', incomingData().mainCategoryId) &&
+             (incomingData().period in ['monthly', 'yearly']) &&
+             (incomingData().monthly > 0) &&
+             (incomingData().yearly > 0) &&
+             isColor(incomingData().color);
+    }
+    
+    function isValidCategory() {
+      return hasCorrectOwner() &&
+      			 (incomingData().description.size() >= 3);
+    }
+    
+    function isValidDeduction() {
+      return hasCorrectOwner() &&
+      			 (incomingData().description.size() >= 3) &&
+             (incomingData().type in ['percentaged', 'fixed']) &&
+             (incomingData().value > 0);
+    }
+    
+    function isValidIncome() {
+      return hasCorrectOwner() &&
+             (incomingData().amount > 0);
+    }
+    
+    function isValidOutgoing() {
+      return hasCorrectOwner() &&
+      			 (incomingData().outgoingTitle.size() >= 3) &&
+             isValidRef('budget', incomingData().outgoingCategoryId) &&
+             (incomingData().outgoingAmount >= 0 || incomingData().outgoingAmount < 0) &&
+             (incomingData().outgoingDate.size() == 10);
+    }
+    
+    function isValidUser() {
+      return (incomingData().name is string) &&
+             (incomingData().state in ['unrequested', 'pending', 'approved', 'rejected']) &&
+             (incomingData().role in ['standard', 'extended', 'admin']);
+    }
+  
     match /budget/{document=**} {
-      allow read, update, delete: if request.auth.uid == resource.data.userId;
-      allow create: if request.auth.uid != null;
+      allow read, delete: if isOwner();
+      allow update: if isOwner() && isValidBudget();
+      allow create: if isSignedIn() && isValidBudget();
     }
     match /categories/{document=**} {
-      allow read, update, delete: if request.auth.uid == resource.data.userId;
-      allow create: if request.auth.uid != null;
+      allow read, delete: if isOwner();
+      allow update: if isOwner() && isValidCategory();
+      allow create: if isSignedIn() && isValidCategory();
     }
     match /deductions/{document=**} {
-      allow read, update, delete: if request.auth.uid == resource.data.userId;
-      allow create: if request.auth.uid != null;
+      allow read, delete: if isOwner();
+      allow update: if isOwner() && isValidDeduction();
+      allow create: if isSignedIn() && isValidDeduction();
     }
     match /income/{document=**} {
-      allow read, update, delete: if request.auth.uid == resource.data.userId;
-      allow create: if request.auth.uid != null;
+      allow read: if isOwner();
+      allow update: if isOwner() && isValidIncome();
+      allow delete: if false;
+      allow create: if isSignedIn() && isValidIncome();
     }
     match /outgoing/{document=**} {
-      allow read, update, delete: if request.auth.uid == resource.data.userId;
-      allow create: if request.auth.uid != null;
+      allow read, delete: if isOwner();
+      allow update: if isOwner() && isValidOutgoing();
+      allow create: if isSignedIn() && isValidOutgoing();
     }
     match /users/{document=**} {
-      allow read, update, delete: if request.auth != null;
-      allow create: if request.auth.uid != null;
+      allow read: if isSignedIn();
+      allow update: if isAdmin() && isValidUser();
+      allow delete: if false;
+      allow create: if isSignedIn() && hasCorrectOwner() && isValidUser();
     }
   }
 }

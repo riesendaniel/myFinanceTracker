@@ -2,7 +2,7 @@ import React from 'react';
 import configureStore from 'redux-mock-store';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { Button } from '@material-ui/core';
+import { Fab } from '@material-ui/core';
 import { BudgetComponent } from '../components/BudgetComponent';
 import BudgetList from '../components/BudgetListComponent';
 import BudgetSummary from '../components/BudgetSummaryComponent';
@@ -26,36 +26,36 @@ describe('BudgetComponent', () => {
       isLoadingMainCategory: false,
       mainCategories: [
         {
-          id: 2,
+          id: 'test2',
           description: 'Haushalt',
           color: '#FF9900',
         },
         {
-          id: 5,
+          id: 'test5',
           description: 'Reisen',
           color: '#00FF00',
         },
       ],
       budget: [
         {
-          id: 1,
-          mainCategoryId: 2,
+          id: 'test1',
+          mainCategoryId: 'test2',
           category: 'Unterhalt',
           period: 'monthly',
           monthly: 100,
           yearly: 1200,
         },
         {
-          id: 2,
-          mainCategoryId: 2,
+          id: 'test2',
+          mainCategoryId: 'test2',
           category: 'Essen & Getränke',
           period: 'monthly',
           monthly: 250,
           yearly: 3000,
         },
         {
-          id: 3,
-          mainCategoryId: 5,
+          id: 'test3',
+          mainCategoryId: 'test5',
           category: 'öffentlicher Verkehr',
           period: 'yearly',
           monthly: 200,
@@ -81,6 +81,6 @@ describe('BudgetComponent', () => {
   });
 
   it('should render the fab button', () => {
-    expect(wrapper.find(Button).exists()).toBe(true);
+    expect(wrapper.find(Fab).exists()).toBe(true);
   });
 });

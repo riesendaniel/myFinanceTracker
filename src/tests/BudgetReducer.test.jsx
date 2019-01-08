@@ -17,17 +17,8 @@ const initialState = {
 
 const budget = [
   {
-    id: 1,
-    mainCategoryId: 2,
-    category: 'Unterhalt',
-    color: '#FF0000',
-    period: 'monthly',
-    monthly: 100,
-    yearly: 1200,
-  },
-  {
-    id: 2,
-    mainCategoryId: 2,
+    id: 'test2',
+    mainCategoryId: 'test2',
     category: 'Essen & Getränke',
     color: '#FF9900',
     period: 'monthly',
@@ -35,29 +26,29 @@ const budget = [
     yearly: 3000,
   },
   {
-    id: 3,
-    mainCategoryId: 9,
+    id: 'test3',
+    mainCategoryId: 'test9',
     category: 'öffentlicher Verkehr',
     color: '#FF0099',
     period: 'yearly',
     monthly: 200,
     yearly: 2400,
+  },
+  {
+    id: 'test1',
+    mainCategoryId: 'test2',
+    category: 'Unterhalt',
+    color: '#FF0000',
+    period: 'monthly',
+    monthly: 100,
+    yearly: 1200,
   },
 ];
 
 const budgetLoaded = [
   {
-    id: 1,
-    mainCategoryId: 2,
-    category: 'Unterhalt',
-    color: '#FF0000',
-    period: 'monthly',
-    monthly: 100,
-    yearly: 1200,
-  },
-  {
-    id: 2,
-    mainCategoryId: 2,
+    id: 'test2',
+    mainCategoryId: 'test2',
     category: 'Essen & Getränke',
     color: '#FF9900',
     period: 'monthly',
@@ -65,8 +56,8 @@ const budgetLoaded = [
     yearly: 3000,
   },
   {
-    id: 3,
-    mainCategoryId: 9,
+    id: 'test3',
+    mainCategoryId: 'test9',
     category: 'öffentlicher Verkehr',
     color: '#FF0099',
     period: 'yearly',
@@ -74,14 +65,23 @@ const budgetLoaded = [
     yearly: 2400,
   },
   {
-    id: 4,
-    mainCategoryId: 5,
+    id: 'test4',
+    mainCategoryId: 'test5',
     category: 'Tanken',
     color: '#FF9999',
     period: 'monthly',
     monthly: 100,
     yearly: 1200,
     disabled: true,
+  },
+  {
+    id: 'test1',
+    mainCategoryId: 'test2',
+    category: 'Unterhalt',
+    color: '#FF0000',
+    period: 'monthly',
+    monthly: 100,
+    yearly: 1200,
   },
 ];
 
@@ -149,10 +149,10 @@ describe('BudgetReducer', () => {
 
     it('should extract categories from budget', () => {
       const categories = [
-        { id: 1, description: 'Unterhalt', color: '#FF0000' },
-        { id: 2, description: 'Essen & Getränke', color: '#FF9900' },
-        { id: 3, description: 'öffentlicher Verkehr', color: '#FF0099' },
-        { id: 4, description: 'Tanken', color: '#FF9999', disabled: true },
+        { id: 'test2', description: 'Essen & Getränke', color: '#FF9900', disabled: undefined },
+        { id: 'test3', description: 'öffentlicher Verkehr', color: '#FF0099', disabled: undefined },
+        { id: 'test4', description: 'Tanken', color: '#FF9999', disabled: true },
+        { id: 'test1', description: 'Unterhalt', color: '#FF0000', disabled: undefined },
       ];
       const state = { ...initialState, budgetHistory: budgetLoaded, categories };
       expect(reducer(

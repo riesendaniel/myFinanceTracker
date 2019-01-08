@@ -37,6 +37,7 @@ import Notifier from './Notifier';
 import SignIn from './SignIn';
 import { auth } from '../config/firebase';
 import Logout from './Logout';
+import Register from './Register';
 
 const menuWidth = '300px';
 
@@ -93,17 +94,22 @@ class AppComponent extends Component {
     },
     {
       id: 8,
+      path: '/register/',
+      component: Register,
+    },
+    {
+      id: 9,
       path: '/logout/',
       component: Logout,
     },
     {
-      id: 9,
+      id: 10,
       path: '/',
       component: Dashboard,
       exact: true,
     },
     {
-      id: 10,
+      id: 11,
       path: '*',
       component: NotFound,
     },
@@ -118,6 +124,11 @@ class AppComponent extends Component {
         loading: false,
       });
     });
+    const {menuState, width} = this.props;
+    const fixedMenu = isWidthUp('lg', width);
+    if (fixedMenu && menuState !== 'open') {
+      this.props.toggleMenu();
+    }
   }
 
   componentWillUnmount() {
@@ -147,7 +158,6 @@ class AppComponent extends Component {
       loading,
     } = this.state;
     const {
-      toggleMenu,
       classes,
       currentUser,
       menuState,
@@ -159,9 +169,6 @@ class AppComponent extends Component {
     const authorizedRoutes = this.routes.filter(
       route => !route.role || route.role === currentUser.role
     );
-    if (fixedMenu && menuState !== 'open') {
-      toggleMenu();
-    }
     return (
       <div>
         <Router history={history}>

@@ -112,7 +112,7 @@ class DashboardComponent extends Component {
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
+          <Typography variant="h2" data-test-id='dashboard-title' component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
         </Grid>
         { isLoadingBudget
         || isLoadingIncome
@@ -153,7 +153,7 @@ class DashboardComponent extends Component {
             <Grid container spacing={gridSpacing} item>
               <DashboardChartComponent
                 title={`Ausgaben im ${currentMonth} pro Kategorie`}
-                content={(
+                content={currentMonthsOutgoingsByCategory.length > 0 ? (
                   <ResponsiveContainer>
                     <PieChart>
                       <Tooltip formatter={value => `${value} ${currency}`} />
@@ -176,6 +176,10 @@ class DashboardComponent extends Component {
                       />
                     </PieChart>
                   </ResponsiveContainer>
+                ) : (
+                  <Typography>
+                    {'Mit der Erfassung von Ausgaben zum aktuellen Monat werden diese hier grafisch dargestellt.'}
+                  </Typography>
                 )}
               />
               <DashboardChartComponent
@@ -257,18 +261,18 @@ class DashboardComponent extends Component {
                         'outgoingDate',
                         'desc',
                       ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
-                          <ResponsiveTableRow key={outgoing.id}>
-                            <ResponsiveTableCell columnHead="Datum">
-                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Beschreibung">
-                              <Typography>{outgoing.outgoingTitle}</Typography>
-                            </ResponsiveTableCell>
-                            <ResponsiveTableCell columnHead="Betrag">
-                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                            </ResponsiveTableCell>
-                          </ResponsiveTableRow>
-                        ))
+                        <ResponsiveTableRow key={outgoing.id}>
+                          <ResponsiveTableCell columnHead="Datum">
+                            <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Beschreibung">
+                            <Typography>{outgoing.outgoingTitle}</Typography>
+                          </ResponsiveTableCell>
+                          <ResponsiveTableCell columnHead="Betrag" align="right">
+                            <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                          </ResponsiveTableCell>
+                        </ResponsiveTableRow>
+                      ))
                       }
                     </ResponsiveTableBody>
                   </ResponsiveTable>
