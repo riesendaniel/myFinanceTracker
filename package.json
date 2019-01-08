@@ -8,6 +8,7 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.27",
     "classnames": "^2.2.6",
+    "dotenv-flow": "^0.2.0",
     "firebase": "^5.7.2",
     "history": "^4.7.2",
     "moment": "^2.23.0",
@@ -36,14 +37,15 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.12.1",
     "https-proxy-agent": "latest",
-    "protractor": "^5.4.2"
+    "protractor": "^5.4.2",
+    "cross-env": "^5.2.0"
   },
   "scripts": {
     "lint": "eslint . --ext jsx --ext js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "e2e-test": "./node_modules/.bin/protractor conf.js",
+    "e2e-test": "cross-env NODE_ENV=local ./node_modules/.bin/protractor conf.js",
     "eject": "react-scripts eject"
   },
   "browserslist": [

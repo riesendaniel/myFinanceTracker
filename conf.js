@@ -1,8 +1,9 @@
+require('dotenv-flow').config();
 // conf.js
 
 exports.config = {
-  sauceUser: 'riesen007',
-  sauceKey: 'f4be4c64-a565-4acf-9335-edb3ad2e7a15',
+  sauceUser: String(process.env.SAUCE_USERNAME),
+  sauceKey: String(process.env.SAUCE_ACCESS_KEY),
   specs: ['e2e-tests/*test.js'],
 
   onPrepare: function () {
