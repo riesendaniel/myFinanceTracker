@@ -149,10 +149,30 @@ describe('BudgetReducer', () => {
 
     it('should extract categories from budget', () => {
       const categories = [
-        { id: 'test2', description: 'Essen & Getränke', color: '#FF9900', disabled: undefined },
-        { id: 'test3', description: 'öffentlicher Verkehr', color: '#FF0099', disabled: undefined },
-        { id: 'test4', description: 'Tanken', color: '#FF9999', disabled: true },
-        { id: 'test1', description: 'Unterhalt', color: '#FF0000', disabled: undefined },
+        {
+          id: 'test2',
+          description: 'Essen & Getränke',
+          color: '#FF9900',
+          disabled: undefined,
+        },
+        {
+          id: 'test3',
+          description: 'öffentlicher Verkehr',
+          color: '#FF0099',
+          disabled: undefined,
+        },
+        {
+          id: 'test4',
+          description: 'Tanken',
+          color: '#FF9999',
+          disabled: true,
+        },
+        {
+          id: 'test1',
+          description: 'Unterhalt',
+          color: '#FF0000',
+          disabled: undefined,
+        },
       ];
       const state = { ...initialState, budgetHistory: budgetLoaded, categories };
       expect(reducer(

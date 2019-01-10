@@ -52,7 +52,7 @@ class OutgoingTableHead extends Component {
     onRequestSort(event, property);
   };
 
-  render() {
+  render = () => {
     const { breakpoint, order, orderBy } = this.props;
 
     return (

@@ -115,7 +115,7 @@ class AppComponent extends Component {
     },
   ];
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.unregisterAuthObserver = auth.onAuthStateChanged((user) => {
       if (user) {
         this.initializeSnapshotWatcher();
@@ -124,14 +124,14 @@ class AppComponent extends Component {
         loading: false,
       });
     });
-    const {menuState, width} = this.props;
+    const { menuState, toggleMenu, width } = this.props;
     const fixedMenu = isWidthUp('lg', width);
     if (fixedMenu && menuState !== 'open') {
-      this.props.toggleMenu();
+      toggleMenu();
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     // un-register Firebase observers when the component unmounts
     this.unregisterAuthObserver();
   }
@@ -167,7 +167,7 @@ class AppComponent extends Component {
     const userName = currentUser.name;
     const fixedMenu = isWidthUp('lg', width);
     const authorizedRoutes = this.routes.filter(
-      route => !route.role || route.role === currentUser.role
+      route => !route.role || route.role === currentUser.role,
     );
     return (
       <div>

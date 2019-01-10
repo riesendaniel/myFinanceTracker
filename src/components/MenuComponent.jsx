@@ -87,7 +87,7 @@ class Menu extends Component {
     } = this.props;
     const { location } = history;
     const authorizedMenus = this.menu.filter(
-      menuItem => !menuItem.role || menuItem.role === currentUser.role
+      menuItem => !menuItem.role || menuItem.role === currentUser.role,
     );
     return (
       <div className="Menu">
@@ -110,7 +110,7 @@ class Menu extends Component {
                 <ListItemIcon>
                   {menuItem.icon}
                 </ListItemIcon>
-                <ListItemText data-test-id={'click-menu-' + menuItem.text} primary={menuItem.text} />
+                <ListItemText data-test-id={`click-menu-${menuItem.text}`} primary={menuItem.text} />
               </ListItem>
             ))}
           </List>

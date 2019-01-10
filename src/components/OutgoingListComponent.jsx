@@ -146,9 +146,10 @@ class OutgoingListComponent extends Component {
     if (desc) {
       return desc.description;
     }
+    return undefined;
   }
 
-  render() {
+  render = () => {
     const {
       outgoings,
       categories,
@@ -194,7 +195,7 @@ class OutgoingListComponent extends Component {
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Grid item xs={12} md={10}>
-          <Typography variant="h2" data-test-id={'title-outgoing'} component="h2">Ausgaben</Typography>
+          <Typography variant="h2" data-test-id="title-outgoing" component="h2">Ausgaben</Typography>
         </Grid>
         <Grid item xs={12} md={10} container>
           <Grid item xs={12}>
@@ -253,14 +254,15 @@ class OutgoingListComponent extends Component {
                         ))
                           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((row) => {
+                            const outgoing = { ...row };
                             const category = categories.filter(
-                              item => item.id === row.outgoingCategoryId,
+                              item => item.id === outgoing.outgoingCategoryId,
                             );
                             if (category.length > 0) {
-                              row.outgoingCategory = category[0].description;
+                              outgoing.outgoingCategory = category[0].description;
                             }
                             return (
-                              <OutgoingItemComponent key={row.id} outgoing={row} />
+                              <OutgoingItemComponent key={outgoing.id} outgoing={outgoing} />
                             );
                           })}
                       </ResponsiveTableBody>
@@ -287,7 +289,7 @@ class OutgoingListComponent extends Component {
           <Fab
             aria-label="Ausgabe hinzufügen"
             color="primary"
-            data-test-id={'add-outgoing'}
+            data-test-id="add-outgoing"
             onClick={() => {
               history.push({
                 pathname: '/outgoing/edit',

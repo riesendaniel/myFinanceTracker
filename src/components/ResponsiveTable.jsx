@@ -43,6 +43,11 @@ export const ResponsiveTable = (props) => {
   );
 };
 
+ResponsiveTable.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
+};
+
 export const ResponsiveTableHead = (props) => {
   const { show } = props;
   const styles = theme => ({
@@ -62,6 +67,16 @@ export const ResponsiveTableHead = (props) => {
   return <Component {...reducedProps}>{childrenWithProps}</Component>;
 };
 
+ResponsiveTableHead.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
+  show: PropTypes.bool,
+};
+
+ResponsiveTableHead.defaultProps = {
+  show: false,
+};
+
 export const ResponsiveTableBody = (props) => {
   const styles = theme => ({
     [theme.breakpoints.down(props.breakpoint)]: {
@@ -76,6 +91,11 @@ export const ResponsiveTableBody = (props) => {
   const { children, breakpoint } = props;
   const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
   return <Component {...props}>{childrenWithProps}</Component>;
+};
+
+ResponsiveTableBody.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
 };
 
 export const ResponsiveTableFooter = (props) => {
@@ -94,6 +114,11 @@ export const ResponsiveTableFooter = (props) => {
   const { children, breakpoint } = props;
   const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
   return <Component {...props}>{childrenWithProps}</Component>;
+};
+
+ResponsiveTableFooter.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
 };
 
 export const ResponsiveTablePagination = (props) => {
@@ -121,6 +146,11 @@ export const ResponsiveTablePagination = (props) => {
   return <Component {...props}>{childrenWithProps}</Component>;
 };
 
+ResponsiveTablePagination.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
+};
+
 export const ResponsiveTableRow = (props) => {
   const styles = theme => ({
     [theme.breakpoints.down(props.breakpoint)]: {
@@ -136,6 +166,11 @@ export const ResponsiveTableRow = (props) => {
   const { children, breakpoint } = props;
   const childrenWithProps = Children.map(children, child => cloneElement(child, { breakpoint }));
   return <Component {...props}>{childrenWithProps}</Component>;
+};
+
+ResponsiveTableRow.propTypes = {
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
 };
 
 export const ResponsiveTableCell = (props) => {
@@ -178,6 +213,18 @@ export const ResponsiveTableCell = (props) => {
   );
 };
 
+ResponsiveTableCell.propTypes = {
+  actions: PropTypes.bool,
+  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  children: CustomPropTypes.children.isRequired,
+  columnHead: PropTypes.string,
+};
+
+ResponsiveTableCell.defaultProps = {
+  actions: false,
+  columnHead: undefined,
+};
+
 const ResponsiveTableRowFormCellComponent = (props) => {
   const {
     actions,
@@ -213,10 +260,7 @@ const ResponsiveTableRowFormCellComponent = (props) => {
 ResponsiveTableRowFormCellComponent.propTypes = {
   actions: PropTypes.bool,
   breakpoint: CustomPropTypes.breakpoint.isRequired,
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
+  children: CustomPropTypes.children.isRequired,
   classes: CustomPropTypes.classes.isRequired,
   columnHead: PropTypes.string,
   width: CustomPropTypes.breakpoint.isRequired,

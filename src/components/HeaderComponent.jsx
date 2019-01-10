@@ -38,7 +38,7 @@ class HeaderComponent extends Component {
     toggleMenu();
   }
 
-  render() {
+  render = () => {
     const { classes, fixedMenu, isLoggedIn } = this.props;
     return (
       <div className="Header">
@@ -50,7 +50,7 @@ class HeaderComponent extends Component {
             {isLoggedIn && (
               <div>
                 <IconButton
-                  onClick={() =>  history.push({pathname: '/logout'})}
+                  onClick={() => history.push({ pathname: '/logout' })}
                 >
                   <LogoutButton />
                 </IconButton>

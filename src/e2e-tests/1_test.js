@@ -1,6 +1,7 @@
-// spec.js
-describe('e2e Test myFinanceTracker', function () {
-  it('it should open site', function () {
+/* eslint-disable no-undef */
+
+describe('e2e Test myFinanceTracker', () => {
+  it('it should open site', () => {
     browser.executeScript('sauce:context=Going to site');
     browser.get('http://danielriesen.ch');
 
@@ -21,38 +22,38 @@ describe('e2e Test myFinanceTracker', function () {
 
     browser.sleep(1000);
     browser.executeScript('sauce:context=Asserting \'Übersicht von riesen@yahoo.de\' welcome text is present');
-    var titleDashboard = element(by.xpath('//*[@data-test-id=\'dashboard-title\']'));
+    const titleDashboard = element(by.xpath('//*[@data-test-id=\'dashboard-title\']'));
     expect(titleDashboard.getText().toString().includes('Übersicht von'));
   });
 
-  it('it should go to budget', function () {
+  it('it should go to budget', () => {
     browser.executeScript('sauce:context=Click Budget');
     element(by.xpath('//*[@data-test-id=\'click-menu-Budget\']')).click();
 
     browser.executeScript('sauce:context=Asserting \'Budget\' text is present"');
-    var titleBudget = element(by.xpath('//*[@data-test-id=\'title-budget\']'));
+    const titleBudget = element(by.xpath('//*[@data-test-id=\'title-budget\']'));
     expect(titleBudget.getText().toString().includes('Budget'));
   });
 
-  it('it should go to outgoing', function () {
+  it('it should go to outgoing', () => {
     browser.executeScript('sauce:context=Click Ausgaben');
     element(by.xpath('//*[@data-test-id=\'click-menu-Ausgaben\']')).click();
 
     browser.executeScript('sauce:context=Asserting \'Ausgaben\' text is present"');
-    var titleOutgoing = element(by.xpath('//*[@data-test-id=\'title-outgoing\']'));
+    const titleOutgoing = element(by.xpath('//*[@data-test-id=\'title-outgoing\']'));
     expect(titleOutgoing.getText().toString().includes('Ausgaben'));
   });
 
-  it('it should go to new outgoing', function () {
+  it('it should go to new outgoing', () => {
     browser.executeScript('sauce:context=Add new Outgoing');
     element(by.xpath('//*[@data-test-id=\'add-outgoing\']')).click();
 
     browser.executeScript('sauce:context=Asserting \'Ausgabe erfassen\' text is present"');
-    var titleNewOutgoing = element(by.xpath('//*[@data-test-id=\'title-new-outgoing\']'));
+    const titleNewOutgoing = element(by.xpath('//*[@data-test-id=\'title-new-outgoing\']'));
     expect(titleNewOutgoing.getText().toString().includes('Ausgabe erfassen'));
   });
 
-  it('it should add new outgoing site', function () {
+  it('it should add new outgoing site', () => {
     browser.executeScript('sauce:context=Enter title');
     element(by.id('outgoing-title')).sendKeys('automated test outgoing');
 
@@ -63,7 +64,7 @@ describe('e2e Test myFinanceTracker', function () {
     element(by.xpath('//*[@data-test-id=\'submit-button\']')).click();
 
     browser.executeScript('sauce:context=Asserting \'Ausgaben\' text is present"');
-    var titleOutgoing = element(by.xpath('//*[@data-test-id=\'title-outgoing\']'));
+    const titleOutgoing = element(by.xpath('//*[@data-test-id=\'title-outgoing\']'));
     expect(titleOutgoing.getText().toString().includes('Ausgaben'));
   });
 });

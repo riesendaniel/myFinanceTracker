@@ -1,12 +1,12 @@
 import React from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { Link } from 'react-router-dom';
-import CustomPropTypes from '../helper/CustomPropTypes';
 import {
   Grid,
   withStyles,
   Typography,
 } from '@material-ui/core';
+import CustomPropTypes from '../helper/CustomPropTypes';
 import { auth, uiConfig } from '../config/firebase';
 import { gridSpacing } from '../theme';
 
@@ -25,7 +25,7 @@ const SignIn = (props) => {
         <Typography variant="h2" component="h2">Login</Typography>
       </Grid>
       <Grid item>
-        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth}/>
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
       </Grid>
       <Grid item>
         <Link to="/register/" className={classes.link}>
