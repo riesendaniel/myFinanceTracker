@@ -21,6 +21,7 @@ export const getUsers = state => state.users.users;
 const USER_ADMINISTRATION_IS_LOADING = 'USER_ADMINISTRATION_IS_LOADING';
 const RECEIVE_USERS = 'RECEIVE_USERS';
 const SET_CURRENT_USER = 'SET_CURRENT_USER';
+const RESET_CURRENT_USER = 'RESET_CURRENT_USER';
 
 
 // ------------------------------------
@@ -41,6 +42,9 @@ const setCurrentUser = users => ({
   users,
 });
 
+const resetCurrentUser = () => ({
+  type: RESET_CURRENT_USER,
+});
 
 // ------------------------------------
 // Async Action Creators
@@ -87,6 +91,7 @@ export const actions = {
   initializeUsersWatcher,
   doAddUser,
   doUpdateUser,
+  resetCurrentUser,
 };
 
 
@@ -112,6 +117,15 @@ const ACTION_HANDLERS = {
         role: 'standard',
       };
     }
+    return { ...state, currentUser };
+  },
+  [RESET_CURRENT_USER]: (state) => {
+    const currentUser = {
+      id: 'anonymous',
+      name: 'anonymous',
+      state: 'unrequested',
+      role: 'standard',
+    };
     return { ...state, currentUser };
   },
 };
