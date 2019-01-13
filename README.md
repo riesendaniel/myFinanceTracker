@@ -113,7 +113,7 @@ Now the app is ready to be deployed!
 
 ### Continuous Deployment
 
-After every commit to the master branch, succeeding tests, the project will be deployed with firebase.
+After every commit to the master branch, succeeding tests and build on Travis, the project will be deployed with Firebase.
 
 ## Built With
 
@@ -126,6 +126,8 @@ After every commit to the master branch, succeeding tests, the project will be d
 * [Cloud Firestore](https://firebase.google.com/products/firestore/) - The cloud storage
 * [Firebase Authentication](https://firebase.google.com/products/auth/) - The authentication service
 * [React Firebase UI](https://github.com/firebase/firebaseui-web-react) - The firebase UI library
+* [Travis CI](https://travis-ci.org/) - The continuous integration platform
+* [Sauce Labs](https://saucelabs.com/) - The end to end tests platform
 * [Jest](https://facebook.github.io/jest/) - The test runner
 * [Protractor](https://www.protractortest.org) - The e2e test runner
 * [Babel](https://babeljs.io/) - The JavaScript compiler
