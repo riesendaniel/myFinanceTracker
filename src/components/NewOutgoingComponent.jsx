@@ -57,9 +57,10 @@ class NewOutgoingComponent extends Component {
       });
     }
     if (location.state && location.state.mostFrequentCategory) {
+      const { outgoing } = this.state;
       this.setState({
         outgoing: {
-          ...this.state.outgoing,
+          ...outgoing,
           outgoingCategoryId: location.state.mostFrequentCategory,
         },
       });
@@ -86,33 +87,30 @@ class NewOutgoingComponent extends Component {
     }
   };
 
-  render() {
+  render = () => {
     const { currency, categories } = this.props;
     const { outgoing } = this.state;
     return (
       <Grid container spacing={gridSpacing} justify="center">
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4}/>
+          <Grid item sm={2} md={3} xl={4} />
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
-          <Typography variant="h2" data-test-id={'title-new-outgoing'} component="h2">Ausgabe erfassen</Typography>
+          <Typography variant="h2" data-test-id="title-new-outgoing" component="h2">Ausgabe erfassen</Typography>
         </Grid>
         <Hidden smDown>
-          <Grid item sm={2} md={3} xl={4}/>
+          <Grid item sm={2} md={3} xl={4} />
         </Hidden>
         <Grid item xs={12} sm={8} md={6} xl={4}>
           <Card>
-            <ValidatorForm
-              ref="form"
-              onSubmit={this.addOutgoing}
-            >
+            <ValidatorForm onSubmit={this.addOutgoing}>
               <CardContent>
                 <Grid item xs={12} container spacing={gridSpacing} justify="space-between">
                   <Grid item xs={12}>
                     <TextValidator
                       fullWidth
                       id="outgoing-title"
-                      data-test-id={'outgoing-title'}
+                      data-test-id="outgoing-title"
                       name="outgoingTitle"
                       type="text"
                       placeholder="Titel eingeben"
@@ -141,7 +139,7 @@ class NewOutgoingComponent extends Component {
                     <FormControl fullWidth>
                       <TextValidator
                         id="amount"
-                        data-test-id={'outgoing-amount'}
+                        data-test-id="outgoing-amount"
                         name="amount"
                         placeholder="Betrag eingeben"
                         validators={[
@@ -176,7 +174,7 @@ class NewOutgoingComponent extends Component {
                       <SelectValidator
                         value={outgoing.outgoingCategoryId || ''}
                         id="category"
-                        data-test-id={'outgoing-category'}
+                        data-test-id="outgoing-category"
                         name="category"
                         validators={['required']}
                         errorMessages={['Die Ausgabe muss einer Kategorie zugewiesen werden. Ggf. muss vorgängig ein Budgeteintrag erfasst werden.']}
@@ -207,7 +205,7 @@ class NewOutgoingComponent extends Component {
                       fullWidth
                       id="outgoing-date"
                       name="outgoingDate"
-                      data-test-id={'outgoing-date'}
+                      data-test-id="outgoing-date"
                       validators={['required']}
                       errorMessages={['Ein Datum muss ausgewählt werden.']}
                       placeholder="Datum auswählen"

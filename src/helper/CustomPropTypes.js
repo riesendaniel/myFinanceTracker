@@ -18,6 +18,10 @@ const CustomPropTypes = {
     color: PropTypes.color,
     disabled: PropTypes.bool,
   }),
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
   classes: PropTypes.objectOf(PropTypes.string),
   currency: PropTypes.oneOf(['CHF']),
   deduction: PropTypes.shape({
