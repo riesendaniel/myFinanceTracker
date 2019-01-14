@@ -112,7 +112,7 @@ class DashboardComponent extends Component {
       <Grid container spacing={gridSpacing} justify="center">
         <RedirectComponent />
         <Grid item xs={12} xl={10}>
-          <Typography variant="h2" data-test-id='dashboard-title' component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
+          <Typography variant="h2" data-test-id="dashboard-title" component="h2">{`Übersicht von ${currentUser.name}`}</Typography>
         </Grid>
         { isLoadingBudget
         || isLoadingIncome
@@ -150,172 +150,172 @@ class DashboardComponent extends Component {
               />
             </Grid>
             { hasPermissions ? (
-            <Grid container spacing={gridSpacing} item>
-              <DashboardChartComponent
-                title={`Ausgaben im ${currentMonth} pro Kategorie`}
-                content={currentMonthsOutgoingsByCategory.length > 0 ? (
-                  <ResponsiveContainer>
-                    <PieChart>
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <Pie
-                        innerRadius={xsDown ? 55 : 100}
-                        outerRadius={xsDown ? 80 : 140}
-                        paddingAngle={4}
-                        data={currentMonthsOutgoingsByCategory}
-                        dataKey="amount"
-                        nameKey="category"
+              <Grid container spacing={gridSpacing} item>
+                <DashboardChartComponent
+                  title={`Ausgaben im ${currentMonth} pro Kategorie`}
+                  content={currentMonthsOutgoingsByCategory.length > 0 ? (
+                    <ResponsiveContainer>
+                      <PieChart>
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Pie
+                          innerRadius={xsDown ? 55 : 100}
+                          outerRadius={xsDown ? 80 : 140}
+                          paddingAngle={4}
+                          data={currentMonthsOutgoingsByCategory}
+                          dataKey="amount"
+                          nameKey="category"
+                        >
+                          {currentMonthsOutgoingsByCategory.map(entry => (
+                            <Cell key={entry.id} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Legend
+                          layout="vertical"
+                          align={xsDown ? 'center' : 'right'}
+                          verticalAlign={xsDown ? 'bottom' : 'middle'}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <Typography>
+                      {'Mit der Erfassung von Ausgaben zum aktuellen Monat werden diese hier grafisch dargestellt.'}
+                    </Typography>
+                  )}
+                />
+                <DashboardChartComponent
+                  title={`Bilanz des Monats ${currentMonth}`}
+                  content={(
+                    <ResponsiveContainer>
+                      <BarChart
+                        data={currentMonthsBalance}
                       >
-                        {currentMonthsOutgoingsByCategory.map(entry => (
-                          <Cell key={entry.id} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Legend
-                        layout="vertical"
-                        align={xsDown ? 'center' : 'right'}
-                        verticalAlign={xsDown ? 'bottom' : 'middle'}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <Typography>
-                    {'Mit der Erfassung von Ausgaben zum aktuellen Monat werden diese hier grafisch dargestellt.'}
-                  </Typography>
-                )}
-              />
-              <DashboardChartComponent
-                title={`Bilanz des Monats ${currentMonth}`}
-                content={(
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={currentMonthsBalance}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
-                      <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
-                      <XAxis
-                        dataKey="category"
-                        interval={0}
-                        textAnchor="start"
-                        height={1}
-                        angle={-90}
-                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
-                        tickLine={false}
-                        tickMargin={-15}
-                        dx={-7}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
+                        <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
+                        <XAxis
+                          dataKey="category"
+                          interval={0}
+                          textAnchor="start"
+                          height={1}
                           angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
+                          tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                          tickLine={false}
+                          tickMargin={-15}
+                          dx={-7}
                         />
-                      </YAxis>
-                    </BarChart>
-                  </ResponsiveContainer>
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </BarChart>
+                    </ResponsiveContainer>
                 )}
-              />
-              <DashboardChartComponent
-                title="Ausgaben des vergangenen Jahres"
-                content={(
-                  <ResponsiveContainer>
-                    <LineChart
-                      data={lastTwelveMonthsOutgoingSum}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <Line name="Betrag" dataKey="amount" stroke="#A10702" />
-                      <XAxis
-                        dataKey="month"
-                        textAnchor="end"
-                        angle={-45}
-                        height={55}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
-                          angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
+                />
+                <DashboardChartComponent
+                  title="Ausgaben des vergangenen Jahres"
+                  content={(
+                    <ResponsiveContainer>
+                      <LineChart
+                        data={lastTwelveMonthsOutgoingSum}
+                      >
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <Line name="Betrag" dataKey="amount" stroke="#A10702" />
+                        <XAxis
+                          dataKey="month"
+                          textAnchor="end"
+                          angle={-45}
+                          height={55}
                         />
-                      </YAxis>
-                    </LineChart>
-                  </ResponsiveContainer>
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </LineChart>
+                    </ResponsiveContainer>
                 )}
-              />
-              <DashboardChartComponent
-                title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
-                content={(
-                  <ResponsiveTable breakpoint="xs">
-                    <ResponsiveTableHead>
-                      <ResponsiveTableRow>
-                        <ResponsiveTableCell>Datum</ResponsiveTableCell>
-                        <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
-                        <ResponsiveTableCell>Betrag</ResponsiveTableCell>
-                      </ResponsiveTableRow>
-                    </ResponsiveTableHead>
-                    <ResponsiveTableBody>
-                      {stableSort(
-                        outgoings,
-                        'outgoingDate',
-                        'desc',
-                      ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
-                        <ResponsiveTableRow key={outgoing.id}>
-                          <ResponsiveTableCell columnHead="Datum">
-                            <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
-                          </ResponsiveTableCell>
-                          <ResponsiveTableCell columnHead="Beschreibung">
-                            <Typography>{outgoing.outgoingTitle}</Typography>
-                          </ResponsiveTableCell>
-                          <ResponsiveTableCell columnHead="Betrag" align="right">
-                            <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
-                          </ResponsiveTableCell>
+                />
+                <DashboardChartComponent
+                  title={xsDown ? 'letzte drei Ausgaben' : 'letzte fünf Ausgaben'}
+                  content={(
+                    <ResponsiveTable breakpoint="xs">
+                      <ResponsiveTableHead>
+                        <ResponsiveTableRow>
+                          <ResponsiveTableCell>Datum</ResponsiveTableCell>
+                          <ResponsiveTableCell>Beschreibung</ResponsiveTableCell>
+                          <ResponsiveTableCell>Betrag</ResponsiveTableCell>
                         </ResponsiveTableRow>
-                      ))
+                      </ResponsiveTableHead>
+                      <ResponsiveTableBody>
+                        {stableSort(
+                          outgoings,
+                          'outgoingDate',
+                          'desc',
+                        ).filter((value, index) => index < lastOutgoingsCount).map(outgoing => (
+                          <ResponsiveTableRow key={outgoing.id}>
+                            <ResponsiveTableCell columnHead="Datum">
+                              <Typography>{moment(outgoing.outgoingDate).format('DD.MM.YYYY')}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Beschreibung">
+                              <Typography>{outgoing.outgoingTitle}</Typography>
+                            </ResponsiveTableCell>
+                            <ResponsiveTableCell columnHead="Betrag" align="right">
+                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                            </ResponsiveTableCell>
+                          </ResponsiveTableRow>
+                        ))
                       }
-                    </ResponsiveTableBody>
-                  </ResponsiveTable>
+                      </ResponsiveTableBody>
+                    </ResponsiveTable>
                 )}
-              />
-              <DashboardChartComponent
-                title="Budget (monatlich)"
-                content={(
-                  <ResponsiveContainer>
-                    <BarChart
-                      data={budget}
-                    >
-                      <Tooltip formatter={value => `${value} ${currency}`} />
-                      <Bar name="Budget" dataKey="monthly">
-                        {budget.map(entry => (
-                          <Cell key={entry.id} fill={entry.color} />
-                        ))}
-                      </Bar>
-                      <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                      <XAxis
-                        dataKey="category"
-                        interval={0}
-                        textAnchor="start"
-                        height={1}
-                        angle={-90}
-                        tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
-                        tickLine={false}
-                        tickMargin={-15}
-                        dx={-7}
-                      />
-                      <YAxis>
-                        <Label
-                          value={`Betrag [${currency}]`}
+                />
+                <DashboardChartComponent
+                  title="Budget (monatlich)"
+                  content={(
+                    <ResponsiveContainer>
+                      <BarChart
+                        data={budget}
+                      >
+                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Bar name="Budget" dataKey="monthly">
+                          {budget.map(entry => (
+                            <Cell key={entry.id} fill={entry.color} />
+                          ))}
+                        </Bar>
+                        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                        <XAxis
+                          dataKey="category"
+                          interval={0}
+                          textAnchor="start"
+                          height={1}
                           angle={-90}
-                          position="insideBottomLeft"
-                          offset={10}
+                          tick={{ fill: 'rgba(0, 0, 0, 0.87)' }}
+                          tickLine={false}
+                          tickMargin={-15}
+                          dx={-7}
                         />
-                      </YAxis>
-                    </BarChart>
-                  </ResponsiveContainer>
+                        <YAxis>
+                          <Label
+                            value={`Betrag [${currency}]`}
+                            angle={-90}
+                            position="insideBottomLeft"
+                            offset={10}
+                          />
+                        </YAxis>
+                      </BarChart>
+                    </ResponsiveContainer>
                 )}
-              />
-            </Grid>
+                />
+              </Grid>
             ) : <NotAuthorizedComponent />}
           </Grid>
         ) }

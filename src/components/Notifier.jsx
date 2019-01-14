@@ -9,7 +9,7 @@ class Notifier extends Component {
     message: '',
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     openSnackbarFn = this.openSnackbar;
   }
 
@@ -27,7 +27,7 @@ class Notifier extends Component {
     });
   };
 
-  render() {
+  render = () => {
     const {
       message,
       open,
@@ -53,8 +53,8 @@ class Notifier extends Component {
   }
 }
 
-export function addMessage({ message }) {
+export const addMessage = ({ message }) => {
   openSnackbarFn({ message });
-}
+};
 
 export default Notifier;

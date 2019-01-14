@@ -49,7 +49,7 @@ class OutgoingItemComponent extends Component {
     await doDeleteOutgoing(outgoing.id);
   }
 
-  render() {
+  render = () => {
     const {
       breakpoint,
       classes,
