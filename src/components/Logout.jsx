@@ -19,7 +19,6 @@ const unregisterSnapshotWatcher = () => {
 };
 
 class Logout extends Component {
-
   componentDidMount = () => {
     const { resetCurrentUser } = this.props;
     auth.signOut();
