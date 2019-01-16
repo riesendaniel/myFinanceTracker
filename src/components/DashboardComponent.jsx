@@ -156,7 +156,7 @@ class DashboardComponent extends Component {
                   content={currentMonthsOutgoingsByCategory.length > 0 ? (
                     <ResponsiveContainer>
                       <PieChart>
-                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Tooltip formatter={value => `${Math.round(value)} ${currency}`} />
                         <Pie
                           innerRadius={xsDown ? 55 : 100}
                           outerRadius={xsDown ? 80 : 140}
@@ -189,7 +189,7 @@ class DashboardComponent extends Component {
                       <BarChart
                         data={currentMonthsBalance}
                       >
-                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Tooltip formatter={value => `${Math.round(value)} ${currency}`} />
                         <CartesianGrid vertical={false} strokeDasharray="3 3" />
                         <Bar name="Budget" dataKey="budget" fill="rgba(8, 61, 119, 0.75)" />
                         <Bar name="Ausgaben" dataKey="outgoing" fill="rgba(161, 7, 2, 0.75)" />
@@ -223,7 +223,7 @@ class DashboardComponent extends Component {
                       <LineChart
                         data={lastTwelveMonthsOutgoingSum}
                       >
-                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Tooltip formatter={value => `${Math.round(value)} ${currency}`} />
                         <CartesianGrid vertical={false} strokeDasharray="3 3" />
                         <Line name="Betrag" dataKey="amount" stroke="#A10702" />
                         <XAxis
@@ -269,7 +269,7 @@ class DashboardComponent extends Component {
                               <Typography>{outgoing.outgoingTitle}</Typography>
                             </ResponsiveTableCell>
                             <ResponsiveTableCell columnHead="Betrag" align="right">
-                              <Typography>{`${outgoing.outgoingAmount} ${currency}`}</Typography>
+                              <Typography>{`${Math.round(outgoing.outgoingAmount)} ${currency}`}</Typography>
                             </ResponsiveTableCell>
                           </ResponsiveTableRow>
                         ))
@@ -285,7 +285,7 @@ class DashboardComponent extends Component {
                       <BarChart
                         data={budget}
                       >
-                        <Tooltip formatter={value => `${value} ${currency}`} />
+                        <Tooltip formatter={value => `${Math.round(value)} ${currency}`} />
                         <Bar name="Budget" dataKey="monthly">
                           {budget.map(entry => (
                             <Cell key={entry.id} fill={entry.color} />
