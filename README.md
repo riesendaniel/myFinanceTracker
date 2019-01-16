@@ -51,7 +51,7 @@ Finally, install npm dependencies.
 npm install
 ```
 
-Add your `.env.local` file with following variables and their values:
+Add your `.env.local` file with following variables and their values to the project root folder:
 * `REACT_APP_FIREBASE_AUTH_DOMAIN`
 * `REACT_APP_FIREBASE_DATABASE_URL`
 * `REACT_APP_FIREBASE_API_KEY`
