@@ -13,6 +13,8 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import CustomPropTypes from '../helper/CustomPropTypes';
 
+const defaultBreakpoint = 'xs';
+
 const removeCustomProps = (allProps, customKeys) => {
   const reducecProps = {};
   Object.keys(allProps).forEach((key) => {
@@ -44,8 +46,12 @@ export const ResponsiveTable = (props) => {
 };
 
 ResponsiveTable.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
   children: CustomPropTypes.children.isRequired,
+};
+
+ResponsiveTable.defaultProps = {
+  breakpoint: defaultBreakpoint,
 };
 
 export const ResponsiveTableHead = (props) => {
@@ -68,12 +74,13 @@ export const ResponsiveTableHead = (props) => {
 };
 
 ResponsiveTableHead.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
   children: CustomPropTypes.children.isRequired,
   show: PropTypes.bool,
 };
 
 ResponsiveTableHead.defaultProps = {
+  breakpoint: defaultBreakpoint,
   show: false,
 };
 
@@ -94,8 +101,12 @@ export const ResponsiveTableBody = (props) => {
 };
 
 ResponsiveTableBody.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
   children: CustomPropTypes.children.isRequired,
+};
+
+ResponsiveTableBody.defaultProps = {
+  breakpoint: defaultBreakpoint,
 };
 
 export const ResponsiveTableFooter = (props) => {
@@ -117,8 +128,12 @@ export const ResponsiveTableFooter = (props) => {
 };
 
 ResponsiveTableFooter.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
   children: CustomPropTypes.children.isRequired,
+};
+
+ResponsiveTableFooter.defaultProps = {
+  breakpoint: defaultBreakpoint,
 };
 
 export const ResponsiveTablePagination = (props) => {
@@ -147,8 +162,13 @@ export const ResponsiveTablePagination = (props) => {
 };
 
 ResponsiveTablePagination.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
-  children: CustomPropTypes.children.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
+  children: CustomPropTypes.children,
+};
+
+ResponsiveTablePagination.defaultProps = {
+  breakpoint: defaultBreakpoint,
+  children: undefined,
 };
 
 export const ResponsiveTableRow = (props) => {
@@ -169,8 +189,12 @@ export const ResponsiveTableRow = (props) => {
 };
 
 ResponsiveTableRow.propTypes = {
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
   children: CustomPropTypes.children.isRequired,
+};
+
+ResponsiveTableRow.defaultProps = {
+  breakpoint: defaultBreakpoint,
 };
 
 export const ResponsiveTableCell = (props) => {
@@ -215,13 +239,15 @@ export const ResponsiveTableCell = (props) => {
 
 ResponsiveTableCell.propTypes = {
   actions: PropTypes.bool,
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
-  children: CustomPropTypes.children.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
+  children: CustomPropTypes.children,
   columnHead: PropTypes.string,
 };
 
 ResponsiveTableCell.defaultProps = {
   actions: false,
+  breakpoint: defaultBreakpoint,
+  children: undefined,
   columnHead: undefined,
 };
 
@@ -259,8 +285,8 @@ const ResponsiveTableRowFormCellComponent = (props) => {
 
 ResponsiveTableRowFormCellComponent.propTypes = {
   actions: PropTypes.bool,
-  breakpoint: CustomPropTypes.breakpoint.isRequired,
-  children: CustomPropTypes.children.isRequired,
+  breakpoint: CustomPropTypes.breakpoint,
+  children: CustomPropTypes.children,
   classes: CustomPropTypes.classes.isRequired,
   columnHead: PropTypes.string,
   width: CustomPropTypes.breakpoint.isRequired,
@@ -268,6 +294,8 @@ ResponsiveTableRowFormCellComponent.propTypes = {
 
 ResponsiveTableRowFormCellComponent.defaultProps = {
   actions: false,
+  breakpoint: defaultBreakpoint,
+  children: undefined,
   columnHead: undefined,
 };
 
